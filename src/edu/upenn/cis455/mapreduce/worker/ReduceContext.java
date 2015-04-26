@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.sleepycat.je.rep.impl.networkRestore.Protocol.Done;
+
 import edu.upenn.cis455.mapreduce.Context;
 import edu.upenn.cis455.mapreduce.WebClient.IOUtils;
 
@@ -62,6 +64,11 @@ class ReduceContext implements Context {
 		System.err.println("ReduceContext.closeWriter");
 		if (writer != null) {
 			writer.close();
+		}
+		File done = new File(output.getAbsolutePath() + "_done.txt");
+		boolean rv = output.renameTo(done);
+		if(!rv) {
+			System.err.println("rename file failed! " + output.getAbsolutePath());
 		}
 	}
 	
