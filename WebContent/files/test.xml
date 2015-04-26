@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml-stylesheet type = "text/xsl" href="default.xsl"?>
+<documentcollection>
+	<document>
+		abcd
+	</document>
+	<document>
+		efgh
+	</document>
+	<document>
+		ijkl
+	</document>
+</documentcollection>
