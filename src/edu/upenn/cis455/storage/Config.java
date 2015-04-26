@@ -10,7 +10,7 @@ package edu.upenn.cis455.storage;
 public class Config {
 
 	public static int machine = 0;
-	public static String[] DocID_Files = {"/Users/peach/Documents/upenn/2015spring/cis555/db/db39/input/id.txt", "/Users/dichenli/Downloads/tryCrawl/id.txt"};
+	public static String[] DocID_Files = {"/Users/peach/Documents/upenn/2015spring/cis555/db/db39/input/id", "/Users/dichenli/Downloads/tryCrawl/id.txt"};
 
 	public static String[] DocLinks_Files = {"/Users/peach/Documents/upenn/2015spring/cis555/db/db39/links.txt", "/Users/dichenli/Downloads/tryCrawl/links.txt"};
 

@@ -59,6 +59,7 @@ public class XPathCrawler {
 	private final static Charset ENCODING = StandardCharsets.UTF_8;
 	private String MapReduceInput;
 	int count = 0;
+	int line = 0;
 
 	
 	public static void main(String[] args){
@@ -510,11 +511,16 @@ public class XPathCrawler {
 	}
 	
 	private void writeToInput(String linkid, String url) throws IOException {
-		FileWriter fileWriter = new FileWriter(MapReduceInput, true);
-//		System.out.println(linkid+"\t"+url+"\n");
-		fileWriter.write(linkid+"\t"+url+"\n");
-		fileWriter.close();
-		
+		if(line > 100){
+			
+			
+		}
+		else{
+			line++;
+			FileWriter fileWriter = new FileWriter(MapReduceInput, true);
+			fileWriter.write(linkid+"\t"+url+"\n");
+			fileWriter.close();
+		}
 	}
 	
 	private void readFromOutput() {
