@@ -9,7 +9,7 @@ package edu.upenn.cis455.storage;
  */
 public class Config {
 
-	public static int machine = 1;
+	public static int machine = 0;
 	public static String[] Roots = {
 		"/Users/peach/Documents/upenn/2015spring/cis555/db/db39/", 
 		"/Users/dichenli/Downloads/tryCrawl/"
