@@ -7,16 +7,16 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import edu.upenn.cis455.storage.Config;
+
 /**
  * @author dichenli
  *
  */
 public class MapReduceUtils {
-	public static final String[] PROJECT_PATHS = {"/home/cis455/workspace/HW3/", 
-	"/Users/dichenli/Documents/course materials/eclipse/MapReduce/"};
 
-	public static final String PROJECT_PATH = PROJECT_PATHS[0];
-	public static final String ROOT_DIR = PROJECT_PATH;
+//	public static final String PROJECT_PATH = PROJECT_PATHS[0];
+	public static final String ROOT_DIR = Config.Root;
 	
 	/**
 	 * get a Job object from the given class name. return null if any exception 

@@ -6,7 +6,11 @@ package edu.upenn.cis455.mapreduce.worker;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
+
+import com.sleepycat.je.rep.impl.networkRestore.Protocol.Done;
+import com.sun.org.apache.xml.internal.serialize.LineSeparator;
 
 import edu.upenn.cis455.mapreduce.Context;
 import edu.upenn.cis455.mapreduce.WebClient.IOUtils;
@@ -20,8 +24,11 @@ class ReduceContext implements Context {
 	File output;
 	PrintWriter writer;
 	AtomicLong keysWritten;
+	int id;
 	
-	ReduceContext(File output, AtomicLong keysWritten) {
+	static long maxLines = 20;//max number of lines for each output file
+	
+	ReduceContext(File output, AtomicLong keysWritten, int id) {
 		if(!IOUtils.fileExists(output)) {
 			System.err.println("ReduceContext: output file don't exists!");
 			throw new IllegalArgumentException();
@@ -32,6 +39,7 @@ class ReduceContext implements Context {
 		this.output = output;
 		System.out.println("ReduceContext: output file is: " + output.getAbsolutePath());
 		this.keysWritten = keysWritten;
+		this.id = id;
 		boolean rv = openWriter();
 		if(!rv) {
 			throw new IllegalArgumentException();
@@ -63,8 +71,15 @@ class ReduceContext implements Context {
 		if (writer != null) {
 			writer.close();
 		}
+		File done = new File(output.getAbsolutePath() + "_done.txt");
+		boolean rv = output.renameTo(done);
+		if(!rv || !IOUtils.fileExists(done) || done.length() <= 0) {
+			System.err.println("rename file failed! " + output.getAbsolutePath());
+		}
 	}
 	
+	
+	static long lines = 0;
 	/**
 	 * write to output
 	 */
@@ -76,6 +91,17 @@ class ReduceContext implements Context {
 		writer.flush();
 		System.out.println("output file length: " + output.length());
 		keysWritten.incrementAndGet();
+		
+		lines++;
+		if(lines >= maxLines) { //more granular output
+			closeWriter();
+			output = new File(output.getParentFile(), "" + id + "_" + new Date().getTime());
+			boolean rv = (IOUtils.createFile(output) && openWriter());
+			if(!rv) {
+				System.err.println("ReduceContext.write: create new file failed");
+			}
+		}
+		
 		System.out.println("ReduceContext.writer: output exists?" + output.exists());
 	}
 

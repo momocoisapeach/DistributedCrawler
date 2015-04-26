@@ -6,6 +6,7 @@ package edu.upenn.cis455.mapreduce.worker;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -25,7 +26,7 @@ class ReduceRunner implements Runnable {
 	int numThreads;
 	int id;
 	File input;
-	File output; //file for this thread to write out result
+//	File output; //file for this thread to write out result
 	ReduceContext context;
 	AtomicLong keysRead;
 	AtomicLong keysWritten;
@@ -42,19 +43,17 @@ class ReduceRunner implements Runnable {
 		this.job = job;
 		this.numThreads = numThreads;
 		this.id = id;
-		output = new File(outputDir, "" + id);
+		File output = new File(outputDir, "" + id + "_" + new Date().getTime());
 		boolean rv = IOUtils.createFile(output);
 		System.out.println("ReduceRunner create output file success? " + rv);
-		for(int i = 0; !rv && i < 3; i++) { //if failed, try a few more times
-			output = new File(outputDir, "" + id + "_" + i++);
-		}
 		if(!rv) {
 			throw new IOException();
 		}
 		this.keysRead = jobRunner.keysRead;
 		this.keysWritten = jobRunner.keysWritten;
-		this.context = new ReduceContext(output, keysWritten);
+		this.context = new ReduceContext(output, keysWritten, id);
 	}
+	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
