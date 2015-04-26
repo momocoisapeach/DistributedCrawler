@@ -18,7 +18,7 @@ public class DocID {
 	private String url;
 	private boolean head;
 	
-	private static File docIDFile = new File("/Users/peach/Documents/upenn/2015spring/cis555/db/db38/id.txt");
+	private static File docIDFile = new File(Config.DocID_File);
 	
 	
 	/**

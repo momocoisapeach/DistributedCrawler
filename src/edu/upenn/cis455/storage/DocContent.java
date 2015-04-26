@@ -19,7 +19,7 @@ public class DocContent {
 	private String url;
 	private int contentLength;
 	
-	private String path = "/Users/peach/Documents/upenn/2015spring/cis555/db/db38/content/";
+	private String path = Config.DocContent_File;
 	
 	public DocContent(String docid){
 		this.docID = docid;

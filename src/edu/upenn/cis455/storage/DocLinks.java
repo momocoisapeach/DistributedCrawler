@@ -17,7 +17,7 @@ public class DocLinks {
 	
 	private ArrayList<String> docLinks;
 	
-	private static File docLinksFile = new File("/Users/peach/Documents/upenn/2015spring/cis555/db/db38/links.txt");
+	private static File docLinksFile = new File(Config.DocLinks_File);
 	
 	
 	private DocLinks(){}

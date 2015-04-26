@@ -44,6 +44,10 @@ public class DBWrapper {
 		this.envDirectory = envDirectory;
 		File f = new File(envDirectory);
 		if(!f.exists()) f.mkdir();
+		File content = new File(Config.DocContent_File);
+		if(!content.exists()) {
+			content.mkdirs();
+		}
 		if(!f.isDirectory()) throw new IllegalArgumentException();
 		myEnv = new Environment(f, envConfig);
 		store = new EntityStore(myEnv, "EntityStore", stConfig);
