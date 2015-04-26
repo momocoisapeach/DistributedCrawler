@@ -3,16 +3,23 @@ package edu.upenn.cis455.crawler;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.ProtocolException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
+import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,6 +39,7 @@ import com.cybozu.labs.langdetect.Language;
 import edu.upenn.cis455.crawler.info.RobotsTxtInfo;
 import edu.upenn.cis455.crawler.info.URLInfo;
 import edu.upenn.cis455.storage.Channel;
+import edu.upenn.cis455.storage.Config;
 import edu.upenn.cis455.storage.DBWrapper;
 import edu.upenn.cis455.storage.RawFile;
 import edu.upenn.cis455.storage.User;
@@ -48,6 +56,8 @@ public class XPathCrawler {
 	int maxFileN;
 	DBWrapper db;
 	RobotsTxtInfo robots;
+	private final static Charset ENCODING = StandardCharsets.UTF_8;
+	private String MapReduceInput;
 	int count = 0;
 
 	
@@ -76,7 +86,7 @@ public class XPathCrawler {
 		directory = args[1];
 		db = new DBWrapper(directory);
 		robots = new RobotsTxtInfo();
-		
+		MapReduceInput = Config.DocID_File;
 		maxSize = Double.parseDouble(args[2]);
 		
 		File dir = new File("./test/profiles/");
@@ -116,11 +126,17 @@ public class XPathCrawler {
 			run(currentUrl);
 			i++;
 			if(db.isQEmpty()){
+				
 				System.out.println("empty!!!");
+				readFromOutput();
 			}
 		}
 		db.closeEnv();
 	}
+
+
+	
+	
 
 	public void run(String currentUrl) {
 		NewHttpClient client = new NewHttpClient(currentUrl);
@@ -383,16 +399,21 @@ public class XPathCrawler {
 	            
 //	            System.out.println("the current link is"+url+" and its doc id is"+linkid);
 	            
-	            
-	            
-	            
-				if(!db.containsUrl(linkid)){
-//					System.out.println("db does not contain this doc id");
-					db.addDocID(linkid);
-					db.addDocUrl(linkid, url);
-					db.addUrlToQueue(url);
-					
+	            try {
+					writeToInput(linkid, url);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+	            
+	            
+//				if(!db.containsUrl(linkid)){
+////					System.out.println("db does not contain this doc id");
+//					db.addDocID(linkid);
+//					db.addDocUrl(linkid, url);
+//					db.addUrlToQueue(url);
+//					
+//				}
 				db.addDocLink(docid, linkid);
 			} else {
 //			   System.out.println("url is invalid");
@@ -405,6 +426,8 @@ public class XPathCrawler {
 	}
 	
 	
+
+
 	public boolean isEnglish(String text) throws Exception{
 
 		String after = html2text(text);
@@ -484,6 +507,89 @@ public class XPathCrawler {
 			}
 		}
 		
+	}
+	
+	private void writeToInput(String linkid, String url) throws IOException {
+		FileWriter fileWriter = new FileWriter(MapReduceInput, true);
+//		System.out.println(linkid+"\t"+url+"\n");
+		fileWriter.write(linkid+"\t"+url+"\n");
+		fileWriter.close();
+		
+	}
+	
+	private void readFromOutput() {
+		while(db.isQEmpty()){
+			File output = new File(Config.MapReduce_Output);
+			ArrayList<String> files = listFilesForFolder(output);
+			if(files.isEmpty()){
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			else{
+				int size = files.size();
+				for(int i = 0; i < size; i++){
+					Path path = Paths.get(files.get(i));
+					try {
+						writeToDB(path);
+						Files.delete(path);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					
+					
+				}
+				
+			}
+			
+		}
+		
+	}
+	
+
+	
+	private void writeToDB(Path path) throws Exception {
+		
+		String lines[];
+		String url, linkid;
+	    try (Scanner scanner =  new Scanner(path, ENCODING.name())){
+	      while (scanner.hasNextLine()){
+	        //process each line in some way
+	    	  lines=scanner.nextLine().split("\t");
+	    	  linkid = lines[0];
+	    	  url = lines[1];
+	    	 
+	    	  if(!db.containsUrl(linkid)){
+		//			System.out.println("db does not contain this doc id");
+					db.addDocID(linkid);
+					db.addDocUrl(linkid, url);
+					db.addUrlToQueue(url);
+					
+				}
+	    	  
+	    	  
+	      }      
+	    }
+	    
+	}
+	
+	public ArrayList<String> listFilesForFolder(File folder) {
+		ArrayList<String> files = new ArrayList<String>();
+	    for (File fileEntry : folder.listFiles()) {
+	        if (fileEntry.isDirectory()) {
+//	            listFilesForFolder(fileEntry);
+	        } else {
+	        	if(fileEntry.getName().endsWith(".txt")){
+	        		files.add(fileEntry.getName());
+	        	}
+	        }
+	    }
+	    return files;
 	}
 	
 	public BigInteger toBigInteger(String key) {
