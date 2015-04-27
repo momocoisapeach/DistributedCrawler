@@ -63,7 +63,7 @@ public class DocID {
 	
 	private void writeDocId(String to_doc) throws IOException {
 		FileWriter fileWriter = new FileWriter(docIDFile, true);
-		System.out.println(docID+"\t"+to_doc+"\n");
+//		System.out.println(docID+"\t"+to_doc+"\n");
 		fileWriter.write(docID+"\t"+to_doc+"\n");
 		fileWriter.close();
 		

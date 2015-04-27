@@ -189,28 +189,28 @@ public class XPathCrawler {
 		System.out.println("reading from dynamo db...");
 		int count = 0;
 		while(count <=100){
-			System.out.println("count = "+count);
+//			System.out.println("count = "+count);
 			String url = CrawlFront.popUrl(crawler);
 
-			System.out.println("after pop url... and the url is"+url+"@@@");
+//			System.out.println("after pop url... and the url is"+url+"@@@");
 			
 			if (url == null && count >= 1){
 				break;
 			}
 			else if(url!=null){
-				System.out.println("url is not null");
+//				System.out.println("url is not null");
 				String linkid = String.valueOf(toBigInteger(url));
 		  	  	if(!db.containsUrl(linkid)){
-		  	  		System.out.println("db does not contain this url");
+//		  	  		System.out.println("db does not contain this url");
   					db.addDocID(linkid);
   					db.addDocUrl(linkid, url);
   					db.addUrlToQueue(url);
   					count++;
-  					System.out.println("count is "+count);
+//  					System.out.println("count is "+count);
 	  					
 	  			}
 		  	  	else{
-		  	  		System.out.println("db contains this url");
+//		  	  		System.out.println("db contains this url");
 		  	  	}
 			}
 		}
@@ -478,7 +478,7 @@ public class XPathCrawler {
 	            
 //	            System.out.println("the current link is"+url+" and its doc id is"+linkid);
 	            
-	            System.out.println("writing "+count +"th link into db..");
+//	            System.out.println("writing "+count +"th link into db..");
 				writeToDynamoDB(linkid, url);
 				count++;
 	            
@@ -498,6 +498,7 @@ public class XPathCrawler {
 			
             
         }
+		
 		
 	}
 	
@@ -534,20 +535,20 @@ public class XPathCrawler {
 
 
 	private void writeToDynamoDB(String linkid, String url) {
-		System.out.println("before inserting doc id and url into dynamo db...");
-		System.out.println("url is "+url+"\n and the docid is"+linkid+"\nand the crawler # is"+crawler);
-		DocURL.insert(url, linkid, true);
+//		System.out.println("before inserting doc id and url into dynamo db...");
+//		System.out.println("url is "+url+"\n and the docid is"+linkid+"\nand the crawler # is"+crawler);
+		DocURL.insert(url, linkid, false);
 		try {
 			URL u = new URL(url);
 			int writeTo = hash(toBigInteger(u.getHost()));
-			System.out.println("hash to crawler "+writeTo);
-			CrawlFront.insert(url, writeTo, true);
+//			System.out.println("hash to crawler "+writeTo);
+			CrawlFront.insert(url, writeTo, false);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 //		CrawlFront.insert(url, crawler, true);
-		System.out.println("after inserting..");
+//		System.out.println("after inserting..");
 
 		
 	}
