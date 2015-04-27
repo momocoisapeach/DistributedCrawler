@@ -29,9 +29,10 @@ public class Inserter<T> {
 			items = new ArrayList<T>();
 		}
 		items.add(item);
-		if(insertNow || items.size() >= 25) {
+		if(insertNow || items.size() >= 24) {
 			List<FailedBatch> failed = batchInsert(items); //if insert failed, print error message
 			if(failed != null && !failed.isEmpty()) {
+				System.out.println("insert error:");
 				failed.get(0).getException().printStackTrace();
 			}
 		}
