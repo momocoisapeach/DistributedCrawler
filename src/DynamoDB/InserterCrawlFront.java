@@ -4,7 +4,9 @@
 package DynamoDB;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper.FailedBatch;
 
@@ -14,7 +16,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper.FailedBatch
  * of the class T
  */
 public class InserterCrawlFront {
-	private ArrayList items = null;
+	private Set<CrawlFront> items = null;
 	/**
 	 * insert data to DB. It will batch the insert task, and not send 
 	 * the DB request until a total of 25 items
@@ -26,7 +28,7 @@ public class InserterCrawlFront {
 	 */
 	public void insert(CrawlFront item, boolean insertNow) {
 		if(items == null) {
-			items = new ArrayList<CrawlFront>();
+			items = new HashSet<CrawlFront>();
 		}
 //		System.out.println("insert to local buffer: " + item.toString());
 		items.add(item);
@@ -40,8 +42,13 @@ public class InserterCrawlFront {
 		if (items == null) {
 			return;
 		}
-		List<FailedBatch> failed = batchInsert(items); //if insert failed, print error message
-//		System.out.println("insert to DB # of items: " + items.size());
+
+		ArrayList<CrawlFront> list = new ArrayList<CrawlFront>();
+		list.addAll(items);
+		
+		List<FailedBatch> failed = batchInsert(list); //if insert failed, print error message
+//		System.out.println("insert to DB # of items: " + list.size());
+
 		if(failed != null && !failed.isEmpty()) {
 //			System.out.println("insert error, number of failed: " + failed.size());
 			failed.get(0).getException().printStackTrace();
