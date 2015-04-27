@@ -156,7 +156,7 @@ public class XPathCrawler {
 		int count = 0;
 		while(count <=100){
 			String url = CrawlFront.popUrl(crawler);
-			if(url == null && count >= 1){
+			if (url == null && count >= 1) {
 				break;
 			}
 			else if(url!=null){

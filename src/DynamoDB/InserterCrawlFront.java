@@ -13,8 +13,8 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper.FailedBatch
  * binded to a class T to insert items in batch manner to DynamoDB, typically a static instance
  * of the class T
  */
-public class Inserter<T> {
-	private ArrayList<T> items = null;
+public class InserterCrawlFront {
+	private ArrayList items = null;
 	/**
 	 * insert data to DB. It will batch the insert task, and not send 
 	 * the DB request until a total of 25 items
@@ -24,15 +24,18 @@ public class Inserter<T> {
 	 * @param item
 	 * @param insertNow
 	 */
-	public void insert(T item, boolean insertNow) {
+	public void insert(CrawlFront item, boolean insertNow) {
 		if(items == null) {
-			items = new ArrayList<T>();
+			items = new ArrayList();
 		}
+		System.out.println("insert to local buffer: " + item.toString());
 		items.add(item);
+	
 		if(insertNow || items.size() >= 24) {
 			List<FailedBatch> failed = batchInsert(items); //if insert failed, print error message
+			System.out.println("insert to DB # of items: " + items.size());
 			if(failed != null && !failed.isEmpty()) {
-				System.out.println("insert error:");
+				System.out.println("insert error, number of failed: " + failed.size());
 				failed.get(0).getException().printStackTrace();
 			}
 		}
@@ -44,7 +47,7 @@ public class Inserter<T> {
 	 * must call init() before calling this method
 	 * @param item
 	 */
-	public void insert(T item) {
+	public void insert(CrawlFront item) {
 		insert(item, false);
 	}
 	
@@ -53,7 +56,7 @@ public class Inserter<T> {
 	 * @param items
 	 * @return
 	 */
-	public List<FailedBatch> batchInsert(List<T> items) {
+	public List<FailedBatch> batchInsert(List<CrawlFront> items) {
 		return DynamoTable.mapper.batchSave(items);
 	}
 	
@@ -62,7 +65,7 @@ public class Inserter<T> {
 	 * @param item: an item of a persistent model with @DynamoDBTable(tableName=XX)
 	 * @throws Exception when DB init() failed
 	 */
-	public void save(T item) throws Exception {
+	public void save(CrawlFront item) throws Exception {
 		if(DynamoTable.mapper == null) {
 			DynamoTable.init();
 		}

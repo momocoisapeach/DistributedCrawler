@@ -18,7 +18,7 @@ public class DocURL {
 	
 	byte[] id; //binary data
 	String url;
-	static Inserter<DocURL> inserter = new Inserter<DocURL>();
+	static InserterDocURL inserter = new InserterDocURL();
 	
 	DocURL() {
 		id = new byte[20];
