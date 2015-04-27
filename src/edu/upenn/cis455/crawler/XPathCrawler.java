@@ -7,7 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -139,7 +141,19 @@ public class XPathCrawler {
 		String seedid = String.valueOf(toBigInteger(seed));
 		System.out.println("before inserting seed into db\nand the seed is "+seed+"\nand id is "+seedid);
 		DocURL.insert(seed, seedid, true);
-		CrawlFront.insert(seed, crawler, true);
+		URL url;
+		try {
+			url = new URL(seed);
+			int writeTo = hash(toBigInteger(url.getHost()));
+			System.out.println("hash to crawler "+writeTo);
+			CrawlFront.insert(seed, writeTo, true);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
 		System.out.println("after inserting seed...");
 		
 //		String url = CrawlFront.popUrl(crawler);
