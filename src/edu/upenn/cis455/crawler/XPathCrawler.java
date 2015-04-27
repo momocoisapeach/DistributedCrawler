@@ -109,7 +109,8 @@ public class XPathCrawler {
 		MapReduceInput = Config.MapReduce_Input;
 		
 		setHashRange(numCrawlers);
-		File dir = new File("/home/ec2-user/profiles/");
+		String[] profiles = {"/home/ec2-user/profiles/", "./test/profiles/"};
+		File dir = new File(profiles[1]);
 		try {
 			DetectorFactory.loadProfile(dir);
 		} catch (LangDetectException e) {
