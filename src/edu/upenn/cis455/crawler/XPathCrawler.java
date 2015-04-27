@@ -169,6 +169,8 @@ public class XPathCrawler {
   					count++;
 	  					
 	  			}
+			} else if(url == null && count == 0) {
+				
 			}
 		}
 		

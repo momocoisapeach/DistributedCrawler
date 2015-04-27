@@ -32,15 +32,23 @@ public class InserterCrawlFront {
 		items.add(item);
 	
 		if(insertNow || items.size() >= 24) {
-			List<FailedBatch> failed = batchInsert(items); //if insert failed, print error message
-			System.out.println("insert to DB # of items: " + items.size());
-			if(failed != null && !failed.isEmpty()) {
-				System.out.println("insert error, number of failed: " + failed.size());
-				failed.get(0).getException().printStackTrace();
-			}
-			items = null;
+			flush();
 		}
 	}
+	
+	public void flush() {
+		if (items == null) {
+			return;
+		}
+		List<FailedBatch> failed = batchInsert(items); //if insert failed, print error message
+		System.out.println("insert to DB # of items: " + items.size());
+		if(failed != null && !failed.isEmpty()) {
+			System.out.println("insert error, number of failed: " + failed.size());
+			failed.get(0).getException().printStackTrace();
+		}
+		items = null;
+	}
+	
 	
 	/**
 	 * equal to insert(item, false);
