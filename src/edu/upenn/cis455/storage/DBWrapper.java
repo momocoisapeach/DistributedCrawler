@@ -51,7 +51,10 @@ public class DBWrapper {
 			content.mkdirs();
 		}
 		
-
+		File input = new File(Config.MapReduce_Input);
+		if(!input.exists()) {
+			input.mkdirs();
+		}
 		
 		File output = new File(Config.MapReduce_Output);
 		if(!output.exists()) {
