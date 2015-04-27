@@ -79,7 +79,7 @@ public class DocURLPopulator implements Populator {
 			if(item != null) {
 				items.add(item);
 				if(items.size() >= 25) {
-					failed += DynamoTable.batchInsert(items);
+					failed += DynamoTable.mapper.batchSave(items).size();
 					count += items.size();
 					current += items.size();
 					items = new ArrayList<DocURL>();
@@ -106,7 +106,7 @@ public class DocURLPopulator implements Populator {
 			}
 		}
 		if(!items.isEmpty()) {
-			failed += DynamoTable.batchInsert(items);
+			failed += DynamoTable.mapper.batchSave(items).size();
 		}
 		System.out.println("done, count: " + count + ", failed: " + failed);
 		sc.close();

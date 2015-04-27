@@ -149,56 +149,20 @@ public class DynamoTable {
 		}
 	}	
 
-	private static ArrayList items = null;
-	/**
-	 * insert data to DB. It will batch the insert task, and not send 
-	 * the DB request until a total of 25 items
-	 * has been sent to insert queue. However, if insertNow is set to true,
-	 * it will insert immediately all currently available items in the batch. 
-	 * Must call init() before calling this method.
-	 * @param item
-	 * @param insertNow
-	 */
-	public static void insert(Object item, boolean insertNow) {
-		if(items == null) {
-			items = new ArrayList();
-		}
-		items.add(item);
-		if(insertNow || items.size() >= 25) {
-			batchInsert(items);
-		}
-		items = null;
-	}
 	
-	/**
-	 * equal to insert(item, false);
-	 * must call init() before calling this method
-	 * @param item
-	 */
-	public static void insert(Object item) {
-		insert(item, false);
-	}
 	
-	/**
-	 * must call init() before calling this method
-	 * @param items
-	 * @return
-	 */
-	public static int batchInsert(List items) {
-		return mapper.batchSave(items).size();
-	}
-	
-	/**
-	 * upload a single item to DB
-	 * @param item: an item of a persistent model with @DynamoDBTable(tableName=XX)
-	 * @throws Exception when DB init() failed
-	 */
-	public static void save(Object item) throws Exception {
-		if(DynamoTable.mapper == null) {
-			DynamoTable.init();
+	public static boolean checkTableExists(String tableName) {
+		if (DynamoTable.mapper == null) {
+			try {
+				DynamoTable.init();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		
-		DynamoTable.mapper.save(item);
+		if (!Tables.doesTableExist(DynamoTable.dynamoDB, tableName)) {
+			return false;
+		}
+		return true;
 	}
 	
 }

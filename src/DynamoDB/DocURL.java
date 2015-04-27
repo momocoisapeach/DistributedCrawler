@@ -18,6 +18,7 @@ public class DocURL {
 	
 	byte[] id; //binary data
 	String url;
+	static Inserter<DocURL> inserter;
 	
 	DocURL() {
 		id = new byte[20];
@@ -88,7 +89,14 @@ public class DocURL {
     }
     
     public static void insert(DocURL item, boolean insertNow) {
-    	DynamoTable.insert(item, insertNow);
+    	if (DynamoTable.mapper == null) {
+    		try {
+				DynamoTable.init();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+    	}
+    	inserter.insert(item, insertNow);
     }
     
     /**
