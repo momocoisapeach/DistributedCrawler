@@ -97,9 +97,17 @@ public class DBWrapper {
 	}
 	
 	public boolean addUrlToQueue(String url){
-		URLFrontier temp = urlFrontier.get(frontier);
-		temp.addUrlToLast(url);
-		urlFrontier.put(temp);
+		if(urlFrontier.contains(frontier)){
+			URLFrontier temp = urlFrontier.get(frontier);
+			temp.addUrlToLast(url);
+			urlFrontier.put(temp);
+		}
+		else{
+			URLFrontier url_frontier = new URLFrontier(frontier);
+			url_frontier.addUrlToLast(url);
+			urlFrontier.put(url_frontier);
+			
+		}
 		
 		return true;
 	}

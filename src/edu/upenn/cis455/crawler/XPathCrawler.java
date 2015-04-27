@@ -31,6 +31,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.w3c.tidy.Tidy;
 
+import DynamoDB.CrawlFront;
+import DynamoDB.DocURL;
+
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
@@ -50,6 +53,7 @@ import edu.upenn.cis455.xpathengine.XPathEngineImpl;
 
 public class XPathCrawler {
 	
+	static int crawler = 1;
 	String directory;
 	double maxSize;
 	String startUrl;
@@ -116,22 +120,29 @@ public class XPathCrawler {
 			maxFileN = Integer.parseInt(args[3]);
 		}
 		
-		db.initialLizeUrlQ(args[0]);
+//		db.initialLizeUrlQ(args[0]);
 //		db.addUrlToQueue("https://www.yahoo.com/");
 //		db.addUrlToQueue("http://www.msn.com/");
 //		db.addUrlToQueue("http://www.aol.com/");
+		String seed = args[0];
+		String seedid = String.valueOf(toBigInteger(seed));
+		DocURL.insert(seed, seedid, true);
+		CrawlFront.insert(seed, crawler, true);
 		int i = 0;
-		while(count<maxFileN && !db.isQEmpty()){
-			String currentUrl = db.getFstUrlFromQ();
-
-			System.out.println("\n"+i+"th url: "+currentUrl+"\n");
-			run(currentUrl);
-			i++;
+		while(count<maxFileN){
 			if(db.isQEmpty()){
 				
 				System.out.println("empty!!!");
-				readFromOutput();
+				readFromDynamoDB();
 			}
+			else{
+				String currentUrl = db.getFstUrlFromQ();
+	
+				System.out.println("\n"+i+"th url: "+currentUrl+"\n");
+				run(currentUrl);
+				i++;
+			}
+
 		}
 		db.closeEnv();
 	}
@@ -139,6 +150,29 @@ public class XPathCrawler {
 
 	
 	
+
+	private void readFromDynamoDB() {
+		System.out.println("reading from dynamo db...");
+		int count = 0;
+		while(count <=100){
+			String url = CrawlFront.popUrl(crawler);
+			if(url == null && count >= 1){
+				break;
+			}
+			else if(url!=null){
+				String linkid = String.valueOf(toBigInteger(url));
+		  	  	if(!db.containsUrl(linkid)){
+		  	  		
+  					db.addDocID(linkid);
+  					db.addDocUrl(linkid, url);
+  					db.addUrlToQueue(url);
+  					count++;
+	  					
+	  			}
+			}
+		}
+		
+	}
 
 	public void run(String currentUrl) {
 		NewHttpClient client = new NewHttpClient(currentUrl);
@@ -401,12 +435,9 @@ public class XPathCrawler {
 	            
 //	            System.out.println("the current link is"+url+" and its doc id is"+linkid);
 	            
-	            try {
-					writeToInput(linkid, url);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+				writeToDynamoDB(linkid, url);
+
 	            
 	            
 //				if(!db.containsUrl(linkid)){
@@ -429,6 +460,14 @@ public class XPathCrawler {
 	
 	
 
+
+	private void writeToDynamoDB(String linkid, String url) {
+		DocURL.insert(url, linkid, false);
+		CrawlFront.insert(url, crawler, false);
+		
+
+		
+	}
 
 	public boolean isEnglish(String text) throws Exception{
 
@@ -511,91 +550,91 @@ public class XPathCrawler {
 		
 	}
 	
-	private void writeToInput(String linkid, String url) throws IOException {
-
-		if(line == 0){
-			Calendar now = Calendar.getInstance();
-			long millsec = now.getTimeInMillis();
-			inputFileName = String.valueOf(millsec);
-			MapReduceInput = MapReduceInput+inputFileName;			
-		}
-		if(line > 100){
-			File input = new File(MapReduceInput);
-			File newFile = new File(MapReduceInput+".txt");
-			input.renameTo(newFile);
-			Calendar now = Calendar.getInstance();
-			long millsec = now.getTimeInMillis();
-			inputFileName = String.valueOf(millsec);
-			MapReduceInput = MapReduceInput+inputFileName;
-			line = 0;
-		}
-		FileWriter fileWriter = new FileWriter(MapReduceInput, true);
-		fileWriter.write(linkid+"\t"+url+"\n");
-		fileWriter.close();
-		
-		line++;
-	}
-	
-	private void readFromOutput() {
-		while(db.isQEmpty()){
-			File output = new File(Config.MapReduce_Output);
-			ArrayList<String> files = listFilesForFolder(output);
-			if(files.isEmpty()){
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-			}
-			else{
-				int size = files.size();
-				for(int i = 0; i < size; i++){
-					Path path = Paths.get(files.get(i));
-					try {
-						writeToDB(path);
-						Files.delete(path);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-					
-					
-				}
-				
-			}
-			
-		}
-		
-	}
-	
-
-	
-	private void writeToDB(Path path) throws Exception {
-		
-		String lines[];
-		String url, linkid;
-	    try (Scanner scanner =  new Scanner(path, ENCODING.name())){
-	      while (scanner.hasNextLine()){
-	        //process each line in some way
-	    	  lines=scanner.nextLine().split("\t");
-	    	  linkid = lines[0];
-	    	  url = lines[1];
-	    	 
-	    	  if(!db.containsUrl(linkid)){
-		//			System.out.println("db does not contain this doc id");
-					db.addDocID(linkid);
-					db.addDocUrl(linkid, url);
-					db.addUrlToQueue(url);
-					
-				}
-	    	  
-	    	  
-	      }      
-	    }
-	    
-	}
+//	private void writeToInput(String linkid, String url) throws IOException {
+//
+//		if(line == 0){
+//			Calendar now = Calendar.getInstance();
+//			long millsec = now.getTimeInMillis();
+//			inputFileName = String.valueOf(millsec);
+//			MapReduceInput = MapReduceInput+inputFileName;			
+//		}
+//		if(line > 100){
+//			File input = new File(MapReduceInput);
+//			File newFile = new File(MapReduceInput+".txt");
+//			input.renameTo(newFile);
+//			Calendar now = Calendar.getInstance();
+//			long millsec = now.getTimeInMillis();
+//			inputFileName = String.valueOf(millsec);
+//			MapReduceInput = MapReduceInput+inputFileName;
+//			line = 0;
+//		}
+//		FileWriter fileWriter = new FileWriter(MapReduceInput, true);
+//		fileWriter.write(linkid+"\t"+url+"\n");
+//		fileWriter.close();
+//		
+//		line++;
+//	}
+//	
+//	private void readFromOutput() {
+//		while(db.isQEmpty()){
+//			File output = new File(Config.MapReduce_Output);
+//			ArrayList<String> files = listFilesForFolder(output);
+//			if(files.isEmpty()){
+//				try {
+//					Thread.sleep(1000);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//				
+//			}
+//			else{
+//				int size = files.size();
+//				for(int i = 0; i < size; i++){
+//					Path path = Paths.get(files.get(i));
+//					try {
+//						writeToDB(path);
+//						Files.delete(path);
+//					} catch (Exception e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					
+//					
+//					
+//				}
+//				
+//			}
+//			
+//		}
+//		
+//	}
+//	
+//
+//	
+//	private void writeToDB(Path path) throws Exception {
+//		
+//		String lines[];
+//		String url, linkid;
+//	    try (Scanner scanner =  new Scanner(path, ENCODING.name())){
+//	      while (scanner.hasNextLine()){
+//	        //process each line in some way
+//	    	  lines=scanner.nextLine().split("\t");
+//	    	  linkid = lines[0];
+//	    	  url = lines[1];
+//	    	 
+//	    	  if(!db.containsUrl(linkid)){
+//		//			System.out.println("db does not contain this doc id");
+//					db.addDocID(linkid);
+//					db.addDocUrl(linkid, url);
+//					db.addUrlToQueue(url);
+//					
+//				}
+//	    	  
+//	    	  
+//	      }      
+//	    }
+//	    
+//	}
 	
 	public ArrayList<String> listFilesForFolder(File folder) {
 		ArrayList<String> files = new ArrayList<String>();

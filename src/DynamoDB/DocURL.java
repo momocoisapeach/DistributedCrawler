@@ -8,7 +8,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 import Utils.BinaryUtils;
 
-import com.sun.org.apache.bcel.internal.util.ByteSequence;
+//import com.sun.org.apache.bcel.internal.util.ByteSequence;
 /**
  * Object Persistent model, to populate docID-URL table 
  * @author dichenli
