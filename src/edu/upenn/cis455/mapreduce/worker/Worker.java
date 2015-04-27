@@ -12,8 +12,8 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Utils.IOUtils;
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
-import edu.upenn.cis455.mapreduce.WebClient.IOUtils;
 import edu.upenn.cis455.mapreduce.WebClient.WebHost;
 
 /**

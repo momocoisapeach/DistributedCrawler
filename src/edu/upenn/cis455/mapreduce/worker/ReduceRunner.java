@@ -10,10 +10,10 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicLong;
 
+import Utils.IOUtils;
 import edu.upenn.cis455.mapreduce.Job;
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
 import edu.upenn.cis455.mapreduce.WebClient.CollectionUtils;
-import edu.upenn.cis455.mapreduce.WebClient.IOUtils;
 
 /**
  * @author dichenli

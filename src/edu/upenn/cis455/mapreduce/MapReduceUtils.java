@@ -16,7 +16,7 @@ import edu.upenn.cis455.storage.Config;
 public class MapReduceUtils {
 
 //	public static final String PROJECT_PATH = PROJECT_PATHS[0];
-	public static final String ROOT_DIR = Config.Root;
+//	public static final String ROOT_DIR = Config.Root;
 	
 	/**
 	 * get a Job object from the given class name. return null if any exception 
@@ -37,12 +37,12 @@ public class MapReduceUtils {
 		}
 	}
 	
-	public static String fullPath(String relativePath) {
-		while (relativePath.charAt(0) == '/') {
-			relativePath = relativePath.substring(1);
-		}
-		return ROOT_DIR + relativePath;
-	}
+//	public static String fullPath(String relativePath) {
+//		while (relativePath.charAt(0) == '/') {
+//			relativePath = relativePath.substring(1);
+//		}
+//		return ROOT_DIR + relativePath;
+//	}
 	
 	/**
 	 * parse string to get an integer, return null if the string is not a number

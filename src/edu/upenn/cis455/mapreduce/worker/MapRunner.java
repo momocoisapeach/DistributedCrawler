@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicLong;
 
+import Utils.IOUtils;
 import edu.upenn.cis455.mapreduce.Job;
-import edu.upenn.cis455.mapreduce.WebClient.IOUtils;
 import edu.upenn.cis455.mapreduce.job.WordCount;
 /**
  * @author dichenli
@@ -47,6 +47,7 @@ class MapRunner implements Runnable {
 		this.context = new MapContext(peers, numWorkers, keysWritten);
 	}
 	
+	
 	@Override
 	public void run() {
 		System.out.println("MapRunner.run: start");
@@ -56,15 +57,26 @@ class MapRunner implements Runnable {
 			throw new IllegalArgumentException();
 		}
 		System.out.println("MapRunner.run: found number of files: " + files.length);
-		for (File file : files) {
+		int len = files.length;
+		for (int i = 0; i < len; i++) { 
+			File file = files[i];
+			if ( !IOUtils.fileExists(file)) {
+				System.err.println("Maprunner.run: !file exists");
+				continue;
+			}
+			if ( !IOUtils.getExtension(file).equalsIgnoreCase("done") ) {
+				continue;
+			}
+			
 			Scanner scanner = IOUtils.getScanner(file);
 			readInput(scanner);
 			scanner.close();
 		}
+		
 	}
 
 	/**
-	 * read a input file line by line
+	 * read a input file line by line, and do job.map()
 	 * @param scanner
 	 */
 	private void readInput(Scanner scanner) {

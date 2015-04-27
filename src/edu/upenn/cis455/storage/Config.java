@@ -3,6 +3,8 @@
  */
 package edu.upenn.cis455.storage;
 
+import java.io.File;
+
 /**
  * @author dichenli
  *
@@ -21,5 +23,10 @@ public class Config {
 	public static String DocContent_File = Root + "content/";
 	public static String MapReduce_Output = Root + "output/";
 	public static String MapReduce_Input = Root + "input/";
+	
+	public static String MR_Input_Name = Root + "mr_input/";
+	public static String MR_Output_Name = Root + "mr_output/";
+	
+//	public static File MR_Input
 	public static String DocID_File = MapReduce_Input + "id";
 }
