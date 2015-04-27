@@ -99,6 +99,10 @@ public class DocURL {
     	inserter.insert(item, insertNow);
     }
     
+    public static void flush() {
+		inserter.flush();
+	}
+    
     /**
      * insert a docID-url pair to DB, docID is the decimal String representation of it 
      * @param url

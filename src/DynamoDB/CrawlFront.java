@@ -85,6 +85,10 @@ public class CrawlFront {
 		inserter.insert(item, insertNow);
 	}
 	
+	public static void flush() {
+		inserter.flush();
+	}
+	
 	@Override
 	public String toString() {
 		return crawler + "\t" + timestamp.toString() + "\t" +  url;
