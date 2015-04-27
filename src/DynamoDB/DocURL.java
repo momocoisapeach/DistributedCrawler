@@ -49,6 +49,15 @@ public class DocURL {
        return url;  
     }
     
+    @Override
+	public boolean equals(Object other) {
+		if(other == null || !(this.getClass().equals(other.getClass()))) {
+			return false;
+		}
+		DocURL other2 = (DocURL) other;
+		return this.id == other2.id;
+	}
+    
     public static DocURL parseInput(String line) {
 		if(line == null) {
 			System.out.println("null line");

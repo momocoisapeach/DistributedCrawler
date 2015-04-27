@@ -77,6 +77,16 @@ public class CrawlFront {
 		this.timestamp = timeRand();
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		if(other == null || !(this.getClass().equals(other.getClass()))) {
+			return false;
+		}
+		
+		CrawlFront other2 = (CrawlFront) other;
+		return this.timestamp == other2.timestamp && this.crawler == other2.crawler;
+	}
+	
 	public static void insert(String url, int crawler, boolean insertNow) {
 		inserter.insert(new CrawlFront(url, crawler), insertNow);
 	}
@@ -172,5 +182,6 @@ public class CrawlFront {
 		}
 		tableExists = true;
 	}
+
 	
 }
