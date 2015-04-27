@@ -14,10 +14,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.http.HttpServletRequest;
 
-
+import Utils.IOUtils;
 import edu.upenn.cis455.mapreduce.Job;
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
-import edu.upenn.cis455.mapreduce.WebClient.IOUtils;
 import edu.upenn.cis455.mapreduce.WebClient.WebHost;
 
 /**
@@ -140,7 +139,7 @@ zero if the status is idle*/
 			return false;
 		}
 		input = new File(worker.root, inputPath);
-		rv = checkDirectory(input) && IOUtils.containsFile(input);
+		rv = checkDirectory(input); // && IOUtils.containsFile(input);
 		if(!rv) {
 			System.err.println("JobRunner.parseRunmapRequest: input dir error");
 			return false;
@@ -229,8 +228,8 @@ zero if the status is idle*/
 			System.err.println("JobRunner.parseReduceRequest: can't find output");
 			return false;
 		}
-		System.out.println("JobRunner.parseReduceRequest: clear output... " + output.getAbsolutePath());
-		IOUtils.clearFolder(output);
+//		System.out.println("JobRunner.parseReduceRequest: clear output... " + output.getAbsolutePath());
+//		IOUtils.clearFolder(output);
 		rv = parseNumThreads(runreduce);
 		if(!rv) {
 			System.err.println("JobRunner.parseReduceRequest: can't parse numthreads");
@@ -253,6 +252,8 @@ zero if the status is idle*/
 		this.status = "mapping";
 		keysRead.set(0);
 		keysWritten.set(0);
+		
+		
 		
 		Thread[] threads = new Thread[numThreads];
 		for (int i = 0; i < numThreads; i++) {

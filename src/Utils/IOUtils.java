@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.upenn.cis455.mapreduce.WebClient;
+package Utils;
 
 import java.io.*;
 //import java.io.StringWriter;
@@ -16,6 +16,26 @@ import edu.upenn.cis455.mapreduce.MapReduceUtils;
  * static methods to facilitates IO classes
  */
 public class IOUtils {
+	
+	/**
+	 * count number of lines of a file using its scanner to scan line by line
+	 * return number of lines. Return null if input file is illegal. No exception thrown.
+	 * @param file
+	 * @return
+	 */
+	public static Long countLines(File file) {
+		if(!fileExists(file)) {
+			return null;
+		}
+		Scanner sc = getScanner(file);
+		long count = 0;
+		while(sc.hasNextLine()) {
+			sc.nextLine();
+			count++;
+		}
+		sc.close();
+		return count;
+	}
 
 	public static BufferedReader getReader(
 			InputStream is) throws IOException {
@@ -100,21 +120,21 @@ public class IOUtils {
 		return dirExists(new File(fileName));
 	}
 
-	public static File getFile(String relativePath) {
-		String path = MapReduceUtils.fullPath(relativePath);
-		return new File(path);
-	}
-
-	/**
-	 * return true if a file or directory exists in file system. It doesn't 
-	 * differentiate directory or file
-	 * @param fileName
-	 * @return
-	 */
-	public static boolean fileOrDirExists(String relativePath) {
-		File file = getFile(relativePath);
-		return file.exists();
-	}
+//	public static File getFile(String relativePath) {
+//		String path = MapReduceUtils.fullPath(relativePath);
+//		return new File(path);
+//	}
+//
+//	/**
+//	 * return true if a file or directory exists in file system. It doesn't 
+//	 * differentiate directory or file
+//	 * @param fileName
+//	 * @return
+//	 */
+//	public static boolean fileOrDirExists(String relativePath) {
+//		File file = getFile(relativePath);
+//		return file.exists();
+//	}
 	
 	/**
 	 * return true if the file exists and is a file (not directory)
@@ -217,6 +237,70 @@ public class IOUtils {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * get file extension from file name by searching for the last "." and return the string
+	 * after it. abc.def.txt will return "txt". abc will return empty string "". abc/ will return
+	 * empty string 
+	 * @throws NullPointerException if input file is null or can't get its file name (not likely)
+	 * @param file
+	 * @return
+	 */
+	public static String getExtension(File file) {
+		if(file.isDirectory()) { // for example, /.dev is a folder, so no extension
+			return "";
+		}
+		String extension = "";
+		String fileName = file.getName();
+		int i = fileName.lastIndexOf('.');
+		if (i > 0) {
+		    extension = fileName.substring(i+1);
+		}
+		return extension;
+	}
+	
+	/**
+	 * will rename the file, newName must be full directory
+	 * @param file
+	 * @param newName
+	 * @return the pointer to the renamed file, or null if fail (like system forbidden)
+	 */
+	public static File rename(File file, String newName) {
+		File newFile = new File(newName);
+		boolean rv = file.renameTo(newFile);
+		if(!rv) {
+			return null;
+		}
+		return newFile;
+	}
+	
+	/**
+	 * add file extension to file name. "/abc" will be renamed to "/abc.txt"
+	 * extension must start with ".", like ".txt", must has more than just "."
+	 * @param file
+	 * @param extension
+	 * @return new file,
+	 * @throws NullPointerException if any argument is null or original file name is null
+	 * @throws IllegalArgumentException if input extension is not beginning with . or is just .
+	 * or if after rename, the new file name is illegal (rename failed)
+	 */
+	public static File appendExtension(File file, String extension) {
+		if(extension.charAt(0) != '.' || extension.length() <= 1) {
+			throw new IllegalArgumentException();
+		}
+		
+		String name = file.getAbsolutePath();
+		
+		if(name.charAt(name.length() - 1) == '/') {
+			name = name.substring(0, name.length() - 1);
+		}
+		name += extension;
+		File newFile = rename(file, name);
+		if(newFile == null) {
+			throw new IllegalArgumentException();
+		}
+		return newFile;
 	}
 	
 }

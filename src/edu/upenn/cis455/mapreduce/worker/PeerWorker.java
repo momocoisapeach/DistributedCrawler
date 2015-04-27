@@ -7,8 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import Utils.IOUtils;
 import edu.upenn.cis455.mapreduce.WebClient.HttpSocketIO;
-import edu.upenn.cis455.mapreduce.WebClient.IOUtils;
 import edu.upenn.cis455.mapreduce.WebClient.WebClientRequest;
 import edu.upenn.cis455.mapreduce.WebClient.WebClientResponse;
 import edu.upenn.cis455.mapreduce.WebClient.WebHost;
