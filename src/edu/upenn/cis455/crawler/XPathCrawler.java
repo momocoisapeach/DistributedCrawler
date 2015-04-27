@@ -135,21 +135,21 @@ public class XPathCrawler {
 		String url = CrawlFront.popUrl(crawler);
 		System.out.println("pop url: "+url);
 		int i = 0;
-//		while(count<maxFileN){
-//			if(db.isQEmpty()){
-//				
-//				System.out.println("empty!!!");
-//				readFromDynamoDB();
-//			}
-//			else{
-//				String currentUrl = db.getFstUrlFromQ();
-//	
-//				System.out.println("\n"+i+"th url: "+currentUrl+"\n");
-//				run(currentUrl);
-//				i++;
-//			}
-//
-//		}
+		while(count<maxFileN){
+			if(db.isQEmpty()){
+				
+				System.out.println("empty!!!");
+				readFromDynamoDB();
+			}
+			else{
+				String currentUrl = db.getFstUrlFromQ();
+	
+				System.out.println("\n"+i+"th url: "+currentUrl+"\n");
+				run(currentUrl);
+				i++;
+			}
+
+		}
 		db.closeEnv();
 	}
 
@@ -161,10 +161,12 @@ public class XPathCrawler {
 		System.out.println("reading from dynamo db...");
 		int count = 0;
 		while(count <=100){
-			System.out.println("count = "+count);
+//			System.out.println("count = "+count);
 			String url = CrawlFront.popUrl(crawler);
-			System.out.println("after pop url... and the url is"+url+"@@@");
-			if(url == null && count >= 1){
+
+//			System.out.println("after pop url... and the url is"+url+"@@@");
+			
+			if (url == null && count >= 1){
 				break;
 			}
 			else if(url!=null){

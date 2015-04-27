@@ -24,7 +24,7 @@ import com.amazonaws.services.dynamodbv2.util.Tables;
 public class CrawlFront {
 	
 	public static String tableName = "CrawlFront";
-	static Inserter<CrawlFront> inserter = new Inserter<CrawlFront>();
+	static InserterCrawlFront inserter = new InserterCrawlFront();
 	static Random rand = new Random();
 	static boolean tableExists = false; //if table has been created, set to true
 	
@@ -33,16 +33,6 @@ public class CrawlFront {
 	Long timestamp; 
 	
 	public CrawlFront() {} //called by DynamoDB
-	
-	public static long getTimeRand() {
-		return new Date().getTime() * 10000 + rand.nextInt(10000);
-	}
-	
-	public CrawlFront(String url, Integer crawler) {
-		this.url = url;
-		this.crawler = crawler;
-		this.timestamp = getTimeRand(); 
-	}
 	
 	@DynamoDBHashKey(attributeName="crawler")
 	public Integer getCrawler() {
@@ -60,16 +50,27 @@ public class CrawlFront {
 		this.timestamp = time;
 	}
 	
-	public void setTimestampRand() {
-		this.timestamp = getTimeRand();
-	}
-	
 	@DynamoDBAttribute(attributeName="url")
 	public String getUrl() {
 		return url;
 	}
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	
+	public static long timeRand() {
+		return new Date().getTime() * 10000 + rand.nextInt(10000);
+	}
+	
+	public CrawlFront(String url, Integer crawler) {
+		this.url = url;
+		this.crawler = crawler;
+		this.timestamp = timeRand(); 
+	}
+	
+	public void setTimestampRand() {
+		this.timestamp = timeRand();
 	}
 	
 	public static void insert(String url, int crawler, boolean insertNow) {
@@ -113,7 +114,11 @@ public class CrawlFront {
 	 * @return a url to be crawled
 	 */
 	public static String popUrl(Integer crawler) {
-		return pop(crawler).getUrl();
+		CrawlFront crawlFront = pop(crawler);
+		if(crawlFront == null) {
+			return null;
+		}
+		return crawlFront.getUrl();
 	}
 	
 	/**
