@@ -36,6 +36,7 @@ import org.w3c.tidy.Tidy;
 
 import DynamoDB.CrawlFront;
 import DynamoDB.DocURL;
+import DynamoDB.DynamoTable;
 
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
@@ -141,6 +142,7 @@ public class XPathCrawler {
 		String seed = args[0];
 		String seedid = String.valueOf(toBigInteger(seed));
 		System.out.println("before inserting seed into db\nand the seed is "+seed+"\nand id is "+seedid);
+		
 		CrawlFront.creatTable();
 		DocURL.insert(seed, seedid, true);
 		URL url;

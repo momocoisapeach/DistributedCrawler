@@ -154,6 +154,8 @@ public class CrawlFront {
 	}
 
 	public static void creatTable() {
+		DynamoTable.checkTableExists(tableName);
+		
 		CreateTableRequest createTableRequest 
 		= DynamoUtils.createTableHashRange(
 				tableName, "crawler", ScalarAttributeType.N, "timestamp", 
