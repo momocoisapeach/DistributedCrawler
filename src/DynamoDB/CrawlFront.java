@@ -36,6 +36,7 @@ public class CrawlFront {
 	
 	@DynamoDBHashKey(attributeName="crawler")
 	public Integer getCrawler() {
+		System.out.println("getCrawler: " + crawler);
 		return crawler;
 	}
 	public void setCrawler(Integer crawler) {
@@ -44,14 +45,17 @@ public class CrawlFront {
 	
 	@DynamoDBRangeKey(attributeName="timestamp")
 	public Long getTimestamp() {
+		System.out.println("getTimestamp: " + timestamp);
 		return timestamp;
 	}
 	public void setTimestamp(Long time) {
+		System.out.println("setTimestamp: " + time);
 		this.timestamp = time;
 	}
 	
 	@DynamoDBAttribute(attributeName="url")
 	public String getUrl() {
+		System.out.println("geturl " + url);
 		return url;
 	}
 	public void setUrl(String url) {
