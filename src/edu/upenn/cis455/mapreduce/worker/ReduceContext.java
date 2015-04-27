@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import Utils.IOUtils;
 
 import com.sleepycat.je.rep.impl.networkRestore.Protocol.Done;
-import com.sun.org.apache.xml.internal.serialize.LineSeparator;
+//import com.sun.org.apache.xml.internal.serialize.LineSeparator;
 
 import edu.upenn.cis455.mapreduce.Context;
 

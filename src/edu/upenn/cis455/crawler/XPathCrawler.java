@@ -58,7 +58,9 @@ public class XPathCrawler {
 	RobotsTxtInfo robots;
 	private final static Charset ENCODING = StandardCharsets.UTF_8;
 	private String MapReduceInput;
+	private String inputFileName;
 	int count = 0;
+	int line = 0;
 
 	
 	public static void main(String[] args){
@@ -86,7 +88,7 @@ public class XPathCrawler {
 		directory = args[1];
 		db = new DBWrapper(directory);
 		robots = new RobotsTxtInfo();
-		MapReduceInput = Config.DocID_File;
+		MapReduceInput = Config.MapReduce_Input;
 		maxSize = Double.parseDouble(args[2]);
 		
 		File dir = new File("./test/profiles/");
@@ -510,11 +512,28 @@ public class XPathCrawler {
 	}
 	
 	private void writeToInput(String linkid, String url) throws IOException {
+
+		if(line == 0){
+			Calendar now = Calendar.getInstance();
+			long millsec = now.getTimeInMillis();
+			inputFileName = String.valueOf(millsec);
+			MapReduceInput = MapReduceInput+inputFileName;			
+		}
+		if(line > 100){
+			File input = new File(MapReduceInput);
+			File newFile = new File(MapReduceInput+".txt");
+			input.renameTo(newFile);
+			Calendar now = Calendar.getInstance();
+			long millsec = now.getTimeInMillis();
+			inputFileName = String.valueOf(millsec);
+			MapReduceInput = MapReduceInput+inputFileName;
+			line = 0;
+		}
 		FileWriter fileWriter = new FileWriter(MapReduceInput, true);
-//		System.out.println(linkid+"\t"+url+"\n");
 		fileWriter.write(linkid+"\t"+url+"\n");
 		fileWriter.close();
 		
+		line++;
 	}
 	
 	private void readFromOutput() {
