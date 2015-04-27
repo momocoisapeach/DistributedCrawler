@@ -1,6 +1,7 @@
 package DynamoDB;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
@@ -49,13 +50,15 @@ public class DocURL {
        return url;  
     }
     
+   
+    
     @Override
 	public boolean equals(Object other) {
 		if(other == null || !(this.getClass().equals(other.getClass()))) {
 			return false;
 		}
 		DocURL other2 = (DocURL) other;
-		return this.id == other2.id;
+		return this.url.equals(other2.url);
 	}
     
     public static DocURL parseInput(String line) {

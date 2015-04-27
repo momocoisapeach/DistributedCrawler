@@ -82,7 +82,6 @@ public class CrawlFront {
 		if(other == null || !(this.getClass().equals(other.getClass()))) {
 			return false;
 		}
-		
 		CrawlFront other2 = (CrawlFront) other;
 		return this.timestamp == other2.timestamp && this.crawler == other2.crawler;
 	}

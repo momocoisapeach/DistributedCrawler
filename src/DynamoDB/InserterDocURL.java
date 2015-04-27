@@ -50,6 +50,9 @@ public class InserterDocURL {
 		if(failed != null && !failed.isEmpty()) {
 			System.out.println("insert error, number of failed: " + failed.size());
 			failed.get(0).getException().printStackTrace();
+//			for(FailedBatch f : failed) {
+//				save(f.);
+//			}
 		}
 		items = null;
 	}
