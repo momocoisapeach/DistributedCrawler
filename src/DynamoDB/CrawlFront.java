@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import Utils.TimeUtils;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
@@ -26,17 +25,23 @@ public class CrawlFront {
 	
 	public static String tableName = "CrawlFront";
 	static Inserter<CrawlFront> inserter;
+	static Random rand;
+	static boolean tableExists = false; //if table has been created, set to true
 	
 	String url;
 	Integer crawler;
-	Date timestamp; //be aware: on DB, date is stored as Long, not Date!!
+	Long timestamp; 
 	
 	public CrawlFront() {} //called by DynamoDB
+	
+	public static long getTimeRand() {
+		return new Date().getTime() * 10000 + rand.nextInt(10000);
+	}
 	
 	public CrawlFront(String url, Integer crawler) {
 		this.url = url;
 		this.crawler = crawler;
-		this.timestamp = TimeUtils.randomDate(10000); //a date object, with time +- 10 seconds randomly from now
+		this.timestamp = getTimeRand(); 
 	}
 	
 	@DynamoDBHashKey(attributeName="crawler")
@@ -49,14 +54,14 @@ public class CrawlFront {
 	
 	@DynamoDBRangeKey(attributeName="timestamp")
 	public Long getTimestamp() {
-		return timestamp.getTime();
+		return timestamp;
 	}
 	public void setTimestamp(Long time) {
-		this.timestamp = new Date(time);
+		this.timestamp = time;
 	}
 	
-	public void setTimestamp(Date time) {
-		this.timestamp = time;
+	public void setTimestampRand() {
+		this.timestamp = getTimeRand();
 	}
 	
 	@DynamoDBAttribute(attributeName="url")
@@ -126,7 +131,7 @@ public class CrawlFront {
 	 * @return
 	 */
 	public static List<CrawlFront> queryPage(Integer crawler) {
-		if(!DynamoTable.checkTableExists(tableName)) {
+		if(!tableExists && !DynamoTable.checkTableExists(tableName)) {
 			creatTable();
 		}
 
@@ -142,7 +147,7 @@ public class CrawlFront {
 	static void creatTable() {
 		CreateTableRequest createTableRequest 
 		= DynamoUtils.createTableHashRange(
-				tableName, "crawler", ScalarAttributeType.N, "url", 
+				tableName, "crawler", ScalarAttributeType.N, "timestamp", 
 				ScalarAttributeType.S, 25, 25);
 		
 		try {
@@ -150,6 +155,7 @@ public class CrawlFront {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		tableExists = true;
 	}
 	
 }

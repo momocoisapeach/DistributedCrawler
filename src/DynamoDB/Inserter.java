@@ -6,6 +6,8 @@ package DynamoDB;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper.FailedBatch;
+
 /**
  * @author dichenli
  * binded to a class T to insert items in batch manner to DynamoDB, typically a static instance
@@ -28,7 +30,10 @@ public class Inserter<T> {
 		}
 		items.add(item);
 		if(insertNow || items.size() >= 25) {
-			batchInsert(items);
+			List<FailedBatch> failed = batchInsert(items); //if insert failed, print error message
+			if(failed != null && !failed.isEmpty()) {
+				failed.get(0).getException().printStackTrace();
+			}
 		}
 		items = null;
 	}
@@ -47,8 +52,8 @@ public class Inserter<T> {
 	 * @param items
 	 * @return
 	 */
-	public int batchInsert(List<T> items) {
-		return DynamoTable.mapper.batchSave(items).size();
+	public List<FailedBatch> batchInsert(List<T> items) {
+		return DynamoTable.mapper.batchSave(items);
 	}
 	
 	/**
