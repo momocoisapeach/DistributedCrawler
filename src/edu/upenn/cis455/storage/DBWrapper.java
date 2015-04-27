@@ -31,6 +31,7 @@ public class DBWrapper {
 	public PrimaryIndex<String, DocID> urlByDocID;
 	public PrimaryIndex<String, DocLinks> linksByDocID;
 	public PrimaryIndex<String, DocContent> contentByDocID;
+	public PrimaryIndex<String, Robots> robotsByHost;
 	
 	public String frontier = "URLFrontier";
 	
@@ -61,6 +62,7 @@ public class DBWrapper {
 		myEnv = new Environment(f, envConfig);
 		store = new EntityStore(myEnv, "EntityStore", stConfig);
 
+		
 		contentByDocID = store.getPrimaryIndex(String.class, DocContent.class);
 		linksByDocID = store.getPrimaryIndex(String.class, DocLinks.class);
 		urlByDocID = store.getPrimaryIndex(String.class, DocID.class);
