@@ -25,27 +25,21 @@ public class InserterCrawlFront {
 	 * @param insertNow
 	 */
 	public void insert(CrawlFront item, boolean insertNow) {
-		try {
-			save(item);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(items == null) {
+			items = new ArrayList<CrawlFront>();
 		}
-//		if(items == null) {
-//			items = new ArrayList<CrawlFront>();
-//		}
-//		System.out.println("insert to local buffer: " + item.toString());
-//		items.add(item);
-//	
-//		if(insertNow || items.size() >= 24) {
-//			List<FailedBatch> failed = batchInsert(items); //if insert failed, print error message
-//			System.out.println("insert to DB # of items: " + items.size());
-//			if(failed != null && !failed.isEmpty()) {
-//				System.out.println("insert error, number of failed: " + failed.size());
-//				failed.get(0).getException().printStackTrace();
-//			}
-//			items = null;
-//		}
+		System.out.println("insert to local buffer: " + item.toString());
+		items.add(item);
+	
+		if(insertNow || items.size() >= 24) {
+			List<FailedBatch> failed = batchInsert(items); //if insert failed, print error message
+			System.out.println("insert to DB # of items: " + items.size());
+			if(failed != null && !failed.isEmpty()) {
+				System.out.println("insert error, number of failed: " + failed.size());
+				failed.get(0).getException().printStackTrace();
+			}
+			items = null;
+		}
 	}
 	
 	/**
@@ -75,7 +69,7 @@ public class InserterCrawlFront {
 		if(DynamoTable.mapper == null) {
 			DynamoTable.init();
 		}
-		System.out.println("mapper.save: " +item);
+		
 		DynamoTable.mapper.save(item);
 	}
 }
