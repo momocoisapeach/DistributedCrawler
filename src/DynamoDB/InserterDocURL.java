@@ -26,7 +26,7 @@ public class InserterDocURL {
 	 */
 	public void insert(DocURL item, boolean insertNow) {
 		if(items == null) {
-			items = new ArrayList();
+			items = new ArrayList<CrawlFront>();
 		}
 		System.out.println("insert to local buffer: " + item.toString());
 		items.add(item);
@@ -38,8 +38,8 @@ public class InserterDocURL {
 				System.out.println("insert error, number of failed: " + failed.size());
 				failed.get(0).getException().printStackTrace();
 			}
+			items = null;
 		}
-		items = null;
 	}
 	
 	/**
