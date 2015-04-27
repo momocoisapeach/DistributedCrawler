@@ -124,26 +124,32 @@ public class XPathCrawler {
 //		db.addUrlToQueue("https://www.yahoo.com/");
 //		db.addUrlToQueue("http://www.msn.com/");
 //		db.addUrlToQueue("http://www.aol.com/");
+		
 		String seed = args[0];
 		String seedid = String.valueOf(toBigInteger(seed));
+		System.out.println("before inserting seed into db\nand the seed is "+seed+"\nand id is "+seedid);
 		DocURL.insert(seed, seedid, true);
 		CrawlFront.insert(seed, crawler, true);
+		System.out.println("after inserting seed...");
+		
+		String url = CrawlFront.popUrl(crawler);
+		System.out.println("pop url: "+url);
 		int i = 0;
-		while(count<maxFileN){
-			if(db.isQEmpty()){
-				
-				System.out.println("empty!!!");
-				readFromDynamoDB();
-			}
-			else{
-				String currentUrl = db.getFstUrlFromQ();
-	
-				System.out.println("\n"+i+"th url: "+currentUrl+"\n");
-				run(currentUrl);
-				i++;
-			}
-
-		}
+//		while(count<maxFileN){
+//			if(db.isQEmpty()){
+//				
+//				System.out.println("empty!!!");
+//				readFromDynamoDB();
+//			}
+//			else{
+//				String currentUrl = db.getFstUrlFromQ();
+//	
+//				System.out.println("\n"+i+"th url: "+currentUrl+"\n");
+//				run(currentUrl);
+//				i++;
+//			}
+//
+//		}
 		db.closeEnv();
 	}
 
@@ -155,7 +161,9 @@ public class XPathCrawler {
 		System.out.println("reading from dynamo db...");
 		int count = 0;
 		while(count <=100){
+			System.out.println("count = "+count);
 			String url = CrawlFront.popUrl(crawler);
+			System.out.println("after pop url... and the url is"+url+"@@@");
 			if(url == null && count >= 1){
 				break;
 			}
@@ -462,9 +470,11 @@ public class XPathCrawler {
 
 
 	private void writeToDynamoDB(String linkid, String url) {
+		System.out.println("before inserting doc id and url into dynamo db...");
+		System.out.println("url is "+url+"\n and the docid is"+linkid+"\nand the crawler # is"+crawler);
 		DocURL.insert(url, linkid, false);
 		CrawlFront.insert(url, crawler, false);
-		
+		System.out.println("after inserting..");
 
 		
 	}
