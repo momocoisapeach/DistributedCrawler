@@ -56,8 +56,7 @@ public class XPathCrawler {
 	
 	static int crawler = 1;
 	int numCrawlers = 1;
-	static String crawlerRoot = null;
-	String directory;
+	static String directory = null;
 	double maxSize;
 	String startUrl;
 	int maxFileN;
@@ -78,7 +77,6 @@ public class XPathCrawler {
 //		args[3] = max file #
 //		args[4] = crawler #
 //		args[5] = total crawler #
-//		args[6] = crawler root directory
 		
 		if(args.length <3 || args.length>7){
 			usage();
@@ -96,10 +94,18 @@ public class XPathCrawler {
 	public void initialize(String[] args){
 		startUrl = args[0];
 		directory = args[1];
+		maxSize = Double.parseDouble(args[2]);
+		if(args.length >= 4){
+			maxFileN = Integer.parseInt(args[3]);
+			crawler = Integer.parseInt(args[4]);
+			numCrawlers = Integer.parseInt(args[5]);
+			setCrawlerRoot();
+			
+		}
 		db = new DBWrapper(directory);
 		robots = new RobotsTxtInfo();
 		MapReduceInput = Config.MapReduce_Input;
-		maxSize = Double.parseDouble(args[2]);
+		
 		setHashRange(numCrawlers);
 		File dir = new File("./test/profiles/");
 		try {
@@ -122,14 +128,7 @@ public class XPathCrawler {
 		
 		db.addChannel(rss);
 		db.addChannelToUser("RSS aggregator", "admin");
-		if(args.length >= 4){
-			maxFileN = Integer.parseInt(args[3]);
-			crawler = Integer.parseInt(args[4]);
-			numCrawlers = Integer.parseInt(args[5]);
-			crawlerRoot = args[6];
-			setCrawlerRoot();
-			
-		}
+
 		db.initialLizeUrlQ();
 //		db.initialLizeUrlQ(args[0]);
 //		db.addUrlToQueue("https://www.yahoo.com/");
@@ -726,7 +725,7 @@ public class XPathCrawler {
 	}
 	
 	public static void setCrawlerRoot(){
-		Config.Root = crawlerRoot;
+		Config.init(directory);
 	}
 
 	private static void usage() {
