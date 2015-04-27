@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -54,12 +55,14 @@ import edu.upenn.cis455.xpathengine.XPathEngineImpl;
 public class XPathCrawler {
 	
 	static int crawler = 1;
+	int numCrawlers = 1;
 	String directory;
 	double maxSize;
 	String startUrl;
 	int maxFileN;
 	DBWrapper db;
 	RobotsTxtInfo robots;
+	HashMap<Integer, BigInteger> range = new HashMap<Integer, BigInteger>();
 	private final static Charset ENCODING = StandardCharsets.UTF_8;
 	private String MapReduceInput;
 	private String inputFileName;
@@ -94,7 +97,7 @@ public class XPathCrawler {
 		robots = new RobotsTxtInfo();
 		MapReduceInput = Config.MapReduce_Input;
 		maxSize = Double.parseDouble(args[2]);
-		
+		setHashRange(numCrawlers);
 		File dir = new File("./test/profiles/");
 		try {
 			DetectorFactory.loadProfile(dir);
@@ -132,8 +135,8 @@ public class XPathCrawler {
 		CrawlFront.insert(seed, crawler, true);
 		System.out.println("after inserting seed...");
 		
-		String url = CrawlFront.popUrl(crawler);
-		System.out.println("pop url: "+url);
+//		String url = CrawlFront.popUrl(crawler);
+//		System.out.println("pop url: "+url);
 		int i = 0;
 		while(count<maxFileN){
 			if(db.isQEmpty()){
@@ -161,24 +164,29 @@ public class XPathCrawler {
 		System.out.println("reading from dynamo db...");
 		int count = 0;
 		while(count <=100){
-//			System.out.println("count = "+count);
+			System.out.println("count = "+count);
 			String url = CrawlFront.popUrl(crawler);
 
-//			System.out.println("after pop url... and the url is"+url+"@@@");
+			System.out.println("after pop url... and the url is"+url+"@@@");
 			
 			if (url == null && count >= 1){
 				break;
 			}
 			else if(url!=null){
+				System.out.println("url is not null");
 				String linkid = String.valueOf(toBigInteger(url));
 		  	  	if(!db.containsUrl(linkid)){
-		  	  		
+		  	  		System.out.println("db does not contain this url");
   					db.addDocID(linkid);
   					db.addDocUrl(linkid, url);
   					db.addUrlToQueue(url);
   					count++;
+  					System.out.println("count is "+count);
 	  					
 	  			}
+		  	  	else{
+		  	  		System.out.println("db contains this url");
+		  	  	}
 			}
 		}
 		
@@ -423,7 +431,7 @@ public class XPathCrawler {
 //		System.out.println("\nin the method of extrac links...\n");
 		String docid = String.valueOf(toBigInteger(currentUrl));
 //		System.out.println("the current url is"+currentUrl+" and its doc id is"+docid);
-		
+		int count = 1;
 		String docString = db.getFile(currentUrl);
 		String baseUrl = currentUrl.substring(0,currentUrl.lastIndexOf("/")+1);
 		Document doc = null;
@@ -445,9 +453,9 @@ public class XPathCrawler {
 	            
 //	            System.out.println("the current link is"+url+" and its doc id is"+linkid);
 	            
-
+	            System.out.println("writing "+count +"th link into db..");
 				writeToDynamoDB(linkid, url);
-
+				count++;
 	            
 	            
 //				if(!db.containsUrl(linkid)){
@@ -469,13 +477,42 @@ public class XPathCrawler {
 	}
 	
 	
+	public int hash(BigInteger num) {
+		int res = -1;
+		for (int i = 0; i < range.size(); i++) {
+			if (num.compareTo(range.get(i)) < 0)
+				return i;
+		}
+		return res;
+	}
+	
+	private void setHashRange(int numCrawlers) {
+		  System.out.println("in the set hash range method");
+		StringBuilder max = new StringBuilder("");
+		String num = String.valueOf(numCrawlers);
+		HashMap<Integer, BigInteger> range = new HashMap<Integer, BigInteger>();
+		for(int i = 0; i <40; i++){
+			max.append("F");
+		}
+		BigInteger maxB = new BigInteger(max.toString(),16);
+		BigInteger interval = maxB.divide(new BigInteger(num,16));
+		BigInteger current = new BigInteger("0", 16);
+		for(int i = 0; i < numCrawlers; i++){
+			current = current.add(interval);
+			range.put(i, current);
+		}
+		this.range = range;
+		
+	}
+	
+	
 
 
 	private void writeToDynamoDB(String linkid, String url) {
 		System.out.println("before inserting doc id and url into dynamo db...");
 		System.out.println("url is "+url+"\n and the docid is"+linkid+"\nand the crawler # is"+crawler);
-		DocURL.insert(url, linkid, false);
-		CrawlFront.insert(url, crawler, false);
+		DocURL.insert(url, linkid, true);
+		CrawlFront.insert(url, crawler, true);
 		System.out.println("after inserting..");
 
 		
