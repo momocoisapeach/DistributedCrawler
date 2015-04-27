@@ -119,7 +119,7 @@ public class XPathCrawler {
 		if(args.length == 4){
 			maxFileN = Integer.parseInt(args[3]);
 		}
-		
+		db.initialLizeUrlQ();
 //		db.initialLizeUrlQ(args[0]);
 //		db.addUrlToQueue("https://www.yahoo.com/");
 //		db.addUrlToQueue("http://www.msn.com/");

@@ -90,9 +90,8 @@ public class DBWrapper {
 		return fileByUrl.contains(url);
 	}
 	
-	public void initialLizeUrlQ(String startUrl){
+	public void initialLizeUrlQ(){
 		URLFrontier url_frontier = new URLFrontier(frontier);
-		url_frontier.addUrlToLast(startUrl);
 		urlFrontier.put(url_frontier);
 	}
 	

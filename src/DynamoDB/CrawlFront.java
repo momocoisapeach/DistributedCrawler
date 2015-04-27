@@ -24,8 +24,8 @@ import com.amazonaws.services.dynamodbv2.util.Tables;
 public class CrawlFront {
 	
 	public static String tableName = "CrawlFront";
-	static Inserter<CrawlFront> inserter;
-	static Random rand;
+	static Inserter<CrawlFront> inserter = new Inserter<CrawlFront>();
+	static Random rand = new Random();
 	static boolean tableExists = false; //if table has been created, set to true
 	
 	String url;

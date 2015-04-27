@@ -18,11 +18,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/je-6.2.31.jar"/>
-	<classpathentry kind="lib" path="/Users/dichenli/Documents/course materials/eclipse/DistributedCrawler/jsoup-1.8.2.jar"/>
-	<classpathentry kind="lib" path="/Users/dichenli/Documents/course materials/eclipse/DistributedCrawler/lib/jasypt-1.9.2.jar"/>
-	<classpathentry kind="lib" path="/Users/dichenli/Documents/course materials/eclipse/DistributedCrawler/commons-validator-1.4.1.jar"/>
-	<classpathentry kind="lib" path="/Users/dichenli/Documents/course materials/eclipse/DistributedCrawler/langdetect.jar"/>
-	<classpathentry kind="lib" path="/Users/dichenli/Documents/course materials/eclipse/DistributedCrawler/lib/jsonic-1.2.5.jar"/>
 	<classpathentry kind="con" path="com.amazonaws.eclipse.sdk.AWS_JAVA_SDK"/>
+	<classpathentry kind="lib" path="/Users/peach/Documents/jar/commons-validator-1.4.1/commons-validator-1.4.1.jar"/>
+	<classpathentry kind="lib" path="/Users/peach/Documents/jar/langdetect-09-13-2011/lib/langdetect.jar"/>
+	<classpathentry kind="lib" path="/Users/peach/Documents/workspace/HW2/jsoup-1.8.2.jar"/>
+	<classpathentry kind="lib" path="/Users/peach/Documents/workspace/HW2/lib/jsonic-1.2.5.jar"/>
+	<classpathentry kind="lib" path="/Users/peach/Documents/workspace/HW2/lib/jasypt-1.9.2.jar"/>
 	<classpathentry kind="output" path="target/classes/"/>
 </classpath>
