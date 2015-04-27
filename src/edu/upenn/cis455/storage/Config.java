@@ -5,6 +5,8 @@ package edu.upenn.cis455.storage;
 
 import java.io.File;
 
+import edu.upenn.cis455.crawler.XPathCrawler;
+
 /**
  * @author dichenli
  *
@@ -18,7 +20,7 @@ public class Config {
 	};
 
 	
-	public static String Root = Roots[machine];
+	public static String Root = null;
 	public static String DocLinks_File = Root + "links.txt";
 	public static String DocContent_File = Root + "content/";
 	public static String MapReduce_Output = Root + "output/";

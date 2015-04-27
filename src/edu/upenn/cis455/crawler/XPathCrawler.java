@@ -56,6 +56,7 @@ public class XPathCrawler {
 	
 	static int crawler = 1;
 	int numCrawlers = 1;
+	static String crawlerRoot = null;
 	String directory;
 	double maxSize;
 	String startUrl;
@@ -72,12 +73,14 @@ public class XPathCrawler {
 	
 	public static void main(String[] args){
 //		args[0] = "https://dbappserv.cis.upenn.edu/crawltest.html";
-//		args[1] = "/Users/peach/Documents/cis555/database/";
-//		args[2] = "1";
-//		args[3] = "3";
+//		args[1] = berkeleyDB root directory
+//		args[2] = max size of file (in the unit of MB)
+//		args[3] = max file #
+//		args[4] = crawler #
+//		args[5] = total crawler #
+//		args[6] = crawler root directory
 		
-		
-		if(args.length <3 || args.length>4){
+		if(args.length <3 || args.length>7){
 			usage();
 		}
 		else{
@@ -119,8 +122,13 @@ public class XPathCrawler {
 		
 		db.addChannel(rss);
 		db.addChannelToUser("RSS aggregator", "admin");
-		if(args.length == 4){
+		if(args.length >= 4){
 			maxFileN = Integer.parseInt(args[3]);
+			crawler = Integer.parseInt(args[4]);
+			numCrawlers = Integer.parseInt(args[5]);
+			crawlerRoot = args[6];
+			setCrawlerRoot();
+			
 		}
 		db.initialLizeUrlQ();
 //		db.initialLizeUrlQ(args[0]);
@@ -715,6 +723,10 @@ public class XPathCrawler {
 			e.printStackTrace();
 		}
 		return new BigInteger("0", 16);
+	}
+	
+	public static void setCrawlerRoot(){
+		Config.Root = crawlerRoot;
 	}
 
 	private static void usage() {
