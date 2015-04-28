@@ -30,7 +30,7 @@ public class InserterDocURL {
 		if(items == null) {
 			items = new HashSet<DocURL>();
 		}
-		System.out.println("insert to local buffer: " + item.toString());
+//		System.out.println("insert to local buffer: " + item.toString());
 		items.add(item);
 	
 		if(insertNow || items.size() >= 24) {
@@ -46,9 +46,9 @@ public class InserterDocURL {
 		list.addAll(items);
 		
 		List<FailedBatch> failed = batchInsert(list); //if insert failed, print error message
-		System.out.println("insert to DB # of items: " + list.size());
+//		System.out.println("insert to DB # of items: " + list.size());
 		if(failed != null && !failed.isEmpty()) {
-			System.out.println("insert error, number of failed: " + failed.size());
+//			System.out.println("insert error, number of failed: " + failed.size());
 			failed.get(0).getException().printStackTrace();
 //			for(FailedBatch f : failed) {
 //				save(f.);
