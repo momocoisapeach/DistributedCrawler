@@ -538,14 +538,14 @@ public class XPathCrawler {
 //		System.out.println("before inserting doc id and url into dynamo db...");
 //		System.out.println("url is "+url+"\n and the docid is"+linkid+"\nand the crawler # is"+crawler);
 
-		DocURL.insert(url, linkid, false);
+		DocURL.insert(url, linkid, true);
 		try {
 			URL u = new URL(url);
 			int writeTo = hash(toBigInteger(u.getHost()));
 
 //			System.out.println("hash to crawler "+writeTo);
 
-			CrawlFront.insert(url, writeTo, false);
+			CrawlFront.insert(url, writeTo, true);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
