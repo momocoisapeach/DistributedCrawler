@@ -61,6 +61,11 @@ public class DocURL {
 		return this.url.equals(other2.url);
 	}
     
+    @Override
+    public int hashCode() {
+    	return url.hashCode();
+    };
+    
     public static DocURL parseInput(String line) {
 		if(line == null) {
 			System.out.println("null line");

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
@@ -85,6 +84,7 @@ public class CrawlFront {
 		CrawlFront other2 = (CrawlFront) other;
 		return this.timestamp == other2.timestamp && this.crawler == other2.crawler;
 	}
+	
 	
 	public static void insert(String url, int crawler, boolean insertNow) {
 		inserter.insert(new CrawlFront(url, crawler), insertNow);
