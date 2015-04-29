@@ -56,4 +56,18 @@ public class BinaryUtils {
 			return true;
 		}
 	}
+	
+	/**
+	 * get a bit from the int "b" with given position "pos"
+	 * @param b: a byte number
+	 * @param pos: a position, 1 ... 32, (1 means the least significant bit)
+	 * @return 0 or 1
+	 */
+	public static int getBit(int b, int pos) {
+		if(pos <= 0 || pos > 32) {
+			throw new IllegalArgumentException();
+		}
+		
+		return (b >>> (pos - 1)) & 1;
+	}
 }

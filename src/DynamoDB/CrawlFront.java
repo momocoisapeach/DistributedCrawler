@@ -172,7 +172,7 @@ public class CrawlFront {
 		CreateTableRequest createTableRequest 
 		= DynamoUtils.createTableHashRange(
 				tableName, "crawler", ScalarAttributeType.N, "timestamp", 
-				ScalarAttributeType.N, 25, 25);
+				ScalarAttributeType.N, 500, 500);
 		
 		try {
 			DynamoTable.createTable(tableName, createTableRequest);

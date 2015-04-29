@@ -8,6 +8,10 @@ import java.io.*;
 //import java.net.Socket;
 import java.nio.file.Files;
 import java.util.Scanner;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.HashSet;
+import java.util.Set;
 
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
 
@@ -301,6 +305,93 @@ public class IOUtils {
 			throw new IllegalArgumentException();
 		}
 		return newFile;
+	}
+	
+	public static boolean deleteFile(File file) {
+		if (!fileExists(file)) {
+			return true;
+		}
+		try {
+			file.delete();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * set chmod for the given file. File must exists
+	 * to set chmod 740, call with user = 7, group = 4, others = 0
+	 * @param file
+	 * @param user
+	 * @param group
+	 * @param others
+	 * @return true if success
+	 */
+	public static boolean setFilePermission(File file, int user, int group, int others) {
+		if(file == null || !fileExists(file) || 
+				user < 0 || group < 0 || others < 0 || 
+				user > 7 || group > 7 || others > 7) {
+			throw new IllegalArgumentException();
+		}
+		
+		//using PosixFilePermission to set file permissions 777
+        Set<PosixFilePermission> perms = new HashSet<PosixFilePermission>();
+        //add owners permission
+        if(BinaryUtils.getBit(user, 3) == 1) {        	
+        	perms.add(PosixFilePermission.OWNER_READ);
+        }
+        if(BinaryUtils.getBit(user, 2) == 1) {        	
+        	perms.add(PosixFilePermission.OWNER_WRITE);
+        }
+        if(BinaryUtils.getBit(user, 1) == 1) {
+        	perms.add(PosixFilePermission.OWNER_EXECUTE);        	
+        }
+        //add group permissions
+        if(BinaryUtils.getBit(group, 3) == 1) {
+        	perms.add(PosixFilePermission.GROUP_READ);
+        }
+        if(BinaryUtils.getBit(group, 2) == 1) {
+        	perms.add(PosixFilePermission.GROUP_WRITE);
+        }
+        if(BinaryUtils.getBit(group, 1) == 1) {
+        	perms.add(PosixFilePermission.GROUP_EXECUTE);
+        }
+        
+        //add others permissions
+        if(BinaryUtils.getBit(others, 3) == 1) {
+        	perms.add(PosixFilePermission.OTHERS_READ);
+        }
+        if(BinaryUtils.getBit(others, 2) == 1) {
+        	perms.add(PosixFilePermission.OTHERS_WRITE);
+        }
+        if(BinaryUtils.getBit(others, 1) == 1) {
+        	perms.add(PosixFilePermission.OTHERS_EXECUTE);
+        }
+         
+        try {
+			Files.setPosixFilePermissions(file.toPath(), perms);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+        return true;
+	}
+	
+	/**
+	 * execute a system command, return true if success
+	 * @param command
+	 * @return
+	 */
+	public static boolean runtimeExec(String command) {
+		Process process = null;
+		try {
+			process = Runtime.getRuntime().exec(command);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 }
