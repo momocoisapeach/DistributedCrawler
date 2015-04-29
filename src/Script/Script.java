@@ -16,29 +16,45 @@ import Utils.IOUtils;
 public class Script {
 
 	static String[] addresses = {
+		"ec2-user@52.24.15.232", //0
 		"ec2-user@54.213.17.150",
 		"ec2-user@52.10.6.206",
-		"ec2-user@54.149.220.141",
-		"ec2-user@54.213.235.114",
-		"ec2-user@54.149.228.245",
-		"ec2-user@54.191.133.199",
-		"ec2-user@52.10.33.146",
-		"ec2-user@54.69.137.17",
-		"ec2-user@54.187.253.21",
-		"ec2-user@54.148.82.163"
+		"ec2-user@52.24.15.231",
+		"ec2-user@52.24.15.200",
+		"ec2-user@52.24.15.228",//5
+		"ec2-user@52.24.15.230",
+		"ec2-user@52.24.15.229",
+		"ec2-user@52.24.15.227",
+		"ec2-user@52.24.15.194",
+		"ec2-user@52.24.8.13",//10
+		"ec2-user@52.24.17.4",
+		"ec2-user@52.24.13.124",
+		"ec2-user@52.24.18.1",
+		"ec2-user@52.24.7.96",
+		"ec2-user@52.10.53.0",//15
+		"ec2-user@52.24.1.234",
+		"ec2-user@52.24.5.121"//17
 	};
 
 	static String[] seeds = {
-		"http://www.dmoz.org/",
+		"http://www.dmoz.org/", //0
 		"http://www.aol.com/",
 		"http://www.incrawler.com/",
 		"http://news.google.com/",
 		"http://www.gimpsy.com/",
-		"http://www.msn.com/",
+		"http://www.msn.com/", //5
 		"https://twitter.com/?lang=en /home/ec2-user/crawl_data",
 		"https://en.wikipedia.org/wiki/Main_Page",
 		"https://www.techmeme.com/",
-		"https://business.yahoo.com/"
+		"https://business.yahoo.com/",
+		"http://news.google.com/", //10
+		"http://www.gimpsy.com/",
+		"http://www.msn.com/",
+		"https://twitter.com/?lang=en /home/ec2-user/crawl_data",
+		"https://en.wikipedia.org/wiki/Main_Page",
+		"https://www.techmeme.com/", //15
+		"https://business.yahoo.com/",
+		"http://www.aol.com/" //17
 	};
 
 	static String local_home = "/Users/dichenli/";
@@ -53,40 +69,19 @@ public class Script {
 	static String crawl_data = remote_home + "crawl_data/";
 	static long crawl_limit = 10000;
 	static double size = 1; //Mb data
-	static int crawler_num = 2;
+	static int crawler_num = 18;
 
 	/**
 	 * @param args
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-//		if(addresses.length != crawler_num || seeds.length != crawler_num) {
-//			System.err.println("wrong seeds or addresses!");
-//			return;
-//		}
-
-		boolean success = true;
-		
-		String filenameEc2Script = local_download + upload_data + "/ec2_script";
-		File ec2Script = new File(filenameEc2Script);
-		success &= IOUtils.createFile(ec2Script);
-		if(!success) {
-			System.err.println("create file ec2 failed");
+		if(addresses.length != crawler_num || seeds.length != crawler_num) {
+			System.err.println("wrong seeds or addresses!");
 			return;
 		}
 
-		try {
-			PrintWriter writer = IOUtils.getWriter(ec2Script);
-			writer.println("unzip *.zip");
-			writer.println("mkdir ~/.aws");
-			writer.println("mv " + crawl_data + "credentials " + "~/.aws/credentials");
-			writer.println("");
-			writer.close();
-			IOUtils.setFilePermission(ec2Script, 7, 0, 0);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw e;
-		}
+		boolean success = true;
 		
 		String filenameZip = ec2_home + "zip_command";
 		File zip = new File(filenameZip);
@@ -99,6 +94,43 @@ public class Script {
 
 //		PrintWriter writer = null;
 		for (int i = 0; i < crawler_num; i++) {
+			
+			String filenameEc2Script = ec2_home + "ec2_script" + i;
+			File ec2Script = new File(filenameEc2Script);
+			success &= IOUtils.createFile(ec2Script);
+			if(!success) {
+				System.err.println("create file ec2 failed");
+				return;
+			}
+			try {
+				writer = IOUtils.getWriter(ec2Script);
+				writer.println("unzip " + upload_zip);
+				writer.println("mkdir ~/.aws");
+				writer.println("mv " + remote_home + "credentials ~/.aws/credentials"); 
+				writer.close();
+				IOUtils.setFilePermission(ec2Script, 7, 0, 0);
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw e;
+			}
+			
+			String filenameEC2_run = ec2_home + "run_crawl" + i;
+			File ec2_run = new File(filenameEC2_run);
+			success &= IOUtils.createFile(ec2_run);
+			if(!success) {
+				System.err.println("create file ec2 failed");
+				return;
+			}
+			try {
+				writer = IOUtils.getWriter(ec2_run);
+				writer.println("java -jar " + crawl_data + "Crawler.jar " + seeds[i] + " " + crawl_data + " " + size + " " + crawl_limit + " " + i + " " + crawler_num);
+				writer.close();
+				IOUtils.setFilePermission(ec2_run, 7, 0, 0);
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw e;
+			}
+			
 			String filenameUpload = ec2_home + "upload_crawler" + i;
 			File uploadScript = new File(filenameUpload);
 
@@ -111,10 +143,15 @@ public class Script {
 			try {
 				writer = IOUtils.getWriter(uploadScript);
 				writer.println("scp -i " + key_pem + " " + local_download + upload_zip + " " + addresses[i] + ":~/");
-				writer.println("scp -i " + key_pem + " " + aws_home + "credentials " + addresses[i] + ":~/");
+				writer.println("scp -i " + key_pem + " " + aws_home + "credentials " + addresses[i] + ":~/credentials");
+				writer.println("scp -i " + key_pem + " " + filenameEc2Script + " " + addresses[i] + ":~/");
+				writer.println("scp -i " + key_pem + " " + filenameEC2_run + " " + addresses[i] + ":~/");
 				writer.close();
 				IOUtils.setFilePermission(uploadScript, 7, 0, 0);
-				IOUtils.runtimeExec(uploadScript.getAbsolutePath());
+				boolean rv = IOUtils.runtimeExec(uploadScript.getAbsolutePath());
+				if(!rv) {
+					System.err.println("upload error");
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw e;
@@ -133,6 +170,8 @@ public class Script {
 				throw e;
 			}
 		}
+		
+		System.out.println("====done====");
 	}
 
 }
