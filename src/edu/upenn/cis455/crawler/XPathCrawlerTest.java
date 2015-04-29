@@ -59,7 +59,7 @@ public class XPathCrawlerTest {
 				+ "User-agent: evilcrawler\n"
 				+ "Disallow: /\n";
 		String host = "dbappserv.cis.upenn.edu";
-		crawler.processRobotTxt(host, body, robots);
+		crawler.processRobotTxt(host, body);
 		assertEquals(robots.isAllowed("dbappserv.cis.upenn.edu", "/crawltest/foo/"), false);
 		assertEquals(robots.isAllowed("dbappserv.cis.upenn.edu", "/crawltest/marie/private"), true);
 	
