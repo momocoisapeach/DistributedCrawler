@@ -297,7 +297,7 @@ public class XPathCrawler {
 			
 			
 		}
-		
+//		System.out.println("the host is "+host+"\nand the path is "+path);
 		if(db.robotIsAllowed(host, path)){
 //			System.out.println("robots allowed url!");
 			if(!db.hasSentHead(docid)){
