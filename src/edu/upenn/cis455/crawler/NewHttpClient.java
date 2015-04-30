@@ -11,6 +11,7 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
@@ -92,6 +93,8 @@ public class NewHttpClient {
 		if(protocol.equals("http")){
 			try {
 				connection = (HttpURLConnection) https.openConnection();
+				connection.setConnectTimeout(3000);
+				connection.setReadTimeout(5000);
 				connection.setInstanceFollowRedirects(true);
 				connection.setRequestProperty("User-Agent", "cis455crawler");	
 				connection.setRequestProperty("Accept-Language", "en-US");
@@ -190,7 +193,9 @@ public class NewHttpClient {
 			InputStream stream;
 			if(!url.startsWith("https")){
 //				System.out.println("url starts with http....");
+				
 				stream = connection.getInputStream();
+				
 //				System.out.println("after getting the input stream");
 				BufferedReader httpsreader = new BufferedReader(new InputStreamReader(stream));
 		        

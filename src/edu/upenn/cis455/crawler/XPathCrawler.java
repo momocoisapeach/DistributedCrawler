@@ -277,7 +277,7 @@ public class XPathCrawler {
 					Calendar now = Calendar.getInstance();
 					robots.updateLstCrawled(host, now);
 
-					String robotBody = null;
+					String robotBody = "";
 					try {
 						robotBody = robotClient.getResponseBody();
 					} catch (Exception e) {
