@@ -568,7 +568,7 @@ public class XPathCrawler {
 //			}
 //			System.out.println("hash to crawler "+writeTo);
 
-			CrawlFront.insert(""+crawler, writeTo, true);
+			CrawlFront.insert(url, writeTo, true);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
