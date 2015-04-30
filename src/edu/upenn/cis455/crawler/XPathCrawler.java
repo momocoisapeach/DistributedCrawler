@@ -562,10 +562,13 @@ public class XPathCrawler {
 		try {
 			URL u = new URL(url);
 			int writeTo = hash(toBigInteger(u.getHost()));
-
+//			if(writeTo == -1){
+//				System.out.println("I AM CRAWLER #"+crawler);
+//				writeTo = 0;
+//			}
 //			System.out.println("hash to crawler "+writeTo);
 
-			CrawlFront.insert(url, writeTo, true);
+			CrawlFront.insert(""+crawler, writeTo, true);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

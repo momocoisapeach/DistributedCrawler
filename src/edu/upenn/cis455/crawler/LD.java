@@ -2,6 +2,7 @@ package edu.upenn.cis455.crawler;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -10,6 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import org.jsoup.Jsoup;
@@ -21,6 +23,8 @@ import com.cybozu.labs.langdetect.Language;
 
 public class LD {
 	private final static Charset ENCODING = StandardCharsets.UTF_8;
+	
+	HashMap<Integer, BigInteger> range = new HashMap<Integer, BigInteger>();
 	
 	public void init(String profileDirectory) throws LangDetectException {
         DetectorFactory.loadProfile(profileDirectory);
@@ -38,8 +42,17 @@ public class LD {
 
 	public static void main(String[] args) throws Exception {
 		
-		String url = "https://twitter.com/DMOZ/status/528252424671469568";
-		System.out.println(String.valueOf(toBigInteger(url)));
+		LD a = new LD();
+		
+//		String url = "https://twitter.com/DMOZ/status/528252424671469568";
+//		System.out.println(String.valueOf(toBigInteger(url)));
+		String u = "weather.aol.com";
+		URL url = new URL("http://www.incrawler.com/");
+		
+		System.out.println(url.getHost());
+		a.setHashRange(18);
+		int writeTo = a.hash(toBigInteger(url.getHost()));
+		System.out.println(writeTo);
 //		File dir = new File("./test/profiles/");
 //		DetectorFactory.loadProfile(dir);
 //		
@@ -56,6 +69,36 @@ public class LD {
 //        System.out.println(detector.detect());
 		
 
+	}
+	
+	
+	public int hash(BigInteger num) {
+//		int res = -1;
+		num = num.abs();
+		for (int i = 0; i < range.size(); i++) {
+			if (num.compareTo(range.get(i)) < 0)
+				return i;
+		}
+		return 0;
+	}
+	
+	private void setHashRange(int numCrawlers) {
+//		  System.out.println("in the set hash range method");
+		StringBuilder max = new StringBuilder("7");
+		String num = String.valueOf(numCrawlers);
+		HashMap<Integer, BigInteger> range = new HashMap<Integer, BigInteger>();
+		for(int i = 0; i <39; i++){
+			max.append("F");
+		}
+		BigInteger maxB = new BigInteger(max.toString(),16);
+		BigInteger interval = maxB.divide(new BigInteger(num,16));
+		BigInteger current = new BigInteger("0", 16);
+		for(int i = 0; i < numCrawlers; i++){
+			current = current.add(interval);
+			range.put(i, current);
+		}
+		this.range = range;
+		
 	}
 	
 	public static BigInteger toBigInteger(String key) {
