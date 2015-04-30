@@ -140,7 +140,7 @@ public class Script extends Thread {
 
 		try {
 			writer = IOUtils.getWriter(uploadScript);
-			writer.println("scp -i " + key_pem + " " + local_download + upload_zip + " " + addresses[i] + ":~/");
+//			writer.println("scp -i " + key_pem + " " + local_download + upload_zip + " " + addresses[i] + ":~/");
 			writer.println("scp -i " + key_pem + " " + aws_home + "credentials " + addresses[i] + ":~/credentials");
 			writer.println("scp -i " + key_pem + " " + filenameEc2Script + " " + addresses[i] + ":~/");
 			writer.println("scp -i " + key_pem + " " + filenameEC2_run + " " + addresses[i] + ":~/");
