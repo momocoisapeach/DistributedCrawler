@@ -176,7 +176,7 @@ public class NewHttpClient {
 //					System.out.println("status code after executing method is "+statusCode);
 					
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		
