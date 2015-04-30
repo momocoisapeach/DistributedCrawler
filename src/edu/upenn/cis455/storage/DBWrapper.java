@@ -446,57 +446,57 @@ public class DBWrapper {
 		return false;
 	}
 	
-	/**
-	 * add a new host's info of robots.txt to db
-	 * */
-	public void addRobotHost(String host){
-		Robots robot = new Robots(host);
-		robotsByHost.put(robot);
-	}
-	
-	/**
-	 * @param host
-	 * 		  prefix
-	 * 	 	  allow
-	 * add a new robot rule to the host and whether it is 
-	 * an allow or a disallow
-	 * */
-	public void addRobotRule(String host, String prefix, boolean allow){
-		Robots robot = robotsByHost.get(host);
-		robot.addRuleLink(prefix, allow);
-		robotsByHost.put(robot);
-	}
-	
-	public void addRobotDelay(String host, int delay){
-		Robots robot = robotsByHost.get(host);
-		robot.setCrawlDelay(delay);
-		robotsByHost.put(robot);
-	}
-	
-	public boolean containsRobotHost(String host){
-		return robotsByHost.contains(host);
-	}
-	
-	public void updateLstCrawled(String host, long now){
-		Robots robot = robotsByHost.get(host);
-		robot.updateLstCrawled(now);
-		robotsByHost.put(robot);
-	}
-	
-	public boolean robotIsAllowed(String host, String path){
-		Robots robot = robotsByHost.get(host);
-		return robot.isAllowed(path);
-	}
-	
-	public long robotGetLstCrawled(String host){
-		Robots robot = robotsByHost.get(host);
-		return robot.getLstCrawled();
-	}
-	
-	public int robotGetCrawlDelay(String host){
-		Robots robot = robotsByHost.get(host);
-		return robot.getCrawlDelay();
-	}
+//	/**
+//	 * add a new host's info of robots.txt to db
+//	 * */
+//	public void addRobotHost(String host){
+//		Robots robot = new Robots(host);
+//		robotsByHost.put(robot);
+//	}
+//	
+//	/**
+//	 * @param host
+//	 * 		  prefix
+//	 * 	 	  allow
+//	 * add a new robot rule to the host and whether it is 
+//	 * an allow or a disallow
+//	 * */
+//	public void addRobotRule(String host, String prefix, boolean allow){
+//		Robots robot = robotsByHost.get(host);
+//		robot.addRuleLink(prefix, allow);
+//		robotsByHost.put(robot);
+//	}
+//	
+//	public void addRobotDelay(String host, int delay){
+//		Robots robot = robotsByHost.get(host);
+//		robot.setCrawlDelay(delay);
+//		robotsByHost.put(robot);
+//	}
+//	
+//	public boolean containsRobotHost(String host){
+//		return robotsByHost.contains(host);
+//	}
+//	
+//	public void updateLstCrawled(String host, long now){
+//		Robots robot = robotsByHost.get(host);
+//		robot.updateLstCrawled(now);
+//		robotsByHost.put(robot);
+//	}
+//	
+//	public boolean robotIsAllowed(String host, String path){
+//		Robots robot = robotsByHost.get(host);
+//		return robot.isAllowed(path);
+//	}
+//	
+//	public long robotGetLstCrawled(String host){
+//		Robots robot = robotsByHost.get(host);
+//		return robot.getLstCrawled();
+//	}
+//	
+//	public int robotGetCrawlDelay(String host){
+//		Robots robot = robotsByHost.get(host);
+//		return robot.getCrawlDelay();
+//	}
 	
 	
 	public PrimaryIndex<String, User> getUsers(){

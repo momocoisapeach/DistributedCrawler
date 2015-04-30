@@ -64,7 +64,7 @@ public class XPathCrawler {
 	String startUrl;
 	int maxFileN;
 	DBWrapper db;
-//	RobotsTxtInfo robots;
+	RobotsTxtInfo robots;
 	HashMap<Integer, BigInteger> range = new HashMap<Integer, BigInteger>();
 	private final static Charset ENCODING = StandardCharsets.UTF_8;
 	private String MapReduceInput;
@@ -106,7 +106,7 @@ public class XPathCrawler {
 			
 		}
 		db = new DBWrapper(directory);
-//		robots = new RobotsTxtInfo();
+		robots = new RobotsTxtInfo();
 		MapReduceInput = Config.MapReduce_Input;
 		
 		setHashRange(numCrawlers);
@@ -187,7 +187,7 @@ public class XPathCrawler {
 	
 
 	private void readFromDynamoDB() {
-//		System.out.println("reading from dynamo db...");
+		System.out.println("reading from dynamo db...");
 		int count = 0;
 		while(count <=100){
 //			System.out.println("count = "+count);
@@ -253,9 +253,9 @@ public class XPathCrawler {
 //			System.out.println("*****************\ndb contains this doc id!\n**************");
 		}
 		
-		if(!db.containsRobotHost(host)){
+		if(!robots.containsHost(host)){
 			
-//			System.out.println("no robots info about this host:"+host);
+			System.out.println("no robots info about this host:"+host);
 			String robot_url = protocol+"://"+host+"/robots.txt";
 			NewHttpClient robotClient = new NewHttpClient(robot_url);
 			int robot_sc = -1;
@@ -265,13 +265,13 @@ public class XPathCrawler {
 
 			
 				if(robot_sc!=200){
-//					System.out.println("failed when retrieving robots.txt!");
+					System.out.println("failed when retrieving robots.txt!");
 				}
 				
 				else{
-					db.addRobotHost(host);
-					long now = Calendar.getInstance().getTimeInMillis();
-					db.updateLstCrawled(host, now);
+					
+					Calendar now = Calendar.getInstance();
+					robots.updateLstCrawled(host, now);
 
 					String robotBody = null;
 					try {
@@ -286,7 +286,7 @@ public class XPathCrawler {
 				if(robot_sc != 1000){
 		    		try {
 						robotClient.releaseConnection();
-//						System.out.println("close robots client connection!");
+						System.out.println("close robots client connection!");
 					} catch (IOException e) {
 						
 						e.printStackTrace();
@@ -297,16 +297,16 @@ public class XPathCrawler {
 			
 			
 		}
-//		System.out.println("the host is "+host+"\nand the path is "+path);
-		if(db.robotIsAllowed(host, path)){
-//			System.out.println("robots allowed url!");
+		System.out.println("the host is "+host+"\nand the path is "+path);
+		if(robots.isAllowed(host, path)){
+			System.out.println("robots allowed url!");
 			if(!db.hasSentHead(docid)){
-//				System.out.println("head not being sent yet");
+				System.out.println("head not being sent yet");
 				try {
 					client.setRequestMethod("HEAD");
 					statusCode = client.executeMethod();
-					long now = Calendar.getInstance().getTimeInMillis();
-					db.updateLstCrawled(host, now);
+					Calendar now = Calendar.getInstance();
+					robots.updateLstCrawled(host, now);
 //					System.out.println("head request code is "+statusCode);
 					
 					
@@ -335,7 +335,7 @@ public class XPathCrawler {
 				}
 			}
 			else{
-//				System.out.println("has sent head...go ahead to get request..");
+				System.out.println("has sent head...go ahead to get request..");
 				statusCode = 1216;
 			}
 	    	
@@ -349,10 +349,10 @@ public class XPathCrawler {
 						if(db.needDownload(currentUrl, lastModified)){
 //							System.out.println("need download...");
 							//TODO delay put it at the end of the url Q
-							if(db.containsRobotHost(host)){
-								long lst = db.robotGetLstCrawled(host)/1000;
+							if(robots.delayContainHost(host)){
+								long lst = robots.getLstCrawled(host).getTimeInMillis()/1000;
 								long now = Calendar.getInstance().getTimeInMillis()/1000;
-								int delay = db.robotGetCrawlDelay(host);
+								int delay = robots.getCrawlDelay(host);
 								long diff = now - lst;
 //								System.out.println("difference between last and now is "+diff+" seconds");
 								if(diff < delay){
@@ -371,8 +371,8 @@ public class XPathCrawler {
 							if(!needDelay){
 								getClient.setRequestMethod("GET");
 								statusCode_get = getClient.executeMethod();
-								long now = Calendar.getInstance().getTimeInMillis();
-								db.updateLstCrawled(host, now);
+								Calendar now = Calendar.getInstance();
+								robots.updateLstCrawled(host, now);
 								
 //								System.out.println("get request code is "+statusCode_get);
 								if(statusCode_get == 200){
@@ -626,20 +626,20 @@ public class XPathCrawler {
 			String[] temp = allLines[i].split(": ");
 			if(temp[0].equals("Allow")){
 				if(temp.length >1){
-					db.addRobotRule(host, temp[1], true);
+					robots.addRuleLink(host, temp[1], true);
 				}
 				
 			}
 			else if(temp[0].equals("Disallow")){
 				if(temp.length>1){
-					db.addRobotRule(host, temp[1], false);
+					robots.addRuleLink(host, temp[1], false);
 				}
 				
 			}
 			else if(temp[0].equals("Crawl-delay")){
 //				System.out.println("crawl-delay is@"+temp[1]+"@");
 				if(temp[1] != null){
-					db.addRobotDelay(host, Integer.parseInt(temp[1].trim()));
+					robots.addCrawlDelay(host, Integer.parseInt(temp[1].trim()));
 				}
 			}
 		}
