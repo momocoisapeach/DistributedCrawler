@@ -296,11 +296,8 @@ public class XPathCrawler {
 						e.printStackTrace();
 					}
 		    	}
-			
-			
-			
-			
 		}
+		
 		System.out.println("the host is "+host+"\nand the path is "+path);
 		if(robots.isAllowed(host, path)){
 			System.out.println("robots allowed url!");
@@ -526,20 +523,21 @@ public class XPathCrawler {
 	
 	
 	public int hash(BigInteger num) {
-		int res = -1;
+//		int res = -1;
+		num = num.abs();
 		for (int i = 0; i < range.size(); i++) {
 			if (num.compareTo(range.get(i)) < 0)
 				return i;
 		}
-		return res;
+		return 0;
 	}
 	
 	private void setHashRange(int numCrawlers) {
 //		  System.out.println("in the set hash range method");
-		StringBuilder max = new StringBuilder("");
+		StringBuilder max = new StringBuilder("7");
 		String num = String.valueOf(numCrawlers);
 		HashMap<Integer, BigInteger> range = new HashMap<Integer, BigInteger>();
-		for(int i = 0; i <40; i++){
+		for(int i = 0; i <39; i++){
 			max.append("F");
 		}
 		BigInteger maxB = new BigInteger(max.toString(),16);
