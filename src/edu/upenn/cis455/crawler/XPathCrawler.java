@@ -541,7 +541,7 @@ public class XPathCrawler {
 			max.append("F");
 		}
 		BigInteger maxB = new BigInteger(max.toString(),16);
-		BigInteger interval = maxB.divide(new BigInteger(num,16));
+		BigInteger interval = maxB.divide(new BigInteger(num,10));
 		BigInteger current = new BigInteger("0", 16);
 		for(int i = 0; i < numCrawlers; i++){
 			current = current.add(interval);
