@@ -6,7 +6,8 @@ import com.jcraft.jsch.*;
 
 public class JschCommander {
 
-
+	
+		
 	public static String pem = Script.key_pem;
 	String host;
 	String ip;
@@ -14,7 +15,13 @@ public class JschCommander {
 	Session session;
 	JSch jsch;
 
-	public void connect() throws JSchException, IOException, InterruptedException {
+	public JschCommander(String host, String ip) throws JSchException {
+		this.host = host;
+		this.ip = ip;
+		connect();
+	}
+	
+	public void connect() throws JSchException {
 		jsch=new JSch();
 		jsch.addIdentity(pem);
 		jsch.setConfig("StrictHostKeyChecking", "no");
@@ -46,13 +53,17 @@ public class JschCommander {
 			}
 			Thread.sleep(1000);
 		}
-
+		
+	}
+	
+	public void disconnect() {
 		channel.disconnect();
 		session.disconnect();
 	}
 
 	public static void main(String[] args) throws JSchException, IOException, InterruptedException {
-
+		JschCommander commander = new JschCommander("ec2-user", "54.213.17.150");
+		commander.execute("yes | ./script");
 	}
 
 }

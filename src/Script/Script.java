@@ -6,6 +6,10 @@ package Script;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.jcraft.jsch.JSchException;
 
 import Utils.IOUtils;
 
@@ -14,6 +18,7 @@ import Utils.IOUtils;
  *
  */
 public class Script extends Thread {
+
 
 	static String[] addresses = {
 		"ec2-user@52.24.15.232", //0
@@ -71,13 +76,19 @@ public class Script extends Thread {
 	static int size = 1; //Mb data
 	static int crawler_num = 18;
 
+	static AtomicInteger readyCount = null; //atomic integer to transfer signal among threads
+
 	int i; //crawler number
-	
+	JschCommander commander;
+
 	@Override
 	public void run() {
+
 		System.out.println("Thread start: " + i);
 		boolean success = true;
 		PrintWriter writer = null;
+
+		//create script to configure environment for ec2 
 		String filenameEc2Script = ec2_home + "ec2_script" + i;
 		File ec2Script = new File(filenameEc2Script);
 		success &= IOUtils.createFile(ec2Script);
@@ -90,13 +101,16 @@ public class Script extends Thread {
 			writer.println("unzip " + upload_zip);
 			writer.println("mkdir ~/.aws");
 			writer.println("mv " + remote_home + "credentials ~/.aws/credentials"); 
+			writer.println("yes | ./git_script");
+			writer.println("mv ~/DistributedCrawler/Crawler.jar ~/crawl_data/Crawler.jar");
 			writer.close();
 			IOUtils.setFilePermission(ec2Script, 7, 0, 0);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
-		
+
+		//create script to initiate crawl
 		String filenameEC2_run = ec2_home + "run_crawl" + i;
 		File ec2_run = new File(filenameEC2_run);
 		success &= IOUtils.createFile(ec2_run);
@@ -113,7 +127,8 @@ public class Script extends Thread {
 			e.printStackTrace();
 			return;
 		}
-		
+
+		//create script to do file upload to ec2
 		String filenameUpload = ec2_home + "upload_crawler" + i;
 		File uploadScript = new File(filenameUpload);
 
@@ -129,6 +144,7 @@ public class Script extends Thread {
 			writer.println("scp -i " + key_pem + " " + aws_home + "credentials " + addresses[i] + ":~/credentials");
 			writer.println("scp -i " + key_pem + " " + filenameEc2Script + " " + addresses[i] + ":~/");
 			writer.println("scp -i " + key_pem + " " + filenameEC2_run + " " + addresses[i] + ":~/");
+			writer.println("scp -i " + key_pem + " " + "git_script" + " " + addresses[i] + ":~/");
 			writer.close();
 			IOUtils.setFilePermission(uploadScript, 7, 0, 0);
 			System.out.println("upload for crawler: " + i);
@@ -141,7 +157,8 @@ public class Script extends Thread {
 			e.printStackTrace();
 			return;
 		}
-		
+
+		//create files to ssh to crawlers
 		String filenameSSH = ec2_home + "crawler" + i;
 		File ssh = new File(filenameSSH);
 		try {
@@ -154,8 +171,28 @@ public class Script extends Thread {
 			e.printStackTrace();
 			return ;
 		}
+
+		String[] hostip = addresses[i].split("@");
+		String host = hostip[0];
+		String ip = hostip[1];
+
+		try {
+			JschCommander commander = new JschCommander(host, ip);
+			commander.execute("./ec2_script" + i);
+			commander.disconnect();
+			int count = readyCount.get();
+			if (count < 0) {
+				return;
+			}
+			readyCount.incrementAndGet();
+		} catch (JSchException | IOException | InterruptedException e) {
+			e.printStackTrace();
+			readyCount.set(-1);
+			return;
+		}
+		
 	}
-	
+
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -167,8 +204,9 @@ public class Script extends Thread {
 			return;
 		}
 
+		readyCount = new AtomicInteger(0);
 		boolean success = true;
-		
+
 		String filenameZip = ec2_home + "zip_command";
 		File zip = new File(filenameZip);
 		IOUtils.createFile(zip);
@@ -178,7 +216,7 @@ public class Script extends Thread {
 		IOUtils.setFilePermission(zip, 7, 0, 0);
 		IOUtils.runtimeExec(zip.getAbsolutePath());
 
-//		PrintWriter writer = null;
+		//		PrintWriter writer = null;
 		Script[] scripts = new Script[crawler_num];
 		for (int i = 0; i < crawler_num; i++) {
 			scripts[i] = new Script();
@@ -188,7 +226,7 @@ public class Script extends Thread {
 		for(Script sc : scripts) {
 			sc.join();
 		}
-		
+
 		System.out.println("====done====");
 	}
 
