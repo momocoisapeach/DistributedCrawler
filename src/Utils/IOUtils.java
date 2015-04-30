@@ -387,6 +387,13 @@ public class IOUtils {
 		Process process = null;
 		try {
 			process = Runtime.getRuntime().exec(command);
+			BufferedReader stdIn 
+			= new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line = null;
+			while ((line = stdIn.readLine()) != null) {
+				System.out.println(line);
+			}
+			stdIn.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
