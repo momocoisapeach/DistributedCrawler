@@ -14,10 +14,12 @@ public class JschCommander {
 	ChannelExec channel;
 	Session session;
 	JSch jsch;
+	int id;
 
-	public JschCommander(String host, String ip) throws JSchException {
+	public JschCommander(String host, String ip, int id) throws JSchException {
 		this.host = host;
 		this.ip = ip;
+		this.id = id;
 		connect();
 	}
 	
@@ -48,7 +50,7 @@ public class JschCommander {
 				System.out.print(new String(tmp, 0, i));
 			}
 			if (channel.isClosed()){
-				System.out.println("exit-status: " + channel.getExitStatus());
+				System.out.println("crawler#" + id + " exit-status: " + channel.getExitStatus());
 				break;
 			}
 			Thread.sleep(1000);
@@ -62,7 +64,7 @@ public class JschCommander {
 	}
 
 	public static void main(String[] args) throws JSchException, IOException, InterruptedException {
-		JschCommander commander = new JschCommander("ec2-user", "54.213.17.150");
+		JschCommander commander = new JschCommander("ec2-user", "54.213.17.150", 0);
 		commander.execute("yes | ./script");
 	}
 
