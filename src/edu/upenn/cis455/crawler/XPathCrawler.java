@@ -197,8 +197,12 @@ public class XPathCrawler {
 			if(url == null && count == 0){
 				try {
 					Thread.sleep(1000);
+					
 				} catch (InterruptedException e) {
 					e.printStackTrace();
+				}
+				if(!db.isQEmpty()){
+					break;
 				}
 			}
 			if (url == null && count >= 1){
@@ -307,7 +311,7 @@ public class XPathCrawler {
 					statusCode = client.executeMethod();
 					Calendar now = Calendar.getInstance();
 					robots.updateLstCrawled(host, now);
-//					System.out.println("head request code is "+statusCode);
+					System.out.println("head request code is "+statusCode);
 					
 					
 					if(statusCode == 200){
@@ -323,7 +327,7 @@ public class XPathCrawler {
 	//					db.addUrlToQueue(client.getRedirectLocation());
 	//				}
 					if(statusCode != 1000){
-//						System.out.println("head request closed");
+						System.out.println("head request closed");
 							client.releaseConnection();
 			    	}
 				} catch (IOException e) {
@@ -347,7 +351,7 @@ public class XPathCrawler {
 					try {	
 						lastModified = client.lastModified;
 						if(db.needDownload(currentUrl, lastModified)){
-//							System.out.println("need download...");
+							System.out.println("need download...");
 							//TODO delay put it at the end of the url Q
 							if(robots.delayContainHost(host)){
 								long lst = robots.getLstCrawled(host).getTimeInMillis()/1000;
@@ -414,6 +418,12 @@ public class XPathCrawler {
 										extractLinks(currentUrl);
 									}
 								}
+							}
+							else{
+								readFromDynamoDB();
+								String url = db.getFstUrlFromQ();
+								System.out.println("the first url in queue "+url);
+								db.addUrlToQueue(url);
 							}
 						
 						
@@ -484,8 +494,10 @@ public class XPathCrawler {
 //	            System.out.println("the current link is"+url+" and its doc id is"+linkid);
 	            
 //	            System.out.println("writing "+count +"th link into db..");
-				writeToDynamoDB(linkid, url);
-				count++;
+	            if(!db.containsUrl(linkid)){
+	            	writeToDynamoDB(linkid, url);
+	            	count++;
+	            }
 	            
 	            
 //				if(!db.containsUrl(linkid)){
