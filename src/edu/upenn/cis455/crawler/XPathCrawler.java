@@ -484,6 +484,8 @@ public class XPathCrawler {
 			   if(url.contains("#")){
 					url = url.substring(0,url.indexOf("#"));
 				}
+			   
+			   
 //			   System.out.println("url is "+url);
 	            String linkid = String.valueOf(toBigInteger(url));
 
