@@ -72,7 +72,7 @@ public class Script extends Thread {
 
 	static String remote_home = "/home/ec2-user/";
 	static String crawl_data = remote_home + "crawl_data/";
-	static long crawl_limit = 10000;
+	static long crawl_limit = 7000;
 	static int size = 1; //Mb data
 	static int crawler_num = 18;
 
@@ -149,7 +149,7 @@ public class Script extends Thread {
 			String line = "scp -i " + key_pem + " " + "~/.ec2/git_script" + " " + addresses[i] + ":~/";
 			System.out.println(line);
 			writer.println(line);
-			writer.println("scp -i " + key_pem + " " + "~/.ec2/cleaner" + " " + addresses[i] + ":~/");
+//			writer.println("scp -i " + key_pem + " " + "~/.ec2/cleaner" + " " + addresses[i] + ":~/");
 			writer.close();
 			IOUtils.setFilePermission(uploadScript, 7, 0, 0);
 			System.out.println("upload for crawler: " + i);
@@ -183,7 +183,7 @@ public class Script extends Thread {
 
 		try {
 			JschCommander commander = new JschCommander(host, ip, i);
-			commander.execute("./cleaner");
+//			commander.execute("./cleaner");
 			commander.execute("./git_script");
 			commander.disconnect();
 			int count = readyCount.get();

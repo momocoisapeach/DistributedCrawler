@@ -277,7 +277,7 @@ public class XPathCrawler {
 					Calendar now = Calendar.getInstance();
 					robots.updateLstCrawled(host, now);
 
-					String robotBody = null;
+					String robotBody = "";
 					try {
 						robotBody = robotClient.getResponseBody();
 					} catch (Exception e) {
@@ -553,13 +553,12 @@ public class XPathCrawler {
 		
 	}
 	
-	
 
 
 	private void writeToDynamoDB(String linkid, String url) {
 //		System.out.println("before inserting doc id and url into dynamo db...");
 //		System.out.println("url is "+url+"\n and the docid is"+linkid+"\nand the crawler # is"+crawler);
-
+		
 		DocURL.insert(url, linkid, true);
 		try {
 			URL u = new URL(url);
@@ -654,7 +653,12 @@ public class XPathCrawler {
 			else if(temp[0].equals("Crawl-delay")){
 //				System.out.println("crawl-delay is@"+temp[1]+"@");
 				if(temp[1] != null){
-					robots.addCrawlDelay(host, Integer.parseInt(temp[1].trim()));
+					int delay = 0;
+					try {
+						delay = (int) Double.parseDouble(temp[1].trim());
+					} catch (Exception e) {
+					}
+					robots.addCrawlDelay(host, delay);
 				}
 			}
 		}
