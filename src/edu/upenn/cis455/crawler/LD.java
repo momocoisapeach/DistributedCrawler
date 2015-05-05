@@ -44,15 +44,15 @@ public class LD {
 		
 		LD a = new LD();
 		
-//		String url = "https://twitter.com/DMOZ/status/528252424671469568";
-//		System.out.println(String.valueOf(toBigInteger(url)));
-		String u = "weather.aol.com";
-		URL url = new URL("http://www.incrawler.com/");
-		
-		System.out.println(url.getHost());
-		a.setHashRange(18);
-		int writeTo = a.hash(toBigInteger(url.getHost()));
-		System.out.println(writeTo);
+		String url = "https://weather.yahoo.com";
+		System.out.println(String.valueOf(toBigInteger(url)));
+//		String u = "weather.aol.com";
+//		URL url = new URL("http://www.incrawler.com/");
+//		
+//		System.out.println(url.getHost());
+//		a.setHashRange(18);
+//		int writeTo = a.hash(toBigInteger(url.getHost()));
+//		System.out.println(writeTo);
 //		File dir = new File("./test/profiles/");
 //		DetectorFactory.loadProfile(dir);
 //		
