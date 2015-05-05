@@ -37,7 +37,7 @@ public class JschCommander {
 		//run stuff
 		channel = (ChannelExec) session.openChannel("exec");
 		channel.setCommand(command);
-		channel.setErrStream(System.err);
+//		channel.setErrStream(System.err);
 		channel.connect();
 		
 		InputStream input = channel.getInputStream();

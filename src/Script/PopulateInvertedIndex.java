@@ -17,30 +17,28 @@ import Utils.IOUtils;
  * @author dichenli
  * Modify format of crawled data
  */
-public class ModifyFormatQuery extends Thread {
+public class PopulateInvertedIndex extends Thread {
 
 
 	static String[] addresses = {
-		"ec2-user@52.24.10.246", //0
-		"ec2-user@52.10.106.69",
-		"ec2-user@52.24.60.48",
-		"ec2-user@52.24.41.98",
-		"ec2-user@52.24.53.215",
+		"ec2-user@52.24.60.12", //0
+		"ec2-user@52.24.37.11",
+		"ec2-user@52.24.42.228",
+		"ec2-user@52.24.28.79",
+		"ec2-user@52.24.26.194",
 
-		"ec2-user@52.24.52.239",//5
-		"ec2-user@52.24.19.231",
-		"ec2-user@52.11.164.47",
-		"ec2-user@52.24.47.203",
-		"ec2-user@52.24.88.140",
-		"ec2-user@52.24.39.227",//10
+		"ec2-user@52.10.66.78",//5
+		"ec2-user@52.24.46.29",
+		"ec2-user@52.24.62.195",
+		"ec2-user@52.24.62.201",
+		"ec2-user@52.24.70.144",
+		"ec2-user@52.24.59.13",//10
 
-		"ec2-user@52.24.55.102",
-		"ec2-user@52.11.211.241",
-		"ec2-user@52.24.42.170",
-		"ec2-user@52.24.43.215",
-		"ec2-user@52.11.140.135",//15
-		"ec2-user@52.24.43.249",
-		"ec2-user@52.10.106.69"//17
+		"ec2-user@52.24.55.80",
+		"ec2-user@52.24.53.106",
+		"ec2-user@52.24.56.130",
+		"ec2-user@52.24.55.208",
+		"ec2-user@52.24.29.82"//15
 		};
 
 //	static String[] seeds = {
@@ -74,14 +72,12 @@ public class ModifyFormatQuery extends Thread {
 	static String berkeley_cleaner = "berkeley_cleaner";
 
 	static String remote_home = "/home/ec2-user/";
-	static String remote_crawl_data = remote_home + "crawl_data/";
-	static String remote_jar_dir = remote_home;
-	static String jar_name = "MergeLine.jar"; 
-	static String input_filename = "final"; 
-	static String output_filename = "crawler"; 
+	static String project_name = "DynamoDB555";
+	static String remote_jar_dir = remote_home + project_name + "/";
+	static String jar_name = "DataPopulator.jar"; 
 //	static long crawl_limit = 7000;
 //	static int size = 1; //Mb data
-	static int crawler_num = 1;
+	static int crawler_num = 16;
 
 	static AtomicInteger readyCount = null; //atomic integer to transfer signal among threads
 
@@ -96,7 +92,7 @@ public class ModifyFormatQuery extends Thread {
 		PrintWriter writer = null;
 
 		//create script to initiate crawl
-		String filenameEC2_run = "run_refromat" + i;
+		String filenameEC2_run = "run_populate" + i;
 		File ec2_run = new File(local_ec2_home + filenameEC2_run);
 		success &= IOUtils.createFile(ec2_run);
 		if(!success) {
@@ -105,8 +101,7 @@ public class ModifyFormatQuery extends Thread {
 		}
 		try {
 			writer = IOUtils.getWriter(ec2_run);
-			writer.println("java -jar " + remote_jar_dir + jar_name + " " + remote_crawl_data + input_filename + i + " " + remote_crawl_data + i + output_filename);
-			writer.println("s3cmd sync ~/crawl_data/" + i + output_filename + " --preserve s3://mergecrawlercontent/");
+			writer.println("java -jar " + remote_jar_dir + jar_name + " " + i);
 			writer.close();
 			IOUtils.setFilePermission(ec2_run, 7, 0, 0);
 		} catch (IOException e) {
@@ -126,12 +121,9 @@ public class ModifyFormatQuery extends Thread {
 
 		try {
 			writer = IOUtils.getWriter(uploadScript);
-			writer.println("scp -i " + key_pem + " " + local_ec2_home + berkeley_cleaner + " " + addresses[i] + ":~/");
+//			writer.println("scp -i " + key_pem + " " + local_ec2_home + berkeley_cleaner + " " + addresses[i] + ":~/");
 			writer.println("scp -i " + key_pem + " " + local_ec2_home + filenameEC2_run + " " + addresses[i] + ":~/");
-			String line = "scp -i " + key_pem + " " + "~/.ec2/git_script_mergeline" + " " + addresses[i] + ":~/";
-			System.out.println(line);
-			writer.println(line);
-//			writer.println("scp -i " + key_pem + " " + "~/.ec2/cleaner" + " " + addresses[i] + ":~/");
+			writer.println("scp -i " + key_pem + " " + "~/.ec2/git_script_inverted_index" + " " + addresses[i] + ":~/");
 			writer.close();
 			IOUtils.setFilePermission(uploadScript, 7, 0, 0);
 			System.out.println("upload for crawler: " + i);
@@ -165,9 +157,8 @@ public class ModifyFormatQuery extends Thread {
 
 		try {
 			JschCommander commander = new JschCommander(host, ip, i);
-			commander.execute("./" + berkeley_cleaner);
-			commander.execute("./git_script_mergeline");
-			commander.execute("./" + filenameEC2_run);
+			commander.execute("./git_script_inverted_index");
+//			commander.execute("./" + filenameEC2_run);
 			commander.disconnect();
 			int count = readyCount.get();
 			if (count < 0) {
@@ -175,7 +166,7 @@ public class ModifyFormatQuery extends Thread {
 //				return;
 			}
 			readyCount.incrementAndGet();
-		} catch (JSchException | IOException | InterruptedException e) {
+		} catch (/*JSchException | IOException | InterruptedException*/Exception e) {
 			e.printStackTrace();
 			System.out.println("Thread " + i + " got error! Exit");
 			readyCount.set(-1);
@@ -198,13 +189,13 @@ public class ModifyFormatQuery extends Thread {
 		boolean success = true;
 
 		//		PrintWriter writer = null;
-		ModifyFormatQuery[] scripts = new ModifyFormatQuery[crawler_num];
+		PopulateInvertedIndex[] scripts = new PopulateInvertedIndex[crawler_num];
 		for (int i = 0; i < crawler_num; i++) {
-			scripts[i] = new ModifyFormatQuery();
-			scripts[i].i = 17;
+			scripts[i] = new PopulateInvertedIndex();
+			scripts[i].i = i;
 			scripts[i].start();
 		}
-		for(ModifyFormatQuery sc : scripts) {
+		for(PopulateInvertedIndex sc : scripts) {
 			sc.join();
 		}
 
