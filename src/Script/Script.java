@@ -249,14 +249,14 @@ public class Script extends Thread {
 		readyCount = new AtomicInteger(0);
 		boolean success = true;
 
-		String filenameZip = ec2_home + "zip_command";
-		File zip = new File(filenameZip);
-		IOUtils.createFile(zip);
-		PrintWriter writer = IOUtils.getWriter(zip);
-		writer.println("cd ~/Downloads/ && zip -r " + upload_zip + " " + upload_data + "/*");
-		writer.close();
-		IOUtils.setFilePermission(zip, 7, 0, 0);
-		IOUtils.runtimeExec(zip.getAbsolutePath());
+//		String filenameZip = ec2_home + "zip_command";
+//		File zip = new File(filenameZip);
+//		IOUtils.createFile(zip);
+//		PrintWriter writer = IOUtils.getWriter(zip);
+//		writer.println("cd ~/Downloads/ && zip -r " + upload_zip + " " + upload_data + "/*");
+//		writer.close();
+//		IOUtils.setFilePermission(zip, 7, 0, 0);
+//		IOUtils.runtimeExec(zip.getAbsolutePath());
 
 		//		PrintWriter writer = null;
 		Script[] scripts = new Script[crawler_num];
