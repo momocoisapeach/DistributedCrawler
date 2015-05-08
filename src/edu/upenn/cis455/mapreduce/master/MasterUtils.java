@@ -9,19 +9,41 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.upenn.cis455.mapreduce.Job;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class MasterUtils.
+ *
  * @author dichenli
  * static helper methods to generate response
  */
 class MasterUtils {
 	
+	/** The Constant ClassName. */
 	static final String ClassName = "ClassName";
+	
+	/** The Constant InDir. */
 	static final String InDir = "inDir";
+	
+	/** The Constant OutDir. */
 	static final String OutDir = "outDir";
+	
+	/** The Constant MapThreads. */
 	static final String MapThreads = "MapThreads";
+	
+	/** The Constant ReduceThreads. */
 	static final String ReduceThreads = "ReduceThreads";
+	
+	/** The Constant masterAgent. */
 	static final String masterAgent = "Master"; //master user agent
 	
+	/**
+	 * Text input.
+	 *
+	 * @param label the label
+	 * @param name the name
+	 * @param value the value
+	 * @return the string
+	 */
 	private static String textInput(String label, String name, String value) {
 		if(label == null || name == null || value == null) {
 			throw new NullPointerException();
@@ -30,10 +52,23 @@ class MasterUtils {
 				+ "\" value=\"" + value + "\"><br><br>\r\n";
 	}
 	
+	/**
+	 * Html end.
+	 *
+	 * @return the string
+	 */
 	private static String htmlEnd() {
 		return "</body></html>\r\n";
 	}
 	
+	/**
+	 * Number input.
+	 *
+	 * @param label the label
+	 * @param name the name
+	 * @param value the value
+	 * @return the string
+	 */
 	private static String numberInput(String label, String name, String value) {
 		if(label == null || name == null || value == null) {
 			throw new NullPointerException();
@@ -42,11 +77,22 @@ class MasterUtils {
 				+ "\" value=\"" + value + "\"><br><br>\r\n";
 	}
 	
+	/**
+	 * Html head.
+	 *
+	 * @param title the title
+	 * @return the string
+	 */
 	private static String htmlHead(String title) {
 		return "<!DOCTYPE html><html><head><title>" 
 				+ title + "</title></head><body>\r\n";
 	}
 	
+	/**
+	 * Job form.
+	 *
+	 * @return the string
+	 */
 	private static String jobForm() {
 		return "<form action=\"/job\" method=\"POST\">\r\n"
 		+ textInput("Class Name of Job", ClassName, "edu.upenn.cis455.mapreduce.job.WordCount")
@@ -57,6 +103,12 @@ class MasterUtils {
 		+ "<input type=\"submit\" value=\"submit job\">";
 	}
 	
+	/**
+	 * Message.
+	 *
+	 * @param msg the msg
+	 * @return the string
+	 */
 	private static String message(String msg) {
 		if(msg == null) {
 			return "";
@@ -66,15 +118,15 @@ class MasterUtils {
 	}
 	
 	/**
-	 * return a status table showing status of all workers
-	 * @return
-	 * html.append("\r\n<table style=\"text-align: left;width: 40%\">\r\n");
-		html.append("<caption style=\"text-align: left;font-weight: bold;\">Channels List</caption>\r\n");
-		html.append("<tr><th>Name</th><th>Creator</th></tr>\r\n");
-		for(int i = 0; i < channels.length; i++) {
-			html = appendChannelInfo(html, channels[i]);
-		}
-		html.append("</table>\r\n");
+	 * return a status table showing status of all workers.
+	 *
+	 * @return html.append("\r\n<table style=\"text-align: left;width: 40%\">\r\n");
+	 * 		html.append("<caption style=\"text-align: left;font-weight: bold;\">Channels List</caption>\r\n");
+	 * 		html.append("<tr><th>Name</th><th>Creator</th></tr>\r\n");
+	 * 		for(int i = 0; i < channels.length; i++) {
+	 * 			html = appendChannelInfo(html, channels[i]);
+	 * 		}
+	 * 		html.append("</table>\r\n");
 	 */
 	private static String statusTable() {
 		String table = "\r\n<table style=\"text-align: left;width: 40%\">\r\n"
@@ -93,9 +145,10 @@ class MasterUtils {
 	}
 	
 	/**
-	 * create status page
+	 * create status page.
+	 *
 	 * @param msg a message shown on the page
-	 * @return
+	 * @return the string
 	 */
 	static String statusPage(String msg) {
 		String head = htmlHead("Dichen Li MapReduce");
@@ -122,7 +175,10 @@ class MasterUtils {
 	 * 3. The output directory, relative to the storage directory
 	 * 4. The number of map threads to run on each worker
 	 * 5. The number of reduce threads to run on each worker
-	 * @param response
+	 *
+	 * @param response the response
+	 * @param msg the msg
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	static void sendStatusPage(HttpServletResponse response, String msg) throws IOException {
 		try {

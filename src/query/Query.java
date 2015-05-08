@@ -2,10 +2,23 @@ package query;
 
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Query.
+ */
 public class Query {
+	
+	/** The base. */
 	int base = 30;
+	
+	/** The window. */
 	int window = 3;
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		Query q = new Query();
 		String[] query = new String[] { "best", "buy" };
@@ -29,6 +42,12 @@ public class Query {
 		System.out.println("the score is " + q.orderValue(positions));
 	}
 
+	/**
+	 * Order value.
+	 *
+	 * @param positions the positions
+	 * @return the int
+	 */
 	public int orderValue(ArrayList<ArrayList<Integer>> positions) {
 		int totalScore = 0;
 
@@ -84,6 +103,12 @@ public class Query {
 		return totalScore;
 	}
 
+	/**
+	 * Un order value.
+	 *
+	 * @param positions the positions
+	 * @return the double
+	 */
 	public double unOrderValue(ArrayList<ArrayList<Integer>> positions) {
 		return 0.0;
 	}

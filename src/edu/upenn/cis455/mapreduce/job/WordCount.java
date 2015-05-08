@@ -6,11 +6,19 @@ import java.util.Map;
 import edu.upenn.cis455.mapreduce.Context;
 import edu.upenn.cis455.mapreduce.Job;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WordCount.
+ */
 public class WordCount implements Job {
 
 	/**
 	 * for wordCount, key can be anything (don't care), value should be
-	 * a line composed of many words
+	 * a line composed of many words.
+	 *
+	 * @param key the key
+	 * @param value the value
+	 * @param context the context
 	 */
 	public void map(String key, String value, Context context) {
 		if(key == null || value == null || context == null) {
@@ -36,6 +44,9 @@ public class WordCount implements Job {
 //		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.upenn.cis455.mapreduce.Job#reduce(java.lang.String, java.lang.String[], edu.upenn.cis455.mapreduce.Context)
+	 */
 	public void reduce(String key, String[] values, Context context) {
 		long sum = 0;
 		for(int i = 0; i < values.length; i++) {

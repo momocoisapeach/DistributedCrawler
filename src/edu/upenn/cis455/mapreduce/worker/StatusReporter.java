@@ -8,14 +8,21 @@ import edu.upenn.cis455.mapreduce.WebClient.WebClientRequest;
 import edu.upenn.cis455.mapreduce.WebClient.WebClientRequestTest;
 import edu.upenn.cis455.mapreduce.WebClient.WebClientResponse;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class StatusReporter.
+ *
  * @author dichenli
  * A runnable that reports worker status to master
  */
 class StatusReporter implements Runnable {
 
+	/** The worker. */
 	private Worker worker;
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		while(true) {
@@ -34,12 +41,17 @@ class StatusReporter implements Runnable {
 		}
 	}
 	
+	/**
+	 * Instantiates a new status reporter.
+	 *
+	 * @param worker the worker
+	 */
 	StatusReporter(Worker worker) {
 		this.worker = worker;
 	}
 
 	/**
-	 * send status report to master
+	 * send status report to master.
 	 */
 	void reportStatus() {
 		String url = reportStatusUrl();
@@ -54,11 +66,21 @@ class StatusReporter implements Runnable {
 		//nothing more to do with response?
 	}
 	
+	/**
+	 * Report status url.
+	 *
+	 * @return the string
+	 */
 	private String reportStatusUrl() {
 		return "http://" + worker.master.toString() 
 				+ "/workerstatus" + statusQueryString();
 	}
 	
+	/**
+	 * Status query string.
+	 *
+	 * @return the string
+	 */
 	private String statusQueryString() {
 		return "?port=" + worker.listenPort + "&status=" + worker.getStatus()
 				+ "&job=" + worker.getJobClass() + "&keysRead=" + worker.getKeysRead()

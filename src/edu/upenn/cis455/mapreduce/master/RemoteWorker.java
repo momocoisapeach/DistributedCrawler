@@ -11,37 +11,53 @@ import edu.upenn.cis455.mapreduce.MapReduceUtils;
 import edu.upenn.cis455.mapreduce.WebClient.WebClientResponse;
 import edu.upenn.cis455.mapreduce.WebClient.WebHost;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class RemoteWorker.
+ *
  * @author dichenli
  * Represents a worker from the perspective of the master
  */
 class RemoteWorker {
+	
+	/** The Remote workers. */
 	static HashMap<WebHost, RemoteWorker> RemoteWorkers = new HashMap<WebHost, RemoteWorker>(); // each host:port should map to one worker instance
 	
+	/** The host. */
 	WebHost host; // stores the host and port of the worker 
 	//port: the port number on which the worker is listening for HTTP requests (e.g., port=4711)
+	/** The threads. */
 	int threads; //# of threads to be initialized to run the task, -1 if not specified
+	
+	/** The status. */
 	String status; //status: mapping, waiting, reducing or idle, depending on what the worker is doing
+	
+	/** The job. */
 	String job; //job: the name of the class that is currently being run (for instance, job=edu.upenn.cis455.mapreduce.job.MyJob)
+	
+	/** The keys read. */
 	long keysRead;/*keysRead: the number of keys that have been read so far 
 	(if the status is mapping or reducing), the number of keys that were 
 	read by the last map (if the status is waiting) or zero if the status 
 	is idle*/
-	long keysWritten; /*the number of keys that have been written so far (if the status is mapping or
+	/** The keys written. */
+long keysWritten; /*the number of keys that have been written so far (if the status is mapping or
 	reducing), the number of keys that were written by the last map (if the status is waiting) or
 	the number of keys that were written by the last reduce (if the status is idle). If the node has
 	never run any jobs, return 0.*/
-	Date time; //last time a worker status report has been sent to master
+	/** The time. */
+ Date time; //last time a worker status report has been sent to master
 	
 //	static enum Status {
 //		IDLE, MAPPING, WAITING, REDUCING
 //	}
 	
 	/**
-	 * get a list of all workers that are available for next job. The only 
-	 * standard is that the worker is in idle
-	 * @return
-	 */
+ * get a list of all workers that are available for next job. The only 
+ * standard is that the worker is in idle
+ *
+ * @return the available workers
+ */
 	static ArrayList<RemoteWorker> getAvailableWorkers() {
 		//all idle workers
 		ArrayList<RemoteWorker> idles = new ArrayList<RemoteWorker>();
@@ -77,8 +93,9 @@ class RemoteWorker {
 	 * 
 	 * Update the fields of this worker based on the request info
 	 * then call updateStatus to that worker, and return the worker object
+	 *
+	 * @param statusReport the status report
 	 * @return the worker object found or created
-	 * @throws NullPointerException if argument is null
 	 */
 	static RemoteWorker getWorker(HttpServletRequest statusReport) {
 		if(statusReport == null) {
@@ -116,10 +133,13 @@ class RemoteWorker {
 	}
 	
 	
+	/** The active interval. */
 	static long activeInterval = 30 * 1000; //30 seconds
+	
 	/**
-	 * a worker is considered active if it has posted a /workerstatus within the last 30 seconds
-	 * @return
+	 * a worker is considered active if it has posted a /workerstatus within the last 30 seconds.
+	 *
+	 * @return true, if is active
 	 */
 	boolean isActive() {
 		return new Date().getTime() - time.getTime() <= activeInterval;

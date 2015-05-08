@@ -16,7 +16,10 @@ import Utils.IOUtils;
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
 import edu.upenn.cis455.mapreduce.WebClient.WebHost;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class Worker.
+ *
  * @author dichenli
  * The worker (that is, "myself" for the worker servlet)
  * Each worker owns one thread for sending status report to master,
@@ -24,11 +27,13 @@ import edu.upenn.cis455.mapreduce.WebClient.WebHost;
  */
 class Worker {
 	
+	/** The instance. */
 	static Worker instance;
 
 	/**
-	 * singleton
-	 * @return
+	 * singleton.
+	 *
+	 * @return single instance of Worker
 	 */
 	static Worker getInstance() {
 		if(instance == null) {
@@ -37,33 +42,54 @@ class Worker {
 		return instance;
 	}
 	
+	/** The spool in path. */
 	static String spoolInPath = "/spool-in";
+	
+	/** The spool out path. */
 	static String spoolOutPath = "/spool-out";
 //	static String inputPath = "/input";
 //	static String outputPath = "/output";
 	
-	Boolean running; //always true, false only when server is turning off
+	/** The running. */
+Boolean running; //always true, false only when server is turning off
+	
+	/** The master. */
 	WebHost master; //IP and port number of master, example: 158.138.53.72:3000
+	
+	/** The listen port. */
 	int listenPort; //the listening port number of the worker itself
 //	String jobClass; //class name of the job being run. "None" if in idle
 	
-	String userAgent; //useful when sending request. 
+	/** The user agent. */
+String userAgent; //useful when sending request. 
+	
+	/** The status reporter. */
 	Thread statusReporter; /*a independent thread which constantly sleep for 10 seconds, 
 	then wake up to send status report to master, then sleep again. Each time we call
 	statusReporter.interrupt(), it will be waken up and send a report*/ 
 	//the four folders are subfolders inside root folder
-	String storage; //specified by servlet.initParameter, root path
+	/** The storage. */
+ String storage; //specified by servlet.initParameter, root path
+	
+	/** The root. */
 	File root;
 //	File input;
-	File spoolIn;
+	/** The spool in. */
+File spoolIn;
+	
+	/** The spool out. */
 	File spoolOut;
 //	String outputPath; //output path is specified by user job submission
 //	File output;
 	
 //	int numThread; //number of threads to run the next task
-	JobRunner jobRunner;
+	/** The job runner. */
+JobRunner jobRunner;
 	
 	
+	/**
+	 * Instantiates a new worker.
+	 */
 	private Worker() {
 		userAgent = "Worker";
 		running = true;
@@ -71,6 +97,9 @@ class Worker {
 		jobRunner = new JobRunner(this);
 	}
 
+	/**
+	 * Shutdown.
+	 */
 	void shutdown() {
 		synchronized (running) {
 			running = false;
@@ -86,8 +115,9 @@ class Worker {
 	
 	/**
 	 * parse runmap request. return false if request fields has problem
-	 * @param request
-	 * @return
+	 *
+	 * @param request the request
+	 * @return true, if successful
 	 */
 	boolean parseRunmapRequest(HttpServletRequest request) {
 		boolean success = jobRunner.parseRunmapRequest(request);
@@ -98,12 +128,18 @@ class Worker {
 		return success;
 	}
 	
+	/**
+	 * Parses the runreduce request.
+	 *
+	 * @param request the request
+	 * @return true, if successful
+	 */
 	boolean parseRunreduceRequest(HttpServletRequest request) {
 		return jobRunner.parseRunreduceRequest(request);
 	}
 	
 	/**
-	 * start to run reduce, called after parseRunreduceRequest
+	 * start to run reduce, called after parseRunreduceRequest.
 	 */
 	void runruduce() {
 		System.err.println("Worker.runreduce...");
@@ -124,7 +160,7 @@ class Worker {
 
 	
 	/**
-	 * start the status reporter thread if it is not alive, otherwise do nothing
+	 * start the status reporter thread if it is not alive, otherwise do nothing.
 	 */
 	void startStatusReporter() {
 		if(!statusReporter.isAlive()) {			
@@ -133,7 +169,7 @@ class Worker {
 	}
 	
 	/**
-	 * wake up sleeping status reporter and let it send a status report
+	 * wake up sleeping status reporter and let it send a status report.
 	 */
 	void sendStatusRequest() {
 		statusReporter.interrupt();
@@ -143,7 +179,9 @@ class Worker {
 	 * set storage directory environment, creates subfolders, etc.
 	 * return false if failed
 	 * Called only by Servlet initialization
-	 * @param storage
+	 *
+	 * @param storage the storage
+	 * @return true, if successful
 	 */
 	boolean setStorage(String storage) {
 		if(storage == null) {
@@ -178,8 +216,9 @@ class Worker {
 	}
 	
 	/**
-	 * clear spool in and spool out folder for next task
-	 * @return
+	 * clear spool in and spool out folder for next task.
+	 *
+	 * @return true, if successful
 	 */
 	boolean clearSpool() {
 		System.out.println("Worker.clearSpool");
@@ -189,22 +228,49 @@ class Worker {
 //		return true;
 	}
 
+	/**
+	 * Gets the keys read.
+	 *
+	 * @return the keys read
+	 */
 	long getKeysRead() {
 		return jobRunner.keysRead.get();
 	}
 
+	/**
+	 * Gets the keys written.
+	 *
+	 * @return the keys written
+	 */
 	long getKeysWritten() {
 		return jobRunner.keysWritten.get();
 	}
 
+	/**
+	 * Gets the job class.
+	 *
+	 * @return the job class
+	 */
 	String getJobClass() {
 		return jobRunner.jobClass;
 	}
 
+	/**
+	 * Gets the status.
+	 *
+	 * @return the status
+	 */
 	String getStatus() {
 		return jobRunner.status;
 	}
 
+	/**
+	 * Gets the spool in file.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @return the spool in file
+	 */
 	boolean getSpoolInFile(HttpServletRequest request, HttpServletResponse response) {
 		BufferedReader reader = null;
 		try {

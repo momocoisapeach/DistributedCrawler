@@ -19,7 +19,10 @@ import edu.upenn.cis455.mapreduce.Job;
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
 import edu.upenn.cis455.mapreduce.WebClient.WebHost;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class JobRunner.
+ *
  * @author dichenli
  * everything needed to run a specific job. It should almost be in the same
  * class as the Worker class, but this class holds fields subject to change 
@@ -27,27 +30,58 @@ import edu.upenn.cis455.mapreduce.WebClient.WebHost;
  * independent of each job.
  */
 public class JobRunner {
+	
+	/** The num threads. */
 	Integer numThreads;
+	
+	/** The job. */
 	Job job;
+	
+	/** The job class. */
 	String jobClass;
+	
+	/** The worker. */
 	Worker worker;
 	
+	/** The input path. */
 	String inputPath;
+	
+	/** The input. */
 	File input;
+	
+	/** The output path. */
 	String outputPath;
+	
+	/** The output. */
 	File output;
+	
+	/** The sorted. */
 	File sorted; //input file for reduce phase, keys sorted
 	
+	/** The num workers. */
 	Integer numWorkers;//number of workers on the same job, including myself
+	
+	/** The my number. */
 	int myNumber; //the serial number of myself among peer workers in this task.
+	
+	/** The peers. */
 	HashMap<Integer, PeerWorker> peers;//other workers, include myself
 	
+	/** The keys read. */
 	AtomicLong keysRead; /*the number of keys that have been read so far (if the status is mapping or
 reducing), the number of keys that were read by the last map (if the status is waiting) or
 zero if the status is idle*/
-	AtomicLong keysWritten; //number of keys read or written in the last job (map or reduce)
+	/** The keys written. */
+ AtomicLong keysWritten; //number of keys read or written in the last job (map or reduce)
+	
+	/** The status. */
 	String status;
 	
+	/**
+	 * Instantiates a new job runner.
+	 *
+	 * @param worker the worker
+	 */
 	JobRunner(Worker worker) {
 		this.worker = worker;
 		keysRead = new AtomicLong(0);
@@ -57,7 +91,7 @@ zero if the status is idle*/
 	}
 	
 	/**
-	 * set keysRead = 0, status = "idle", jobClass="none", worker send report to master
+	 * set keysRead = 0, status = "idle", jobClass="none", worker send report to master.
 	 */
 	void setIdle() {
 		keysRead.set(0); //not keysWritten, it's supposed to show keys written for last reduce
@@ -67,6 +101,12 @@ zero if the status is idle*/
 		worker.sendStatusRequest();
 	}
 	
+	/**
+	 * Parses the job class.
+	 *
+	 * @param request the request
+	 * @return true, if successful
+	 */
 	private boolean parseJobClass(HttpServletRequest request) {
 		jobClass = request.getParameter("job");
 		if(jobClass == null) {
@@ -82,6 +122,12 @@ zero if the status is idle*/
 		return true;
 	}
 	
+	/**
+	 * Parses the num threads.
+	 *
+	 * @param request the request
+	 * @return true, if successful
+	 */
 	private boolean parseNumThreads(HttpServletRequest request) {
 		this.numThreads = MapReduceUtils.parseInt(request.getParameter("numThreads"));
 		if(numThreads == null || numThreads <= 0) {
@@ -91,6 +137,12 @@ zero if the status is idle*/
 		return true;
 	}
 	
+	/**
+	 * Parses the num workers.
+	 *
+	 * @param request the request
+	 * @return true, if successful
+	 */
 	private boolean parseNumWorkers(HttpServletRequest request) {
 		this.numWorkers = MapReduceUtils.parseInt(request.getParameter("numWorkers"));
 		if(numWorkers == null || numWorkers <= 0) {
@@ -101,9 +153,10 @@ zero if the status is idle*/
 	}
 	
 	/**
-	 * either input or output: check if the dir exists and is a directory and has no collision with spoolIn or spoolOut
-	 * @param dir
-	 * @return
+	 * either input or output: check if the dir exists and is a directory and has no collision with spoolIn or spoolOut.
+	 *
+	 * @param dir the dir
+	 * @return true, if successful
 	 */
 	private boolean checkDirectory(File dir) {
 		if(dir.equals(worker.spoolIn) || dir.equals(worker.spoolOut)) {
@@ -119,9 +172,10 @@ zero if the status is idle*/
 	}
 	
 	/**
-	 * parse a runmap request to get the info about the task
-	 * @param runmap
-	 * @return
+	 * parse a runmap request to get the info about the task.
+	 *
+	 * @param runmap the runmap
+	 * @return true, if successful
 	 */
 	boolean parseRunmapRequest(HttpServletRequest runmap) {
 		if(!this.status.equals("idle")) {
@@ -203,9 +257,10 @@ zero if the status is idle*/
 	}
 
 	/**
-	 * parse incoming request from master to run reduce
-	 * @param request
-	 * @return
+	 * parse incoming request from master to run reduce.
+	 *
+	 * @param runreduce the runreduce
+	 * @return true, if successful
 	 */
 	boolean parseRunreduceRequest(HttpServletRequest runreduce) {
 		if(!status.equals("waiting")) {
@@ -240,7 +295,7 @@ zero if the status is idle*/
 	}
 
 	/**
-	 * run map
+	 * run map.
 	 */
 	void runmap() {
 		if(!status.equals("idle")) {
@@ -283,14 +338,14 @@ zero if the status is idle*/
 	}
 
 	/**
-	 * set status to waiting
+	 * set status to waiting.
 	 */
 	private void setWaiting() {
 		this.status = "waiting";
 	}
 
 	/**
-	 * run reduce
+	 * run reduce.
 	 */
 	void runreduce() {
 		System.out.println("JobRunner.runreduce: start");
@@ -339,7 +394,9 @@ zero if the status is idle*/
 
 	/**
 	 * sort the key-value pairs in spool-in
-	 * return false if abnormal happens
+	 * return false if abnormal happens.
+	 *
+	 * @return true, if successful
 	 */
 	private boolean sort() {
 		File spoolIn = worker.spoolIn;
@@ -374,8 +431,9 @@ zero if the status is idle*/
 	}
 	
 	/**
-	 * get the file of sorted data to run reduce
-	 * @return
+	 * get the file of sorted data to run reduce.
+	 *
+	 * @return the sorted
 	 */
 	private File getSorted() {
 		return new File(worker.spoolIn, "/sorted");
@@ -384,7 +442,7 @@ zero if the status is idle*/
 
 	/**
 	 * if unlucky, server shutdown may be issued while a job is still running by another
-	 * thread
+	 * thread.
 	 */
 	void shutdown() {
 		while(!this.status.equals("idle")) {

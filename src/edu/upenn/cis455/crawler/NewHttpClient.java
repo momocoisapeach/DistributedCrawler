@@ -32,33 +32,79 @@ import org.xml.sax.InputSource;
 
 import edu.upenn.cis455.crawler.info.URLInfo;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NewHttpClient.
+ */
 public class NewHttpClient {
 	
+	/** The header. */
 	String header;
 	
+	/** The crlf. */
 	static String CRLF = "\r\n";
+	
+	/** The output. */
 	static DataOutputStream output;
+	
+	/** The input. */
 	static DataInputStream input;
+	
+	/** The writer. */
 	static PrintWriter writer;
 	
+	/** The reader. */
 	BufferedReader reader;
+	
+	/** The request. */
 	String request;
+	
+	/** The path. */
 	String path;
+	
+	/** The hostname. */
 	String hostname;
+	
+	/** The protocol. */
 	String protocol;
+	
+	/** The last modified. */
 	long lastModified;
 	
+	/** The redirect. */
 	String redirect =null;
+	
+	/** The port. */
 	int port;
+	
+	/** The status code. */
 	int statusCode;
+	
+	/** The connection. */
 	HttpURLConnection connection;
+	
+	/** The https connection. */
 	HttpsURLConnection httpsConnection;
+	
+	/** The content_len. */
 	int content_len;
+	
+	/** The content_type. */
 	String content_type;
+	
+	/** The u. */
 	URLInfo u;
+	
+	/** The final string. */
 	String url, finalString;
+	
+	/** The https. */
 	URL https;
+	
+	/** The redirect_location. */
 	String redirect_location =null;
+	
+	/** The headers. */
 	HashMap<String,String> headers = new HashMap<String,String>();
 	/*
 	 * two cases
@@ -73,6 +119,11 @@ public class NewHttpClient {
 	 *    partitioned from the url
 	 * 
 	 * */
+	/**
+	 * Instantiates a new new http client.
+	 *
+	 * @param url the url
+	 */
 	public NewHttpClient(String url){
 		this.url = url;
 		statusCode = -1;
@@ -89,6 +140,11 @@ public class NewHttpClient {
 		
 	}
 	
+	/**
+	 * Sets the request method.
+	 *
+	 * @param method the new request method
+	 */
 	public void setRequestMethod(String method){
 		if(protocol.equals("http")){
 			try {
@@ -123,6 +179,11 @@ public class NewHttpClient {
 		}
 	}
 	
+	/**
+	 * Execute method.
+	 *
+	 * @return the int
+	 */
 	public int executeMethod(){
 //		System.out.println("status code before executing method is "+statusCode);
 		if(statusCode == 1000){
@@ -184,6 +245,11 @@ public class NewHttpClient {
 		return statusCode;
 	}
 	
+	/**
+	 * Gets the response body.
+	 *
+	 * @return the response body
+	 */
 	public String getResponseBody(){
 
 		StringBuilder out = new StringBuilder();
@@ -239,6 +305,11 @@ public class NewHttpClient {
 		
 	}
 	
+	/**
+	 * Release connection.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void releaseConnection() throws IOException {
 		if(!url.startsWith("https")){
 			connection.disconnect();
@@ -250,33 +321,74 @@ public class NewHttpClient {
 		
 	}
 	
+	/**
+	 * Gets the content type.
+	 *
+	 * @return the content type
+	 */
 	public String getContentType(){
 		return content_type;
 	}
 	
+	/**
+	 * Gets the content len.
+	 *
+	 * @return the content len
+	 */
 	public int getContentLen(){
 		return content_len;
 	}
 	
+	/**
+	 * Gets the host name.
+	 *
+	 * @return the host name
+	 */
 	public String getHostName(){
 		return hostname;
 	}
 	
+	/**
+	 * Gets the port.
+	 *
+	 * @return the port
+	 */
 	public int getPort(){
 		return port;
 	}
 	
+	/**
+	 * Gets the path.
+	 *
+	 * @return the path
+	 */
 	public String getPath(){
 		return path;
 	}
 	
+	/**
+	 * Gets the protocol.
+	 *
+	 * @return the protocol
+	 */
 	public String getProtocol(){
 		return protocol;
 	}
+	
+	/**
+	 * Gets the last modified.
+	 *
+	 * @return the last modified
+	 */
 	public long getLastModified(){
 		return lastModified;
 	}
 	
+	/**
+	 * Gets the body string.
+	 *
+	 * @return the body string
+	 */
 	public String getBodyString(){
 		return finalString;
 	}

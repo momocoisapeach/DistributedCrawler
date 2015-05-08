@@ -7,36 +7,62 @@ import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SHAUtilsTest.
+ */
 public class SHAUtilsTest {
 
+	/** The sha. */
 	SHAUtils sha;
+	
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		sha = new SHAUtils();
 	}
 	
+	/**
+	 * Test big integer parse hex.
+	 */
 	@Test
 	public void testBigIntegerParseHex() {
 		BigInteger i = new BigInteger("ffffffffffffffff", 16);
 		assertEquals(i.toString(), "10");
 	}
 
+	/**
+	 * Test hash to string.
+	 */
 	@Test
 	public void testHashToString() {
 		assertEquals("86f7e437faa5a7fce15d1ddcb9eaeaea377667b8", sha.hashToString("a").toLowerCase());
 	}
 
+	/**
+	 * Test bytes to string.
+	 */
 	@Test
 	public void testBytesToString() {
 		byte[] bytes = {1, 0xa};
 		assertEquals("010a", SHAUtils.bytesToString(bytes).toLowerCase());
 	}
 
+	/**
+	 * Test hash mod.
+	 */
 	@Test
 	public void testHashMod() {
 		assertEquals(0, sha.hashMod("a", 4));
 	}
 	
+	/**
+	 * Test split.
+	 */
 	@Test
 	public void testSplit() {
 		byte[] bytes0 = {0, 0};
@@ -51,6 +77,9 @@ public class SHAUtilsTest {
 		assertEquals(4, SHAUtils.split(bytes4, 4));
 	}
 	
+	/**
+	 * Test unsigned.
+	 */
 	@Test
 	public void testUnsigned() {
 		byte[] bytes3 = {(byte) 0xBF, (byte) 0xFF}; //BFFF

@@ -11,18 +11,37 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import edu.upenn.cis455.mapreduce.Context;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class MapContext.
+ *
  * @author dichenli
  * The context used for Map
  */
 class MapContext implements Context{
 
+	/** The md. */
 	MessageDigest md;
+	
+	/** The peers. */
 	HashMap<Integer, PeerWorker> peers;
+	
+	/** The num workers. */
 	int numWorkers;
+	
+	/** The sha. */
 	SHAUtils sha;
+	
+	/** The keys written. */
 	AtomicLong keysWritten;
 	
+	/**
+	 * Instantiates a new map context.
+	 *
+	 * @param peers the peers
+	 * @param numWorkers the num workers
+	 * @param keysWritten the keys written
+	 */
 	MapContext(HashMap<Integer, PeerWorker> peers, int numWorkers, AtomicLong keysWritten) {
 		this.peers = peers;
 		this.numWorkers = numWorkers;
@@ -32,7 +51,10 @@ class MapContext implements Context{
 	
 	/**
 	 * for a key value pair, use SHA-1 hash to find out the correct peer worker
-	 * to send file to, find the file writer, write the pair to that file
+	 * to send file to, find the file writer, write the pair to that file.
+	 *
+	 * @param key the key
+	 * @param value the value
 	 */
 	@Override
 	public void write(String key, String value) {

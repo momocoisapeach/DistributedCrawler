@@ -21,25 +21,60 @@ import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
 import com.cybozu.labs.langdetect.Language;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LD.
+ */
 public class LD {
+	
+	/** The Constant ENCODING. */
 	private final static Charset ENCODING = StandardCharsets.UTF_8;
 	
+	/** The range. */
 	HashMap<Integer, BigInteger> range = new HashMap<Integer, BigInteger>();
 	
+	/**
+	 * Inits the.
+	 *
+	 * @param profileDirectory the profile directory
+	 * @throws LangDetectException the lang detect exception
+	 */
 	public void init(String profileDirectory) throws LangDetectException {
         DetectorFactory.loadProfile(profileDirectory);
     }
+    
+    /**
+     * Detect.
+     *
+     * @param text the text
+     * @return the string
+     * @throws LangDetectException the lang detect exception
+     */
     public String detect(String text) throws LangDetectException {
         Detector detector = DetectorFactory.create();
         detector.append(text);
         return detector.detect();
     }
+    
+    /**
+     * Detect langs.
+     *
+     * @param text the text
+     * @return the array list
+     * @throws LangDetectException the lang detect exception
+     */
     public ArrayList<Language> detectLangs(String text) throws LangDetectException {
         Detector detector = DetectorFactory.create();
         detector.append(text);
         return detector.getProbabilities();
     }
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws Exception the exception
+	 */
 	public static void main(String[] args) throws Exception {
 		
 		LD a = new LD();
@@ -72,6 +107,12 @@ public class LD {
 	}
 	
 	
+	/**
+	 * Hash.
+	 *
+	 * @param num the num
+	 * @return the int
+	 */
 	public int hash(BigInteger num) {
 //		int res = -1;
 		num = num.abs();
@@ -82,6 +123,11 @@ public class LD {
 		return 0;
 	}
 	
+	/**
+	 * Sets the hash range.
+	 *
+	 * @param numCrawlers the new hash range
+	 */
 	private void setHashRange(int numCrawlers) {
 //		  System.out.println("in the set hash range method");
 		StringBuilder max = new StringBuilder("7");
@@ -101,6 +147,12 @@ public class LD {
 		
 	}
 	
+	/**
+	 * To big integer.
+	 *
+	 * @param key the key
+	 * @return the big integer
+	 */
 	public static BigInteger toBigInteger(String key) {
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
@@ -119,12 +171,25 @@ public class LD {
 		return new BigInteger("0", 16);
 	}
 	
+	/**
+	 * Html2text.
+	 *
+	 * @param content the content
+	 * @return the string
+	 */
 	public static String html2text(String content) {
 		return Jsoup.parse(content).text();
 		
 	}
 	
 	
+	/**
+	 * Read larger text file.
+	 *
+	 * @param string the string
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	private static String readLargerTextFile(String string) throws Exception {
 		Path path = Paths.get(string);
 		StringBuilder text = new StringBuilder("");

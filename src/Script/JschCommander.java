@@ -4,18 +4,43 @@ import java.io.InputStream;
 
 import com.jcraft.jsch.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JschCommander.
+ */
 public class JschCommander {
 
 	
 		
+	/** The pem. */
 	public static String pem = Script.key_pem;
+	
+	/** The host. */
 	String host;
+	
+	/** The ip. */
 	String ip;
+	
+	/** The channel. */
 	ChannelExec channel;
+	
+	/** The session. */
 	Session session;
+	
+	/** The jsch. */
 	JSch jsch;
+	
+	/** The id. */
 	int id;
 
+	/**
+	 * Instantiates a new jsch commander.
+	 *
+	 * @param host the host
+	 * @param ip the ip
+	 * @param id the id
+	 * @throws JSchException the j sch exception
+	 */
 	public JschCommander(String host, String ip, int id) throws JSchException {
 		this.host = host;
 		this.ip = ip;
@@ -23,6 +48,11 @@ public class JschCommander {
 		connect();
 	}
 	
+	/**
+	 * Connect.
+	 *
+	 * @throws JSchException the j sch exception
+	 */
 	public void connect() throws JSchException {
 		jsch=new JSch();
 		jsch.addIdentity(pem);
@@ -33,6 +63,14 @@ public class JschCommander {
 		session.connect();
 	}
 
+	/**
+	 * Execute.
+	 *
+	 * @param command the command
+	 * @throws JSchException the j sch exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InterruptedException the interrupted exception
+	 */
 	public void execute(String command)  throws JSchException, IOException, InterruptedException {
 		//run stuff
 		channel = (ChannelExec) session.openChannel("exec");
@@ -58,11 +96,22 @@ public class JschCommander {
 		
 	}
 	
+	/**
+	 * Disconnect.
+	 */
 	public void disconnect() {
 		channel.disconnect();
 		session.disconnect();
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws JSchException the j sch exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InterruptedException the interrupted exception
+	 */
 	public static void main(String[] args) throws JSchException, IOException, InterruptedException {
 		JschCommander commander = new JschCommander("ec2-user", "54.213.17.150", 0);
 		commander.execute("yes | ./script");

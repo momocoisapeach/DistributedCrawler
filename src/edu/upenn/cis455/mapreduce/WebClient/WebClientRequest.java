@@ -11,10 +11,13 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class WebClientRequest.
+ *
  * @author dichenli
  * an object to provide interface for webclient to generate request text
- * this class is only for request string building, not responsible for any IO 
+ * this class is only for request string building, not responsible for any IO
  */
 public class WebClientRequest {
 	/*
@@ -28,7 +31,10 @@ public class WebClientRequest {
 	 */
 
 //	public static final String defaultAgent = "cis455crawler";
+	/** The default protocol. */
 	private static String defaultProtocol = "HTTP/1.1";
+	
+	/** The xml types. */
 	private static String[] xmlTypes = 
 		{"text/html", 
 		"application/xml", 
@@ -36,41 +42,93 @@ public class WebClientRequest {
 		"text/xml"};
 	//I don't care about language now, so language is built by a simple string
 	//I may need to switch to array just like xmlTypes if necessary
+	/** The default accept language. */
 	private static String defaultAcceptLanguage = "en-US,en;q=0.8, */*;q=0.1";
+	
+	/** The url. */
 	private URL url;
+	
+	/** The method. */
 	private String method; //GET POST HEAD
+	
+	/** The protocol version. */
 	private String protocolVersion; //"HTTP/1.1"
+	
+	/** The request url. */
 	private String requestUrl; //requested URL, for http://www.google.com/abc, url = "/abc"
+	
+	/** The host. */
 	private WebHost host;
+	
+	/** The accept types. */
 	private ArrayList<String> acceptTypes; //Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+	
+	/** The accept lang. */
 	private String acceptLang; //accept language
+	
+	/** The user agent. */
 	private String userAgent;
+	
+	/** The content length. */
 	private long contentLength;
 //	private String requestHead;
-	private StringWriter requestBody;
+	/** The request body. */
+private StringWriter requestBody;
+	
+	/** The content type. */
 	private String contentType; //useful for POST request
 //	private boolean ready;
 
-	public String getMethod() {
+	/**
+ * Gets the method.
+ *
+ * @return the method
+ */
+public String getMethod() {
 		return method;
 	}
 	
+	/**
+	 * Checks if is head method.
+	 *
+	 * @return true, if is head method
+	 */
 	public boolean isHeadMethod() {
 		return getMethod().equalsIgnoreCase("HEAD");
 	}
 	
+	/**
+	 * Checks if is gets the method.
+	 *
+	 * @return true, if is gets the method
+	 */
 	public boolean isGetMethod() {
 		return getMethod().equalsIgnoreCase("GET");
 	}
 	
+	/**
+	 * Gets the user agent.
+	 *
+	 * @return the user agent
+	 */
 	public String getUserAgent() {
 		return userAgent;
 	}
 	
+	/**
+	 * Gets the url.
+	 *
+	 * @return the url
+	 */
 	public URL getUrl() {
 		return url;
 	}
 	
+	/**
+	 * Gets the url str.
+	 *
+	 * @return the url str
+	 */
 	public String getUrlStr() {
 		return url.toString();
 	}
@@ -78,7 +136,8 @@ public class WebClientRequest {
 	/**
 	 * get base url: for http://www.google.com/abc/foo?c=d, base url
 	 * is http://www.google.com/abc/foo
-	 * @return
+	 *
+	 * @return the base url
 	 */
 	public String getBaseUrl() {
 //		String protocol = url.getProtocol();
@@ -93,24 +152,42 @@ public class WebClientRequest {
 		return WebUtils.getBaseUrl(url);
 	}
 	
+	/**
+	 * Gets the host.
+	 *
+	 * @return the host
+	 */
 	public WebHost getHost() {
 		return host;
 	}
 	
+	/**
+	 * Gets the protocol.
+	 *
+	 * @return the protocol
+	 */
 	public String getProtocol() {
 		return url.getProtocol();
 	}
 	
+	/**
+	 * Gets the accept.
+	 *
+	 * @return the accept
+	 */
 	public String getAccept() {
 		return RequestHelper.constructAcceptHead(acceptTypes);
 	}
 	
 	/**
-	 * initiate an object
-	 * @param host: e.g. localhost
-	 * @param port: e.g. 8080
-	 * @param method: e.g. GET, POST
-	 * @param requestUrl: e.g. /abc?foo=bar
+	 * initiate an object.
+	 *
+	 * @param url the url
+	 * @param host the host
+	 * @param port the port
+	 * @param method the method
+	 * @param requestUrl the request url
+	 * @param userAgent the user agent
 	 */
 	private WebClientRequest(URL url, String host, 
 			int port, String method, String requestUrl, String userAgent) {
@@ -136,10 +213,12 @@ public class WebClientRequest {
 	/**
 	 * Factory method
 	 * generate a WebClientReuqest object by a complete url
-	 * returns null if failed
-	 * @param url: a complete url such as "http://www.google.com/abc"
-	 * @param method: get, post, head
-	 * @return
+	 * returns null if failed.
+	 *
+	 * @param url the url
+	 * @param method the method
+	 * @param userAgent the user agent
+	 * @return the web client request
 	 */
 	public static WebClientRequest getWebClientRequest(String url, String method, String userAgent) {
 		URL urlObj = WebUtils.getURL(url);
@@ -153,9 +232,11 @@ public class WebClientRequest {
 	 * Factory method
 	 * generate a WebClientReuqest object by a url object
 	 * returns null if failed. null parameter is not allowed
-	 * @param url: a complete url such as "http://www.google.com/abc"
-	 * @param method: get, post, head
-	 * @return
+	 *
+	 * @param urlObj the url obj
+	 * @param method the method
+	 * @param userAgent the user agent
+	 * @return the web client request
 	 */
 	public static WebClientRequest getWebClientRequest(URL urlObj, String method, String userAgent) {
 		if(urlObj == null || method == null) {
@@ -172,8 +253,9 @@ public class WebClientRequest {
 	}
 
 	/**
-	 * requestUrl is the portion of url after the http://host:port part
-	 * @param requestUrl
+	 * requestUrl is the portion of url after the http://host:port part.
+	 *
+	 * @param requestUrl the new request url
 	 */
 	public void setRequestUrl(String requestUrl) {
 		if(requestUrl == null || requestUrl.equals("")) {
@@ -185,6 +267,9 @@ public class WebClientRequest {
 		this.requestUrl = requestUrl;
 	}
 
+	/**
+	 * Sets the accept type.
+	 */
 	private void setAcceptType() {
 		acceptTypes = new ArrayList<String>();
 		for(int i = 0; i < xmlTypes.length; i++) {
@@ -197,15 +282,21 @@ public class WebClientRequest {
 //		return ready;
 //	}
 	
-	public boolean isReady() {
+	/**
+ * Checks if is ready.
+ *
+ * @return true, if is ready
+ */
+public boolean isReady() {
 		return method != null && protocolVersion != null 
 				&& host != null && userAgent != null
 				&& requestUrl != null;
 	}
 
 	/**
-	 * Set request method, it must be get, post or head
-	 * @param method
+	 * Set request method, it must be get, post or head.
+	 *
+	 * @param method the new method
 	 */
 	public void setMethod(String method) {
 		if(method == null) {
@@ -221,6 +312,11 @@ public class WebClientRequest {
 		this.method = method;
 	}
 
+	/**
+	 * Gets the body writer.
+	 *
+	 * @return the body writer
+	 */
 	public Writer getBodyWriter() {
 		if(requestBody == null) {
 			requestBody = new StringWriter();
@@ -230,8 +326,9 @@ public class WebClientRequest {
 	
 	/**
 	 * generate request head compliant to HTTP standard, 
-	 * from the fields of this Request object
-	 * @return
+	 * from the fields of this Request object.
+	 *
+	 * @return the request head
 	 */
 	public String getRequestHead() {
 		if(!isReady()) {
@@ -257,10 +354,20 @@ public class WebClientRequest {
 		return requestHead;
 	}
 	
+	/**
+	 * Sets the content length.
+	 *
+	 * @param length the new content length
+	 */
 	public void setContentLength(long length) {
 		this.contentLength = length;
 	}
 	
+	/**
+	 * Sets the content type.
+	 *
+	 * @param type the new content type
+	 */
 	public void setContentType(String type) {
 		this.contentType = type;
 	}
@@ -268,7 +375,9 @@ public class WebClientRequest {
 	/**
 	 * get the full request including request head and body
 	 * The body will be included only if the request method is POST!
-	 * If the request is not ready to be sent yet, the method will return null
+	 * If the request is not ready to be sent yet, the method will return null.
+	 *
+	 * @return the full request
 	 */
 	public String getFullRequest() {
 		if(!isReady()) {
@@ -295,7 +404,8 @@ public class WebClientRequest {
 
 	/**
 	 * get request body string from body stringWriter. Append \r\n
-	 * @return
+	 *
+	 * @return the request body
 	 */
 	String getRequestBody() {
 		if(requestBody == null) {
@@ -311,8 +421,9 @@ public class WebClientRequest {
 	}
 
 	/**
-	 * nested called to setLastCrawl of host
-	 * @param date
+	 * nested called to setLastCrawl of host.
+	 *
+	 * @param date the new last crawl
 	 */
 	public void setLastCrawl(Date date) {
 		this.host.setLastCrawl(date);

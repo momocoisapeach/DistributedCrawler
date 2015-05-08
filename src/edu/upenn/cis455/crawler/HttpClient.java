@@ -42,32 +42,79 @@ import org.xml.sax.SAXException;
 import edu.upenn.cis455.crawler.info.URLInfo;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class HttpClient.
+ */
 public class HttpClient {
 	
+	/** The header. */
 	String header;
+	
+	/** The my socket. */
 	static Socket mySocket;
+	
+	/** The crlf. */
 	static String CRLF = "\r\n";
+	
+	/** The output. */
 	static DataOutputStream output;
+	
+	/** The input. */
 	static DataInputStream input;
+	
+	/** The writer. */
 	static PrintWriter writer;
 	
+	/** The reader. */
 	BufferedReader reader;
+	
+	/** The request. */
 	String request;
+	
+	/** The path. */
 	String path;
+	
+	/** The hostname. */
 	String hostname;
+	
+	/** The protocol. */
 	String protocol;
+	
+	/** The last modified. */
 	long lastModified;
 	
+	/** The redirect. */
 	String redirect =null;
+	
+	/** The port. */
 	int port;
+	
+	/** The status code. */
 	int statusCode;
+	
+	/** The connection. */
 	HttpsURLConnection connection;
+	
+	/** The content_len. */
 	int content_len;
+	
+	/** The content_type. */
 	String content_type;
+	
+	/** The u. */
 	URLInfo u;
+	
+	/** The final string. */
 	String url, finalString;
+	
+	/** The https. */
 	URL https;
+	
+	/** The redirect_location. */
 	String redirect_location =null;
+	
+	/** The headers. */
 	HashMap<String,String> headers = new HashMap<String,String>();
 	/*
 	 * two cases
@@ -82,6 +129,11 @@ public class HttpClient {
 	 *    partitioned from the url
 	 * 
 	 * */
+	/**
+	 * Instantiates a new http client.
+	 *
+	 * @param url the url
+	 */
 	public HttpClient(String url){
 		this.url = url;
 		statusCode = -1;
@@ -123,6 +175,12 @@ public class HttpClient {
 	 * 
 	 * 
 	 * */
+	/**
+	 * Execute method.
+	 *
+	 * @return the int
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public int executeMethod() throws IOException {
 		System.out.println("status code before executing method is "+statusCode);
 		if(statusCode == 1000){
@@ -174,12 +232,22 @@ public class HttpClient {
 		
 	}
 	
+	/**
+	 * Gets the redirect location.
+	 *
+	 * @return the redirect location
+	 */
 	public String getRedirectLocation(){
 		return redirect_location;
 	}
 	
 	
 
+	/**
+	 * Sets the headers.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void setHeaders() throws IOException {
 		String headerLine = null;
 //		System.out.println("header is "+headerLine);
@@ -230,14 +298,29 @@ public class HttpClient {
 		}
 	}
 	
+	/**
+	 * Gets the last modified.
+	 *
+	 * @return the last modified
+	 */
 	public long getLastModified(){
 		return lastModified;
 	}
 	
+	/**
+	 * Gets the body string.
+	 *
+	 * @return the body string
+	 */
 	public String getBodyString(){
 		return finalString;
 	}
 
+	/**
+	 * Gets the response body.
+	 *
+	 * @return the response body
+	 */
 	public Document getResponseBody(){
 		System.out.println("in the method of getResponseBody...");
 		Document doc = null;
@@ -316,6 +399,11 @@ public class HttpClient {
 		return doc;
 	}
 	
+	/**
+	 * Do something.
+	 *
+	 * @param node the node
+	 */
 	public static void doSomething(Node node) {
 	    // do something with the current node instead of System.out
 //	    System.out.println("current node is "+node.getNodeName());
@@ -331,6 +419,11 @@ public class HttpClient {
 	    }
 	}
 
+	/**
+	 * Release connection.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void releaseConnection() throws IOException {
 		if(!url.startsWith("https")){
 			mySocket.close();
@@ -342,6 +435,11 @@ public class HttpClient {
 		
 	}
 
+	/**
+	 * Sets the request.
+	 *
+	 * @param method the new request
+	 */
 	public void setRequest(String method){
         //Construct and send the HTTP request
 		if(url.startsWith("https")){

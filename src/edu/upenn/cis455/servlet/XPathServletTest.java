@@ -13,8 +13,17 @@ import org.junit.Test;
 
 import static org.mockito.Mockito.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class XPathServletTest.
+ */
 public class XPathServletTest {
 
+	/**
+	 * Test do post http servlet request http servlet response.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void testDoPostHttpServletRequestHttpServletResponse() throws Exception {
 		HttpServletRequest request = mock(HttpServletRequest.class);

@@ -16,25 +16,44 @@ import edu.upenn.cis455.mapreduce.Job;
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
 import edu.upenn.cis455.mapreduce.WebClient.*;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class JobMaster.
+ *
  * @author dichenli
  * represents a job submitted by end user, its execution process 
  * and record the status of the job
  */
 class JobMaster {
 	
+	/** The remote workers. */
 	private ArrayList<RemoteWorker> remoteWorkers;
 	
+	/** The job class. */
 	private String jobClass; //the class name of map reduce job to be done
+	
+	/** The input. */
 	private String input; //input directory, used for Map 
+	
+	/** The map threads. */
 	private int mapThreads; // number of threads each worker for map
+	
+	/** The num workers. */
 	private int numWorkers; // number of workers
 	
+	/** The output. */
 	private String output; //output directory, used for Reduce 
+	
+	/** The reduce threads. */
 	private int reduceThreads; //number of threads each worker for reduce
+	
+	/** The msg. */
 	private String msg; //flash message to be sent to endUser, set to "" everytime after called
+	
+	/** The failed. */
 	private boolean failed; //job has failed
 	
+	/** The stage. */
 	String stage; /*"init": not started 
 	"mapping": workers are idle, mapping or waiting 
 	"waiting": workers are all waiting
@@ -42,7 +61,10 @@ class JobMaster {
 	"done": workers are all idle */
 	
 	
-	private JobMaster() {
+	/**
+  * Instantiates a new job master.
+  */
+ private JobMaster() {
 		stage = "init";
 	}
 	
@@ -50,8 +72,9 @@ class JobMaster {
 	 * factory method, to create a JobMaster object with the fields for the nature
 	 * of the job specified from user input form. It returns a job object
 	 * with "failed" true and an error message when the input is invalid
-	 * @param jobRequest
-	 * @return
+	 *
+	 * @param jobRequest the job request
+	 * @return the job master
 	 */
 	static JobMaster createJob(HttpServletRequest jobRequest) {
 		JobMaster job = new JobMaster();
@@ -90,6 +113,12 @@ class JobMaster {
 		return job;
 	}
 	
+	/**
+	 * Valid job dir.
+	 *
+	 * @param relativeDir the relative dir
+	 * @return true, if successful
+	 */
 	@Deprecated //not in use
 	private static boolean validJobDir(String relativeDir) {
 		if(relativeDir == null || relativeDir.equals("")) {
@@ -102,12 +131,18 @@ class JobMaster {
 	}
 
 	/**
-	 * send job requests to workers
+	 * send job requests to workers.
 	 */
 	private void sendJobRequest() {
 		
 	}
 
+	/**
+	 * Sets the error.
+	 *
+	 * @param string the string
+	 * @return the job master
+	 */
 	JobMaster setError(String string) {
 		this.failed = true;
 		this.msg = string;
@@ -115,8 +150,9 @@ class JobMaster {
 	}
 
 	/**
-	 * msg is flash message, delete after reading
-	 * @return
+	 * msg is flash message, delete after reading.
+	 *
+	 * @return the and remove msg
 	 */
 	String getAndRemoveMsg() {
 		String temp = msg;
@@ -124,6 +160,11 @@ class JobMaster {
 		return temp;
 	}
 	
+	/**
+	 * Failed.
+	 *
+	 * @return true, if successful
+	 */
 	boolean failed() {
 		return failed;
 	}
@@ -131,8 +172,9 @@ class JobMaster {
 	/**
 	 * formulate list of workers in the body of /runmap POST
 	 * example: "&numWorkers=1&worker1=1.1.1.1:1111"
-	 * @param remoteWorkers
-	 * @return
+	 *
+	 * @param remoteWorkers the remote workers
+	 * @return the string
 	 */
 	static String workerList(ArrayList<RemoteWorker> remoteWorkers) {
 		String numWorkers = "&numWorkers=" + remoteWorkers.size();
@@ -146,9 +188,11 @@ class JobMaster {
 	
 	/**
 	 * formulate request to be sent to a single worker, with the info of all
-	 * workers and the nature of the job 
-	 * @param remoteWorker
-	 * @param remoteWorkers
+	 * workers and the nature of the job .
+	 *
+	 * @param remoteWorker the remote worker
+	 * @param remoteWorkers the remote workers
+	 * @return true, if successful
 	 */
 	boolean mapRequest(RemoteWorker remoteWorker, ArrayList<RemoteWorker> remoteWorkers) {
 		String url = remoteWorker.host.getHostUrl("http") + "runmap";
@@ -177,6 +221,12 @@ class JobMaster {
 		return true;
 	}
 	
+	/**
+	 * Reduce request.
+	 *
+	 * @param remoteWorker the remote worker
+	 * @return true, if successful
+	 */
 	boolean reduceRequest(RemoteWorker remoteWorker) {
 		String url = remoteWorker.host.getHostUrl("http") + "runreduce";
 		WebClientRequest request = WebClientRequest
@@ -206,7 +256,8 @@ class JobMaster {
 	/**
 	 * send messages to workers to start map. return false if any worker send report that
 	 * the task failed
-	 * @return
+	 *
+	 * @return true, if successful
 	 */
 	boolean startMap() {
 		if(!stage.equals("init")) {
@@ -221,8 +272,9 @@ class JobMaster {
 	}
 
 	/**
-	 * return true if all remote workers are waiting
-	 * @return
+	 * return true if all remote workers are waiting.
+	 *
+	 * @return true, if successful
 	 */
 	public boolean allWaiting() {
 		if(stage.equals("waiting")) {
@@ -237,6 +289,11 @@ class JobMaster {
 		return true;
 	}
 	
+	/**
+	 * All done.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean allDone() {
 		if(stage.equals("done")) {
 			return true;
@@ -252,7 +309,9 @@ class JobMaster {
 	}
 
 	/**
-	 * send messages to workers to start reduce
+	 * send messages to workers to start reduce.
+	 *
+	 * @return true, if successful
 	 */
 	public boolean StartReduce() {
 		if(!stage.equals("waiting")) {

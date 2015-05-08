@@ -30,7 +30,10 @@ import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.amazonaws.services.dynamodbv2.model.TableDescription;
 import com.amazonaws.services.dynamodbv2.util.Tables;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class DynamoTable.
+ *
  * @author dichenli
  * Consists of static methods to facilitate connection to DynamoDB, using my own credentials.
  */
@@ -38,8 +41,12 @@ public class DynamoTable {
 
 
 
+	/** The dynamo db. */
 	static AmazonDynamoDBClient dynamoDB = null; //DB, collection of tables, one instance only, shared with tables
+	
+	/** The mapper. */
 	static DynamoDBMapper mapper;
+	
 	/**
 	 * The only information needed to create a client are security credentials
 	 * consisting of the AWS Access Key ID and Secret Access Key. All other
@@ -47,6 +54,7 @@ public class DynamoTable {
 	 * automatically. Client parameters, such as proxies, can be specified in an
 	 * optional ClientConfiguration object when constructing a client.
 	 *
+	 * @throws Exception the exception
 	 * @see com.amazonaws.auth.BasicAWSCredentials
 	 * @see com.amazonaws.auth.ProfilesConfigFile
 	 * @see com.amazonaws.ClientConfiguration
@@ -74,6 +82,13 @@ public class DynamoTable {
 	}
 	
 
+	/**
+	 * Creates the table.
+	 *
+	 * @param tableName the table name
+	 * @param createTableRequest the create table request
+	 * @throws InterruptedException the interrupted exception
+	 */
 	public static void createTable(String tableName, CreateTableRequest createTableRequest) throws InterruptedException {
 
 		try {
@@ -122,10 +137,11 @@ public class DynamoTable {
 //	private String tableName; //self defined table name. new table will be created if not exists
 
 	/**
-	 * populate the table by the populator
-	 * @param populator
-	 * @throws Exception
-	 */
+ * populate the table by the populator.
+ *
+ * @param populator the populator
+ * @throws Exception the exception
+ */
 	public static void creatTable(Populator populator) throws Exception {
 		String tableName = populator.getTableName();
 		CreateTableRequest createTableRequest = populator.createTableRequest();
@@ -151,6 +167,12 @@ public class DynamoTable {
 
 	
 	
+	/**
+	 * Check table exists.
+	 *
+	 * @param tableName the table name
+	 * @return true, if successful
+	 */
 	public static boolean checkTableExists(String tableName) {
 		if (DynamoTable.mapper == null) {
 			try {

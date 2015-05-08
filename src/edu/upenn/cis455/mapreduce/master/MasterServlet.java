@@ -7,13 +7,22 @@ import javax.servlet.http.*;
 
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MasterServlet.
+ */
 public class MasterServlet extends HttpServlet {
 
+	/** The Constant serialVersionUID. */
 	static final long serialVersionUID = 455555001;
 	
+	/** The current job. */
 	JobMaster currentJob;
 	
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws java.io.IOException {
 		String urlInfo = request.getPathInfo();
@@ -39,8 +48,11 @@ public class MasterServlet extends HttpServlet {
 	
 	
 	/**
-	 * @throws IOException 
-	 * POST /job: submit new job
+	 * Do post.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws IOException POST /job: submit new job
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String urlInfo = request.getPathInfo();
@@ -58,9 +70,10 @@ public class MasterServlet extends HttpServlet {
 	 * do the following things: parse request to get fields from the form
 	 * submitted, send job requests to all proper workers, then send response
 	 * to browser with a message that the job was submitted. 
-	 * @param request
-	 * @param response
-	 * @throws IOException 
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void jobHandler(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
@@ -75,9 +88,10 @@ public class MasterServlet extends HttpServlet {
 
 	/**
 	 * parse status request sent by worker, update info of the worker record,
-	 * then send response to worker (probably a very simple response)
-	 * @param request
-	 * @param response
+	 * then send response to worker (probably a very simple response).
+	 *
+	 * @param request the request
+	 * @param response the response
 	 */
 	private void parseWorkerStatus(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -93,6 +107,12 @@ public class MasterServlet extends HttpServlet {
 		MapReduceUtils.sendSuccesMsg(response);
 	}
 
+	/**
+	 * Send welcome.
+	 *
+	 * @param response the response
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void sendWelcome(HttpServletResponse response) throws IOException {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();

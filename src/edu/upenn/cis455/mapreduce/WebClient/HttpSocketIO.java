@@ -22,19 +22,29 @@ import java.util.regex.Pattern;
 import Utils.IOUtils;
 
 
+// TODO: Auto-generated Javadoc
 //import sun.security.krb5.internal.HostAddress;
 //
 //import com.sleepycat.je.rep.elections.Protocol.Shutdown;
 
 /**
+ * The Class HttpSocketIO.
+ *
  * @author dichenli
  * use socket to achieve IO from HTTP host
  */
 public class HttpSocketIO {
 
+	/** The socket. */
 	private Socket socket;
+	
+	/** The in. */
 	private BufferedReader in;
+	
+	/** The out. */
 	private PrintWriter out;
+	
+	/** The request. */
 	private WebClientRequest request;
 	
 	//there is no constructors yet, all fields will be initialized when 
@@ -42,6 +52,14 @@ public class HttpSocketIO {
 	//in fact, the fields of the class is kind of useless, unless
 	//in the future we will implement persistent connection
 
+	/**
+	 * Gets the socket.
+	 *
+	 * @param host the host
+	 * @return the socket
+	 * @throws UnknownHostException the unknown host exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	static Socket getSocket(WebHost host) 
 			throws UnknownHostException, IOException {
 		if(host == null) {
@@ -50,16 +68,25 @@ public class HttpSocketIO {
 		return getSocket(host.getHostName(), host.getPort());
 	}
 
+	/**
+	 * Gets the socket.
+	 *
+	 * @param hostName the host name
+	 * @param portNumber the port number
+	 * @return the socket
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	static Socket getSocket(String hostName, int portNumber) 
 			throws IOException {
 		return new Socket(hostName, portNumber);
 	}
 
 	/**
-	 * get reader from a socket
-	 * @param socket
-	 * @return
-	 * @throws IOException
+	 * get reader from a socket.
+	 *
+	 * @param socket the socket
+	 * @return the reader
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	static BufferedReader getReader(
 			Socket socket) throws IOException {
@@ -68,10 +95,11 @@ public class HttpSocketIO {
 	}
 
 	/**
-	 * get writer from a a socket, suitable for writing characters
-	 * @param socket
-	 * @return
-	 * @throws IOException 
+	 * get writer from a a socket, suitable for writing characters.
+	 *
+	 * @param socket the socket
+	 * @return the writer
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	static PrintWriter getWriter(
 			Socket socket) throws IOException {
@@ -80,6 +108,11 @@ public class HttpSocketIO {
 	}
 	
 
+	/**
+	 * Close connection.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	void closeConnection() throws IOException {
 //		System.out.println("Socket close connection!!");
 		if(in != null) {
@@ -100,8 +133,9 @@ public class HttpSocketIO {
 	/**
 	 * try to connect to the given host. calling this method
 	 * will also reset existing connection!
-	 * @return
-	 * @throws IOException
+	 *
+	 * @param host the host
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	void connect(WebHost host) throws IOException {
 		closeConnection(); //close old connection first
@@ -120,6 +154,8 @@ public class HttpSocketIO {
 	 * the socket and the associated input
 	 * so shutdownOutput is called instead.
 	 * shudownOutput() doesn't flush buffer
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	void flipIO() throws IOException {
 //		System.out.println("socket shutdownOutput!");
@@ -129,9 +165,10 @@ public class HttpSocketIO {
 
 
 	/**
-	 * send request to remote server, returns null if send fail
-	 * @param request
-	 * @return
+	 * send request to remote server, returns null if send fail.
+	 *
+	 * @param request the request
+	 * @return the web client response
 	 */
 	public WebClientResponse sendRequest(WebClientRequest request) {
 		if (request == null) {
@@ -162,8 +199,9 @@ public class HttpSocketIO {
 	
 	
 	/**
-	 * send a complete request text to remote server, returns whether send success
-	 * @param request
+	 * send a complete request text to remote server, returns whether send success.
+	 *
+	 * @param request the request
 	 * @return if true is send successful
 	 */
 	private boolean sendRequest(String request) {
@@ -192,9 +230,10 @@ public class HttpSocketIO {
 	 * file size is too large for memory. In this case, the request body in
 	 * the request object will be ignored. Only the file content is considered
 	 * the request body
-	 * @param request
-	 * @param file
-	 * @return
+	 *
+	 * @param request the request
+	 * @param file the file
+	 * @return the web client response
 	 */
 	public WebClientResponse sendFileRequest(WebClientRequest request, File file) {
 		System.out.println("HttpSocketIO.sendFileRequest: send file: " + file.getAbsolutePath());
@@ -226,6 +265,13 @@ public class HttpSocketIO {
 		return getResponse();
 	}
 	
+	/**
+	 * Send file request.
+	 *
+	 * @param request the request
+	 * @param file the file
+	 * @return true, if successful
+	 */
 	private boolean sendFileRequest(String request, File file) {
 		if(request == null || file == null || !file.exists() || !file.isFile()) {
 			return false;
@@ -262,7 +308,8 @@ public class HttpSocketIO {
 	 * The method must be called after sendRequest() is called, otherwise
 	 * it will fail miserably
 	 * Returns null if get response failed (like IO exception)
-	 * @return
+	 *
+	 * @return the response
 	 */
 	private WebClientResponse getResponse() {
 		if(in == null) {
@@ -273,6 +320,12 @@ public class HttpSocketIO {
 		return readResponse(in);
 	}
 
+	/**
+	 * Read response.
+	 *
+	 * @param reader the reader
+	 * @return the web client response
+	 */
 	WebClientResponse readResponse(BufferedReader reader) {
 		StringWriter head = new StringWriter();
 		StringWriter body = new StringWriter();
@@ -322,9 +375,10 @@ public class HttpSocketIO {
 	}
 
 	/**
-	 * 
-	 * @param head
-	 * @param response
+	 * Parses the response head.
+	 *
+	 * @param head the head
+	 * @param response the response
 	 * @return if parse response head successful
 	 */
 	static boolean parseResponseHead(String head, WebClientResponse response) {
@@ -372,6 +426,13 @@ public class HttpSocketIO {
 		return true;
 	}
 	
+	/**
+	 * Match first line.
+	 *
+	 * @param input the input
+	 * @param response the response
+	 * @throws Exception the exception
+	 */
 	static void matchFirstLine(String input, WebClientResponse response) throws Exception {
 		//try to match "HTTP/1.1 200 OK"
 		String pattern = "(HTTP/1.1|HTTP/1.0)[ |\t]+(\\d{3})[ |\t]+(.*)";
@@ -384,6 +445,13 @@ public class HttpSocketIO {
 		response.setStatusCode(Integer.parseInt(firstLine.group(2)));
 	}
 	
+	/**
+	 * Parses the response line.
+	 *
+	 * @param line the line
+	 * @param response the response
+	 * @return true, if successful
+	 */
 	static boolean parseResponseLine(String line, WebClientResponse response) {
 		//		System.out.println(line);
 		String[] separated = line.split(":", 2);

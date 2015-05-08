@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.upenn.cis455.storage.Config;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author dichenli
+ * The Class MapReduceUtils.
  *
+ * @author dichenli
  */
 public class MapReduceUtils {
 
@@ -19,10 +21,11 @@ public class MapReduceUtils {
 //	public static final String ROOT_DIR = Config.Root;
 	
 	/**
-	 * get a Job object from the given class name. return null if any exception 
-	 * @param className
-	 * @return
-	 */
+ * get a Job object from the given class name. return null if any exception 
+ *
+ * @param className the class name
+ * @return the job
+ */
 	public static Job getJob(String className) {
 		Class jobClass = null;
 		try {
@@ -45,10 +48,11 @@ public class MapReduceUtils {
 //	}
 	
 	/**
-	 * parse string to get an integer, return null if the string is not a number
-	 * @param intStr
-	 * @return
-	 */
+ * parse string to get an integer, return null if the string is not a number.
+ *
+ * @param intStr the int str
+ * @return the integer
+ */
 	public static Integer parseInt(String intStr) {
 		if(intStr == null) {
 			return null;
@@ -61,7 +65,10 @@ public class MapReduceUtils {
 	}
 
 	/**
-	 * send fail message to server 
+	 * send fail message to server .
+	 *
+	 * @param response the response
+	 * @param code the code
 	 * @return false if IOException and msg not sent
 	 */
 	public static boolean sendFailedMsg(HttpServletResponse response, int code) {
@@ -75,8 +82,10 @@ public class MapReduceUtils {
 	}
 
 	/**
-	 * send success message to server indicating everything normal
-	 * @throws IOException 
+	 * send success message to server indicating everything normal.
+	 *
+	 * @param response the response
+	 * @return true, if successful
 	 */
 	public static boolean sendSuccesMsg(HttpServletResponse response) {
 		try {
