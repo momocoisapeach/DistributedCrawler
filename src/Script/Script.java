@@ -24,24 +24,24 @@ public class Script extends Thread {
 
 	/** The addresses. */
 	static String[] addresses = {
-		"ec2-user@52.24.15.232", //0
-		"ec2-user@54.213.17.150",
-		"ec2-user@52.10.6.206",
-		"ec2-user@52.24.15.231",
-		"ec2-user@52.24.15.200",
-		"ec2-user@52.24.15.228",//5
-		"ec2-user@52.24.15.230",
-		"ec2-user@52.24.15.229",
-		"ec2-user@52.24.15.227",
-		"ec2-user@52.24.15.194",
-		"ec2-user@52.24.8.13",//10
-		"ec2-user@52.24.17.4",
-		"ec2-user@52.24.13.124",
-		"ec2-user@52.24.18.1",
-		"ec2-user@52.24.7.96",
-		"ec2-user@52.10.53.0",//15
-		"ec2-user@52.24.1.234",
-		"ec2-user@52.24.5.121"//17
+		"ec2-user@52.24.236.47", //0
+		"ec2-user@52.24.240.103",
+		"ec2-user@52.24.195.134",
+		"ec2-user@52.24.239.7",
+		"ec2-user@52.24.237.113",
+		"ec2-user@52.24.235.30",//5
+		"ec2-user@52.24.239.37",
+		"ec2-user@52.24.161.12",
+		"ec2-user@52.24.239.171",
+		"ec2-user@52.24.235.34",
+		"ec2-user@52.24.235.99",//10
+		"ec2-user@52.24.236.53",
+		"ec2-user@52.24.236.151",
+		"ec2-user@52.24.239.162",
+		"ec2-user@52.24.236.83",
+		"ec2-user@52.24.235.230",//15
+		"ec2-user@52.24.236.76",
+		"ec2-user@52.24.235.44"//17
 	};
 
 	/** The seeds. */
@@ -241,22 +241,22 @@ public class Script extends Thread {
 	 * @throws InterruptedException the interrupted exception
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException {
-		if(addresses.length != crawler_num || seeds.length != crawler_num) {
-			System.err.println("wrong seeds or addresses!");
-			return;
-		}
+//		if(addresses.length != crawler_num || seeds.length != crawler_num) {
+//			System.err.println("wrong seeds or addresses!");
+//			return;
+//		}
 
 		readyCount = new AtomicInteger(0);
 		boolean success = true;
 
-		String filenameZip = ec2_home + "zip_command";
-		File zip = new File(filenameZip);
-		IOUtils.createFile(zip);
-		PrintWriter writer = IOUtils.getWriter(zip);
-		writer.println("cd ~/Downloads/ && zip -r " + upload_zip + " " + upload_data + "/*");
-		writer.close();
-		IOUtils.setFilePermission(zip, 7, 0, 0);
-		IOUtils.runtimeExec(zip.getAbsolutePath());
+//		String filenameZip = ec2_home + "zip_command";
+//		File zip = new File(filenameZip);
+//		IOUtils.createFile(zip);
+//		PrintWriter writer = IOUtils.getWriter(zip);
+//		writer.println("cd ~/Downloads/ && zip -r " + upload_zip + " " + upload_data + "/*");
+//		writer.close();
+//		IOUtils.setFilePermission(zip, 7, 0, 0);
+//		IOUtils.runtimeExec(zip.getAbsolutePath());
 
 		//		PrintWriter writer = null;
 		Script[] scripts = new Script[crawler_num];
