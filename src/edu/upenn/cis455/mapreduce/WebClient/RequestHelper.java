@@ -6,7 +6,10 @@ package edu.upenn.cis455.mapreduce.WebClient;
 import java.util.ArrayList;
 
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class RequestHelper.
+ *
  * @author dichenli
  * contains exclusively static method to help build client request string
  * called exclusively by WebClientRequest, so it actually should've been a nested class
@@ -26,10 +29,11 @@ class RequestHelper {
 	/**
 	 * build the first line like "GET /abc HTTP/1.1\r\n"
 	 * return the stringBuilder to continue next steps
-	 * @param method
-	 * @param requestUrl
-	 * @param protocol
-	 * @return
+	 *
+	 * @param method the method
+	 * @param requestUrl the request url
+	 * @param protocol the protocol
+	 * @return the string builder
 	 */
 	static StringBuilder writeFirstLine(String method, 
 			String requestUrl, String protocol) {
@@ -41,11 +45,11 @@ class RequestHelper {
 	}
 
 	/**
-	 * append the line: "Host: localhost:8080\r\n" to head
-	 * @param head
-	 * @param host
-	 * @param port
-	 * @return
+	 * append the line: "Host: localhost:8080\r\n" to head.
+	 *
+	 * @param head the head
+	 * @param webHost the web host
+	 * @return the string builder
 	 */
 	public static StringBuilder setHost(StringBuilder head, WebHost webHost) {
 		if(webHost == null) {
@@ -58,7 +62,10 @@ class RequestHelper {
 	 * generate accept type list such as:
 	 * Accept: image/webp,* /*;q=0.8
 	 * and append to head
-	 * @param acceptTypes: arrayList of types it accepts
+	 *
+	 * @param head the head
+	 * @param acceptTypes the accept types
+	 * @return the string builder
 	 */
 	public static StringBuilder setAccept(StringBuilder head,
 			ArrayList<String> acceptTypes) {
@@ -70,6 +77,12 @@ class RequestHelper {
 		return addNameValuePair(head, "Accept: ", accept);
 	}
 	
+	/**
+	 * Construct accept head.
+	 *
+	 * @param acceptTypes the accept types
+	 * @return the string
+	 */
 	public static String constructAcceptHead(ArrayList<String> acceptTypes) {
 		StringBuilder accept = new StringBuilder();
 		if(acceptTypes.size() == 0) {
@@ -87,9 +100,10 @@ class RequestHelper {
 	/**
 	 * append the line:
 	 * Accept-Language: en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4
-	 * @param head
-	 * @param acceptLang
-	 * @return
+	 *
+	 * @param head the head
+	 * @param acceptLang the accept lang
+	 * @return the string builder
 	 */
 	public static StringBuilder setAcceptLanguage(StringBuilder head,
 			String acceptLang) {
@@ -99,9 +113,10 @@ class RequestHelper {
 	/**
 	 * Append the line:
 	 * User-Agent: Mozilla/5.0
-	 * @param head
-	 * @param userAgent
-	 * @return
+	 *
+	 * @param head the head
+	 * @param userAgent the user agent
+	 * @return the string builder
 	 */
 	public static StringBuilder setUserAgent(StringBuilder head,
 			String userAgent) {
@@ -109,6 +124,14 @@ class RequestHelper {
 	}
 	
 	
+	/**
+	 * Adds the name value pair.
+	 *
+	 * @param head the head
+	 * @param name the name
+	 * @param value the value
+	 * @return the string builder
+	 */
 	public static StringBuilder addNameValuePair(
 			StringBuilder head, String name, String value) {
 		
@@ -120,12 +143,26 @@ class RequestHelper {
 		return head.append("\r\n");
 	}
 
+	/**
+	 * Sets the content length.
+	 *
+	 * @param head the head
+	 * @param contentLength the content length
+	 * @return the string builder
+	 */
 	public static StringBuilder setContentLength(StringBuilder head,
 			long contentLength) {
 		head.append("Content-Length: " + contentLength + "\r\n");
 		return head;
 	}
 
+	/**
+	 * Sets the content type.
+	 *
+	 * @param head the head
+	 * @param contentType the content type
+	 * @return the string builder
+	 */
 	static StringBuilder setContentType(StringBuilder head,
 			String contentType) {
 		head.append("Content-Type: " + contentType + "\r\n");

@@ -13,13 +13,16 @@ import com.jcraft.jsch.JSchException;
 
 import Utils.IOUtils;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author dichenli
+ * The Class Script.
  *
+ * @author dichenli
  */
 public class Script extends Thread {
 
 
+	/** The addresses. */
 	static String[] addresses = {
 		"ec2-user@52.24.236.47", //0
 		"ec2-user@52.24.240.103",
@@ -41,6 +44,7 @@ public class Script extends Thread {
 		"ec2-user@52.24.235.44"//17
 	};
 
+	/** The seeds. */
 	static String[] seeds = {
 		"http://www.dmoz.org/", //0
 		"http://www.aol.com/",
@@ -62,25 +66,54 @@ public class Script extends Thread {
 		"http://www.aol.com/" //17
 	};
 
+	/** The local_home. */
 	static String local_home = "/Users/dichenli/";
+	
+	/** The ec2_home. */
 	static String ec2_home = local_home + ".ec2/";
+	
+	/** The aws_home. */
 	static String aws_home = local_home + ".aws/";
+	
+	/** The local_download. */
 	static String local_download = local_home + "Downloads/";
+	
+	/** The upload_data. */
 	static String upload_data = "crawl_data";
+	
+	/** The upload_zip. */
 	static String upload_zip = "crawl_data.zip";
+	
+	/** The key_pem. */
 	static String key_pem = ec2_home + "ec2try.pem";
 
+	/** The remote_home. */
 	static String remote_home = "/home/ec2-user/";
+	
+	/** The crawl_data. */
 	static String crawl_data = remote_home + "crawl_data/";
+	
+	/** The crawl_limit. */
 	static long crawl_limit = 7000;
+	
+	/** The size. */
 	static int size = 1; //Mb data
+	
+	/** The crawler_num. */
 	static int crawler_num = 18;
 
+	/** The ready count. */
 	static AtomicInteger readyCount = null; //atomic integer to transfer signal among threads
 
+	/** The i. */
 	int i; //crawler number
+	
+	/** The commander. */
 	JschCommander commander;
 
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 
@@ -201,9 +234,11 @@ public class Script extends Thread {
 	}
 
 	/**
-	 * @param args
-	 * @throws IOException 
-	 * @throws InterruptedException 
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InterruptedException the interrupted exception
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException {
 //		if(addresses.length != crawler_num || seeds.length != crawler_num) {

@@ -9,12 +9,29 @@ import edu.upenn.cis455.crawler.info.RobotsTxtInfo;
 import edu.upenn.cis455.storage.DBWrapper;
 import edu.upenn.cis455.storage.RawFile;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class XPathCrawlerTest.
+ */
 public class XPathCrawlerTest {
+	
+	/** The crawler. */
 	XPathCrawler crawler;
+	
+	/** The directory. */
 	String directory = "/Users/peach/Documents/cis555/testDB/";
+	
+	/** The db. */
 	DBWrapper db;
+	
+	/** The robots. */
 	RobotsTxtInfo robots;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		crawler = new XPathCrawler();
@@ -32,6 +49,9 @@ public class XPathCrawlerTest {
 
 
 
+	/**
+	 * Test check size type.
+	 */
 	@Test
 	public void testCheckSizeType() {
 		assertEquals(true, crawler.checkSizeType("text/html", 1024));
@@ -39,6 +59,9 @@ public class XPathCrawlerTest {
 		assertEquals(crawler.checkSizeType("text/xml", 1024), true);
 	}
 
+	/**
+	 * Test process robot txt.
+	 */
 	@Test
 	public void testProcessRobotTxt() {
 		String body = "# These defaults shouldn't apply to your crawler\n"

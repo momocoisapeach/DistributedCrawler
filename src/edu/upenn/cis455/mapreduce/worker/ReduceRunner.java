@@ -15,22 +15,48 @@ import edu.upenn.cis455.mapreduce.Job;
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
 import edu.upenn.cis455.mapreduce.WebClient.CollectionUtils;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class ReduceRunner.
+ *
  * @author dichenli
  * a thread to run reduce
  */
 class ReduceRunner implements Runnable {
 
 	
+	/** The job. */
 	Job job;
+	
+	/** The num threads. */
 	int numThreads;
+	
+	/** The id. */
 	int id;
+	
+	/** The input. */
 	File input;
 //	File output; //file for this thread to write out result
-	ReduceContext context;
+	/** The context. */
+ReduceContext context;
+	
+	/** The keys read. */
 	AtomicLong keysRead;
+	
+	/** The keys written. */
 	AtomicLong keysWritten;
 	
+	/**
+	 * Instantiates a new reduce runner.
+	 *
+	 * @param job the job
+	 * @param numThreads the num threads
+	 * @param id the id
+	 * @param input the input
+	 * @param outputDir the output dir
+	 * @param jobRunner the job runner
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	ReduceRunner(Job job, int numThreads, int id, File input, File outputDir, JobRunner jobRunner) throws IOException {
 		if(job == null || numThreads <= 0 || id < 0 
 				|| numThreads <= id || input == null || !IOUtils.isValidFile(input) 

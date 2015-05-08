@@ -11,19 +11,31 @@ import Utils.IOUtils;
 import edu.upenn.cis455.mapreduce.Job;
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author dichenli
+ * The Class WorkerUtils.
  *
+ * @author dichenli
  */
 class WorkerUtils {
 
+	/**
+	 * Gets the job.
+	 *
+	 * @param className the class name
+	 * @return the job
+	 * @throws InstantiationException the instantiation exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	static Job getJob(String className) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		return MapReduceUtils.getJob(className);
 	}
 
 	/**
-	 * split key value pair
-	 * @param line
+	 * split key value pair.
+	 *
+	 * @param line the line
 	 * @return two elements, a key and a value. or returns null if otherwise. Two elements
 	 * in the string[] is promised
 	 */
@@ -40,7 +52,9 @@ class WorkerUtils {
 	 * sort the lines of a file by Runtime.exec(sort file). The File sorted
 	 * will be deleted if exists and new file created given its path, so 
 	 * don't send in existing file! 
-	 * @param origin
+	 *
+	 * @param origin the origin
+	 * @param sorted the sorted
 	 * @return true if success
 	 */
 	public static boolean sortFile(File origin, File sorted) {
@@ -76,6 +90,13 @@ class WorkerUtils {
 		return true;
 	}
 
+	/**
+	 * Gets the line.
+	 *
+	 * @param key the key
+	 * @param value the value
+	 * @return the line
+	 */
 	public static String getLine(String key, String value) {
 		return key + "\t" + value;
 	}

@@ -15,10 +15,21 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class XPathEngineImpl.
+ */
 public class XPathEngineImpl implements XPathEngine {
+	
+	/** The xpaths. */
 	String[] xpaths;
+	
+	/** The doc. */
 	Document doc;
 
+  /**
+   * Instantiates a new x path engine impl.
+   */
   public XPathEngineImpl() {
     // Do NOT add arguments to the constructor!!
   }
@@ -27,6 +38,9 @@ public class XPathEngineImpl implements XPathEngine {
    * this method put the string array passed from the xpath servlet into 
    * its own xpaths string array.
    * */
+  /* (non-Javadoc)
+   * @see edu.upenn.cis455.xpathengine.XPathEngine#setXPaths(java.lang.String[])
+   */
   public void setXPaths(String[] s) {
 	  xpaths = s;
   }
@@ -40,6 +54,9 @@ public class XPathEngineImpl implements XPathEngine {
    * 
    *  returns a boolean
    * */
+  /* (non-Javadoc)
+   * @see edu.upenn.cis455.xpathengine.XPathEngine#isValid(int)
+   */
   public boolean isValid(int i) {
 	  String path = xpaths[i];
 	  if(!path.startsWith("/")){
@@ -78,6 +95,12 @@ public class XPathEngineImpl implements XPathEngine {
    *      1) a '/' first, then pass the rest string to itself
    *      2) a '[' first, then pass it to another method called splitTest
    * */
+  /**
+   * Valid helper.
+   *
+   * @param path the path
+   * @return true, if successful
+   */
   private boolean validHelper(String path) {
 //	  System.out.println("Now in the validHelper \nthe xpath now is "+path);
 	  Pattern p_node_name;
@@ -164,6 +187,12 @@ public class XPathEngineImpl implements XPathEngine {
  * Once a single test is recognized, it would be passed into validTest function
  * Once a nextStep is recognized, it would be passed into validHelper function
  * */
+/**
+ * Split.
+ *
+ * @param tests the tests
+ * @return true, if successful
+ */
 private boolean split(String tests) {
 
 //	System.out.println("Now in the split function\nand the tests are "+tests);
@@ -254,6 +283,12 @@ private boolean split(String tests) {
  * 4. a step
  * 
  * */
+/**
+ * Valid test.
+ *
+ * @param test the test
+ * @return true, if successful
+ */
 public boolean validTest(String test) {
 //	System.out.println("Now in the valid Test");
 	Pattern p_test_att, p_test_text, p_test_contain, p_test_step;
@@ -292,6 +327,9 @@ public boolean validTest(String test) {
  * then test if it matches any node in the document
  * 
  * */
+/* (non-Javadoc)
+ * @see edu.upenn.cis455.xpathengine.XPathEngine#evaluate(org.w3c.dom.Document)
+ */
 public boolean[] evaluate(Document d) { 
     boolean[] result = new boolean[xpaths.length];
     doc = d;
@@ -342,6 +380,13 @@ public boolean[] evaluate(Document d) {
  * becomes easier
  * 
  * */
+/**
+ * Check step.
+ *
+ * @param step the step
+ * @param d the d
+ * @return true, if successful
+ */
 private boolean checkStep(String step, Node d) {
 	
 	int slash = step.indexOf("/");
@@ -421,6 +466,13 @@ private boolean checkStep(String step, Node d) {
 	
 }
 
+/**
+ * Split test.
+ *
+ * @param tests the tests
+ * @param d the d
+ * @return true, if successful
+ */
 private boolean splitTest(String tests, Node d) {
 //	System.out.println("Now in the split function\nand the tests are "+tests);
 	ArrayList<String> conditions = new ArrayList<String>();
@@ -524,6 +576,13 @@ private boolean splitTest(String tests, Node d) {
  * 3. contains(text(),"...")
  * 4. a step
  * */
+/**
+ * Check test.
+ *
+ * @param test the test
+ * @param d the d
+ * @return true, if successful
+ */
 public boolean checkTest(String test, Node d) {
 	int i, flag = -1;
 	if(test.contains("\\\"")){

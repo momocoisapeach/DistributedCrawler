@@ -8,12 +8,26 @@ import java.io.Writer;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WebClientRequestTest.
+ */
 public class WebClientRequestTest {
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 	}
 
+	/**
+	 * Test get full request.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void testGetFullRequest() throws IOException {
 		WebClientRequest request = WebClientRequest.getWebClientRequest("http://www.abc.com/runmap", "POST", "abc");

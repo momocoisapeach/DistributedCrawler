@@ -11,18 +11,33 @@ import java.util.HashMap;
 
 import javax.servlet.ServletException;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class WebHost.
+ *
  * @author dichenli
  * represents a host on the web. A host's key is the combination of
  * its protocol (http or https), host name and port number
- * 
  */
 public class WebHost {
 	
+	/**
+	 * The Class HostPort.
+	 */
 	public static class HostPort {
+		
+		/** The host name. */
 		String hostName;
+		
+		/** The port. */
 		int port;
 		
+		/**
+		 * Instantiates a new host port.
+		 *
+		 * @param hostName the host name
+		 * @param port the port
+		 */
 		public HostPort(String hostName, int port) {
 			this.hostName = hostName;
 			this.port = port;
@@ -30,14 +45,19 @@ public class WebHost {
 	}
 	
 //	private static int defaultPort = URLUtils.defaultPort;
-	private HostPort hostPort;
+	/** The host port. */
+private HostPort hostPort;
 //	private String hostName;
 //	private int port;
-	private boolean hasRobots; //if the host has already retrieved robots.txt
+	/** The has robots. */
+private boolean hasRobots; //if the host has already retrieved robots.txt
+	
+	/** The last crawl. */
 	private Date lastCrawl; //last time a request has been sent to this host. null before first crawl
 	//http or https, depend on which one the host prefer. 
 	//Banks may like https, normal sites like http. Google can do both
 	//default is http. 
+	/** The prefered protocol. */
 	private String preferedProtocol; 
 //	private String protocol; //HTTP or HTTPS
 	
@@ -50,7 +70,13 @@ public class WebHost {
 	
 	
 	
-	public WebHost(String hostName, int port) {
+	/**
+ * Instantiates a new web host.
+ *
+ * @param hostName the host name
+ * @param port the port
+ */
+public WebHost(String hostName, int port) {
 		if(hostName == null || port < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -66,7 +92,9 @@ public class WebHost {
 	/**
 	 * given an input hostport, example: 158.138.53.72:3000,
 	 * parse it and formulate a WebHost object
-	 * @param hostPort
+	 *
+	 * @param hostPort the host port
+	 * @return the web host
 	 */
 	public static WebHost parseHostPort(String hostPort) {
 		String[] splited = hostPort.split(":");
@@ -88,16 +116,29 @@ public class WebHost {
 //	}
 	
 	
-	public String getHostName() {
+	/**
+ * Gets the host name.
+ *
+ * @return the host name
+ */
+public String getHostName() {
 		return hostPort.hostName;
 	}
 	
 	
+	/**
+	 * Gets the port.
+	 *
+	 * @return the port
+	 */
 	public int getPort() {
 		return hostPort.port;
 	}
 	
 	//equals if both host name and port number equals
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object other) {
 		if(other == null || !(other instanceof WebHost)) {
@@ -109,6 +150,9 @@ public class WebHost {
 	}
 	
 	///useful for hashmap. Each host should have only one instance
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		return toString().hashCode();
@@ -116,6 +160,8 @@ public class WebHost {
 	
 	/**
 	 * example: "localhost:8080", "www.google.com:80"
+	 *
+	 * @return the string
 	 */
 	@Override
 	public String toString() {
@@ -123,11 +169,21 @@ public class WebHost {
 	}
 
 	
+	/**
+	 * Checks for robots.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean hasRobots() {
 		return hasRobots;
 	}
 	
 	
+	/**
+	 * Sets the checks for robots.
+	 *
+	 * @param robotsInfo the new checks for robots
+	 */
 	public void setHasRobots(boolean robotsInfo) {
 		this.hasRobots = robotsInfo;
 	}
@@ -141,8 +197,9 @@ public class WebHost {
 	 * protocol).
 	 * If the parameter protocol is not http or https, IllegalArgumentException
 	 * will be thrown
-	 * @param protocol
-	 * @return
+	 *
+	 * @param protocol the protocol
+	 * @return the host url
 	 */
 	public String getHostUrl(String protocol) {
 		if(protocol == null) {
@@ -162,6 +219,13 @@ public class WebHost {
 		return protocol + "://" + hostPort + "/";
 	}
 	
+	/**
+	 * Checks if is default port.
+	 *
+	 * @param protocol the protocol
+	 * @param port the port
+	 * @return true, if is default port
+	 */
 	public static boolean isDefaultPort(String protocol, int port) {
 		if(protocol.equalsIgnoreCase("http") && port == 80) {
 			return true;
@@ -173,20 +237,40 @@ public class WebHost {
 	}
 
 	
+	/**
+	 * Gets the prefered protocol.
+	 *
+	 * @return the prefered protocol
+	 */
 	public String getPreferedProtocol() {
 		return preferedProtocol;
 	}
 	
 	
+	/**
+	 * Sets the prefered protocol.
+	 *
+	 * @param protocol the new prefered protocol
+	 */
 	public void setPreferedProtocol(String protocol) {
 		this.preferedProtocol = protocol;
 	}
 
 	
+	/**
+	 * Sets the last crawl.
+	 *
+	 * @param date the new last crawl
+	 */
 	public void setLastCrawl(Date date) {
 		this.lastCrawl = date;
 	}
 
+	/**
+	 * Gets the last crawl.
+	 *
+	 * @return the last crawl
+	 */
 	public Date getLastCrawl() {
 		return lastCrawl;
 	}

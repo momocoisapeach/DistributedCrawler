@@ -15,10 +15,21 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class XPathEngineImplTest.
+ */
 public class XPathEngineImplTest {
+	
+	/** The xpaths. */
 	String[] xpaths;
+	
+	/** The doc. */
 	Document doc;
 
+	/**
+	 * Test is valid.
+	 */
 	@Test
 	public void testIsValid() {
 		XPathEngineImpl x = (XPathEngineImpl) new XPathEngineFactory().getXPathEngine();
@@ -41,6 +52,9 @@ public class XPathEngineImplTest {
 	}
 
 	
+	/**
+	 * Test valid test.
+	 */
 	@Test
 	public void testValidTest() {
 		XPathEngineImpl x = (XPathEngineImpl) new XPathEngineFactory().getXPathEngine();
@@ -53,6 +67,13 @@ public class XPathEngineImplTest {
 
 	}
 	
+	/**
+	 * Test evaluate.
+	 *
+	 * @throws ParserConfigurationException the parser configuration exception
+	 * @throws SAXException the SAX exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void testEvaluate() throws ParserConfigurationException, SAXException, IOException {
 		XPathEngineImpl x = (XPathEngineImpl) new XPathEngineFactory().getXPathEngine();
@@ -69,6 +90,11 @@ public class XPathEngineImplTest {
 	}
 	
 	
+	/**
+	 * Test check test.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void testCheckTest() throws Exception{
 		XPathEngineImpl x = (XPathEngineImpl) new XPathEngineFactory().getXPathEngine();

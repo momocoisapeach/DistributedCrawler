@@ -18,24 +18,53 @@ import com.sleepycat.persist.EntityStore;
 import com.sleepycat.persist.PrimaryIndex;
 import com.sleepycat.persist.StoreConfig;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DBWrapper.
+ */
 public class DBWrapper {
 	
+	/** The env directory. */
 	private static String envDirectory = null;
 	
+	/** The my env. */
 	private static Environment myEnv;
+	
+	/** The store. */
 	private static EntityStore store;
+	
+	/** The user by name. */
 	public PrimaryIndex<String,User> userByName;
+	
+	/** The channel by name. */
 	public PrimaryIndex<String, Channel> channelByName;
+	
+	/** The file by url. */
 	public PrimaryIndex<String, RawFile> fileByUrl;
+	
+	/** The url frontier. */
 	public PrimaryIndex<String, URLFrontier> urlFrontier;
 	
+	/** The url by doc id. */
 	public PrimaryIndex<String, DocID> urlByDocID;
+	
+	/** The links by doc id. */
 	public PrimaryIndex<String, DocLinks> linksByDocID;
+	
+	/** The content by doc id. */
 	public PrimaryIndex<String, DocContent> contentByDocID;
+	
+	/** The robots by host. */
 	public PrimaryIndex<String, Robots> robotsByHost;
 	
+	/** The frontier. */
 	public String frontier = "URLFrontier";
 	
+	/**
+	 * Instantiates a new DB wrapper.
+	 *
+	 * @param envDirectory the env directory
+	 */
 	public DBWrapper(String envDirectory){
 		if(!envDirectory.endsWith("/")) envDirectory += "/";
 		
@@ -79,22 +108,47 @@ public class DBWrapper {
 		
 	}
 	
+	/**
+	 * Gets the store.
+	 *
+	 * @return the store
+	 */
 	public EntityStore getStore(){
 		return store;
 	}
 	
+	/**
+	 * Gets the env.
+	 *
+	 * @return the env
+	 */
 	public Environment getEnv(){
 		return myEnv;
 	}
 	
+	/**
+	 * Checks for url in frontier.
+	 *
+	 * @param url the url
+	 * @return true, if successful
+	 */
 	public boolean hasUrlInFrontier(String url){
 		return urlFrontier.get(frontier).containsUrl(url);
 	}
 	
+	/**
+	 * Checks for url in db.
+	 *
+	 * @param url the url
+	 * @return true, if successful
+	 */
 	public boolean hasUrlInDB(String url){
 		return fileByUrl.contains(url);
 	}
 	
+	/**
+	 * Initial lize url q.
+	 */
 	public void initialLizeUrlQ(){
 		if(urlFrontier.contains(frontier)){
 		}
@@ -104,6 +158,12 @@ public class DBWrapper {
 		}
 	}
 	
+	/**
+	 * Adds the url to queue.
+	 *
+	 * @param url the url
+	 * @return true, if successful
+	 */
 	public boolean addUrlToQueue(String url){
 		if(urlFrontier.contains(frontier)){
 			URLFrontier temp = urlFrontier.get(frontier);
@@ -120,6 +180,11 @@ public class DBWrapper {
 		return true;
 	}
 	
+	/**
+	 * Gets the fst url from q.
+	 *
+	 * @return the fst url from q
+	 */
 	public String getFstUrlFromQ(){
 //		System.out.println("q size is "+urlFrontier.get(frontier).frontier.size()+"\n"
 //				+"the first element in q is"+urlFrontier.get(frontier).frontier.remove());
@@ -131,28 +196,57 @@ public class DBWrapper {
 		return url;
 	}
 	
+	/**
+	 * Peek fst url from q.
+	 *
+	 * @return the string
+	 */
 	public String peekFstUrlFromQ(){
 		return urlFrontier.get(frontier).peekFstUrl();
 	}
 	
 	
+	/**
+	 * Checks if is q empty.
+	 *
+	 * @return true, if is q empty
+	 */
 	public boolean isQEmpty(){
 		
 		return urlFrontier.get(frontier).isEmpty();
 	}
 	
 	// add the raw file into db
+	/**
+	 * Adds the raw file.
+	 *
+	 * @param file the file
+	 * @return true, if successful
+	 */
 	public boolean addRawFile(RawFile file) {
 		fileByUrl.put(file);
 		return true;
 	}
 	
+	/**
+	 * Gets the file.
+	 *
+	 * @param url the url
+	 * @return the file
+	 */
 	public String getFile(String url){
 		if(fileByUrl.get(url)!=null)
 			return fileByUrl.get(url).getFile();
 		return null;
 	}
 	
+	/**
+	 * Update raw file.
+	 *
+	 * @param url the url
+	 * @param file the file
+	 * @return true, if successful
+	 */
 	public boolean updateRawFile(String url, RawFile file) {
 		
 		if(!fileByUrl.contains(url)){
@@ -164,6 +258,13 @@ public class DBWrapper {
 		}
 	}
 	
+	/**
+	 * Need download.
+	 *
+	 * @param url the url
+	 * @param lastModified the last modified
+	 * @return true, if successful
+	 */
 	public boolean needDownload(String url, long lastModified){
 		if(fileByUrl.contains(url)){
 			Date lstModified = new Date(lastModified);
@@ -176,6 +277,12 @@ public class DBWrapper {
 	}
 	
 	
+	/**
+	 * Gets the lst crawled.
+	 *
+	 * @param url the url
+	 * @return the lst crawled
+	 */
 	public Date getLstCrawled(String url){
 		return fileByUrl.get(url).getTime();
 	}
@@ -186,12 +293,20 @@ public class DBWrapper {
 	 * 
 	 * the boolean is whether this url has saved
 	 * in our db yet (as a doc id).
-	 * 
-	 * */
+	 *
+	 * @param docid the docid
+	 * @return true, if successful
+	 */
 	public boolean containsUrl(String docid){
 		return urlByDocID.contains(docid);
 	}
 	
+	/**
+	 * Content is empty.
+	 *
+	 * @param docid the docid
+	 * @return true, if successful
+	 */
 	public boolean contentIsEmpty(String docid){
 		return contentByDocID.get(docid).contentIsEmpty();
 	}
@@ -200,7 +315,9 @@ public class DBWrapper {
 	 * when a new url comes, hash it into a document id
 	 * and put this primary key in docid->url table,
 	 * docid->links(docid) table, and docid->content table.
-	 * */
+	 *
+	 * @param docid the docid
+	 */
 	public void addDocID(String docid){
 		DocID id = new DocID(docid);
 		urlByDocID.put(id);
@@ -213,18 +330,35 @@ public class DBWrapper {
 		
 	}
 	
+	/**
+	 * Checks for sent head.
+	 *
+	 * @param docid the docid
+	 * @return true, if successful
+	 */
 	public boolean hasSentHead(String docid){
 		DocID id = urlByDocID.get(docid);
 		return id.hasSentHead();
 	}
 	
 	
+	/**
+	 * Sent head.
+	 *
+	 * @param docid the docid
+	 */
 	public void sentHead(String docid){
 		DocID id = urlByDocID.get(docid);
 		id.sentHead();
 		urlByDocID.put(id);
 	}
 	
+	/**
+	 * Adds the doc url.
+	 *
+	 * @param docid the docid
+	 * @param url the url
+	 */
 	public void addDocUrl(String docid, String url){
 		DocID id = urlByDocID.get(docid);
 		id.setUrl(url);
@@ -240,14 +374,23 @@ public class DBWrapper {
 	 * formatted as "docid\tdocid1
 	 * 				 docid\tdocid2
 	 * 				 ......"
-	 * 
-	 * */
+	 *
+	 * @param docid the docid
+	 * @param linkid the linkid
+	 */
 	public void  addDocLink(String docid, String linkid){
 		DocLinks idlinks = linksByDocID.get(docid);
 		idlinks.addLink(linkid);
 		linksByDocID.put(idlinks);
 	}
 	
+	/**
+	 * Adds the doc content.
+	 *
+	 * @param docid the docid
+	 * @param content the content
+	 * @param url the url
+	 */
 	public void addDocContent(String docid, String content, String url){
 		DocContent idContent = contentByDocID.get(docid);
 		idContent.setUrl(url);
@@ -260,6 +403,12 @@ public class DBWrapper {
 	
 	
 	// create a new account in the db
+	/**
+	 * Adds the user.
+	 *
+	 * @param user the user
+	 * @return true, if successful
+	 */
 	public boolean addUser(User user) {
 		if(userByName.contains(user.userName)){
 			return false;
@@ -270,6 +419,12 @@ public class DBWrapper {
 		}
 	}
 	
+	/**
+	 * Adds the channel.
+	 *
+	 * @param channel the channel
+	 * @return true, if successful
+	 */
 	public boolean addChannel(Channel channel) {	
 		if(channelByName.contains(channel.channelName)){
 			return false;
@@ -281,11 +436,23 @@ public class DBWrapper {
 	}
 	
 	//check if the user name has already existed in the db
+	/**
+	 * Checks for user.
+	 *
+	 * @param userName the user name
+	 * @return true, if successful
+	 */
 	public boolean hasUser(String userName){
 		return userByName.contains(userName);
 
 	}
 	
+	/**
+	 * Checks for channel.
+	 *
+	 * @param channelName the channel name
+	 * @return true, if successful
+	 */
 	public boolean hasChannel(String channelName){
 		if(channelName!=null){
 		return channelByName.contains(channelName);
@@ -293,6 +460,12 @@ public class DBWrapper {
 		return false;
 	}
 	
+	/**
+	 * Gets the channel owner.
+	 *
+	 * @param channelName the channel name
+	 * @return the channel owner
+	 */
 	public String getChannelOwner(String channelName){
 		if(channelByName.contains(channelName)){
 			return channelByName.get(channelName).getUserName();
@@ -302,6 +475,13 @@ public class DBWrapper {
 	
 	//check if the user name has already existed in the db
 	//if existed, return the password
+	/**
+	 * Check password.
+	 *
+	 * @param userName the user name
+	 * @param input the input
+	 * @return true, if successful
+	 */
 	public boolean checkPassword(String userName, String input){
 		if(userByName.contains(userName)){
 			return userByName.get(userName).correctPassword(input);
@@ -311,6 +491,12 @@ public class DBWrapper {
 	
 	
 	//return all the channels that belong to a specific user
+	/**
+	 * All my channels.
+	 *
+	 * @param userName the user name
+	 * @return the array list
+	 */
 	public ArrayList<Channel> allMyChannels(String userName){
 		ArrayList<String> myChannelNames = null;
 		if(!userByName.contains(userName)){
@@ -335,6 +521,11 @@ public class DBWrapper {
 	}
 	
 	//return all the available channels in the db
+	/**
+	 * Gets the all channels.
+	 *
+	 * @return the all channels
+	 */
 	public ArrayList<Channel> getAllChannels(){
 		ArrayList<Channel> channels = new ArrayList<Channel>();
 		EntityCursor<Channel> channelCursor = channelByName.entities();
@@ -347,10 +538,22 @@ public class DBWrapper {
 		return channels;
 	}
 	
+	/**
+	 * Gets the xpaths.
+	 *
+	 * @param channelName the channel name
+	 * @return the xpaths
+	 */
 	public ArrayList<String> getXpaths(String channelName){
 		return channelByName.get(channelName).getXpaths();
 	}
 	
+	/**
+	 * Gets the xslt.
+	 *
+	 * @param channelName the channel name
+	 * @return the xslt
+	 */
 	public String getXslt(String channelName){
 		return channelByName.get(channelName).getXsltUrl();
 	}
@@ -358,6 +561,13 @@ public class DBWrapper {
 	// create a new channel and add it into the user's entity 
 
 	
+	/**
+	 * Adds the channel to user.
+	 *
+	 * @param channelName the channel name
+	 * @param userName the user name
+	 * @return true, if successful
+	 */
 	public boolean addChannelToUser(String channelName, String userName){
 		if(!userByName.contains(userName)){
 			return false;
@@ -373,6 +583,13 @@ public class DBWrapper {
 	
 	
 	//delete an existing channel and also delete the channel in the user's entity
+	/**
+	 * Delete channel.
+	 *
+	 * @param chnl the chnl
+	 * @param userName the user name
+	 * @return true, if successful
+	 */
 	public boolean deleteChannel(String chnl, String userName){
 		if(!channelByName.contains(chnl) || !userByName.contains(userName)){
 			return false;
@@ -388,6 +605,13 @@ public class DBWrapper {
 	}
 	
 	// add a xpath to a specific channel
+	/**
+	 * Adds the xpath.
+	 *
+	 * @param channelName the channel name
+	 * @param xpath the xpath
+	 * @return true, if successful
+	 */
 	public boolean addXpath(String channelName, String xpath){
 		Channel chnl = channelByName.get(channelName);
 		if(chnl != null){
@@ -403,6 +627,13 @@ public class DBWrapper {
 		
 	}
 	
+	/**
+	 * Sets the xslt of channel.
+	 *
+	 * @param url the url
+	 * @param channelName the channel name
+	 * @return true, if successful
+	 */
 	public boolean setXsltOfChannel(String url, String channelName){
 		Channel channel = channelByName.get(channelName);
 		channel.setXsltUrl(url);
@@ -410,6 +641,13 @@ public class DBWrapper {
 		return true;
 	}
 	
+	/**
+	 * Adds the url to channel.
+	 *
+	 * @param url the url
+	 * @param channelName the channel name
+	 * @return true, if successful
+	 */
 	public boolean addUrlToChannel(String url, String channelName){
 		Channel chnl = channelByName.get(channelName);
 		if(!chnl.getFileUrls().contains(url)){
@@ -419,6 +657,12 @@ public class DBWrapper {
 		return true;
 	}
 	
+	/**
+	 * Gets the matched urls.
+	 *
+	 * @param channelName the channel name
+	 * @return the matched urls
+	 */
 	public ArrayList<String> getMatchedUrls(String channelName){
 		Channel chnl = channelByName.get(channelName);
 		return chnl.getFileUrls();
@@ -426,6 +670,13 @@ public class DBWrapper {
 
 	
 	
+	/**
+	 * Removes the url from channel.
+	 *
+	 * @param url the url
+	 * @param channelName the channel name
+	 * @return true, if successful
+	 */
 	public boolean removeUrlFromChannel(String url, String channelName){
 		Channel chnl = channelByName.get(channelName);
 		System.out.println("channelName is "+channelName+"\nand the url is@"+url+"@");
@@ -499,24 +750,47 @@ public class DBWrapper {
 //	}
 	
 	
-	public PrimaryIndex<String, User> getUsers(){
+	/**
+ * Gets the users.
+ *
+ * @return the users
+ */
+public PrimaryIndex<String, User> getUsers(){
 		return userByName;
 	}
 	
+	/**
+	 * Gets the channels.
+	 *
+	 * @return the channels
+	 */
 	public PrimaryIndex<String, Channel> getChannels(){
 		return channelByName;
 	}
 	
+	/**
+	 * Gets the files.
+	 *
+	 * @return the files
+	 */
 	public PrimaryIndex<String, RawFile> getFiles(){
 		return fileByUrl;
 	}
 	
 
+	/**
+	 * Gets the frontier.
+	 *
+	 * @return the frontier
+	 */
 	public PrimaryIndex<String, URLFrontier> getFrontier(){
 		return urlFrontier;
 	}
 	
 	// Close the store and the environment
+	/**
+	 * Close env.
+	 */
 	public void closeEnv() {
 		if(store != null){
 			try{
@@ -537,6 +811,12 @@ public class DBWrapper {
 		}
 	}
 	
+	/**
+	 * To big integer.
+	 *
+	 * @param key the key
+	 * @return the big integer
+	 */
 	public BigInteger toBigInteger(String key) {
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");

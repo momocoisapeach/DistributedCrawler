@@ -16,19 +16,37 @@ import com.sleepycat.je.rep.impl.networkRestore.Protocol.Done;
 
 import edu.upenn.cis455.mapreduce.Context;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class ReduceContext.
+ *
  * @author dichenli
  * Context used for reduce
  */
 class ReduceContext implements Context {
 
+	/** The output. */
 	File output;
+	
+	/** The writer. */
 	PrintWriter writer;
+	
+	/** The keys written. */
 	AtomicLong keysWritten;
+	
+	/** The id. */
 	int id;
 	
+	/** The max lines. */
 	static long maxLines = 20;//max number of lines for each output file
 	
+	/**
+	 * Instantiates a new reduce context.
+	 *
+	 * @param output the output
+	 * @param keysWritten the keys written
+	 * @param id the id
+	 */
 	ReduceContext(File output, AtomicLong keysWritten, int id) {
 		if(!IOUtils.fileExists(output)) {
 			System.err.println("ReduceContext: output file don't exists!");
@@ -48,8 +66,9 @@ class ReduceContext implements Context {
 	}
 	
 	/**
-	 * called before a context can be used to write
-	 * @return
+	 * called before a context can be used to write.
+	 *
+	 * @return true, if successful
 	 */
 	boolean openWriter() {
 		if(!IOUtils.fileExists(output)) {
@@ -67,6 +86,9 @@ class ReduceContext implements Context {
 		}
 	}
 	
+	/**
+	 * Close writer.
+	 */
 	void closeWriter() {
 		System.err.println("ReduceContext.closeWriter");
 		if (writer != null) {
@@ -80,9 +102,14 @@ class ReduceContext implements Context {
 	}
 	
 	
+	/** The lines. */
 	static long lines = 0;
+	
 	/**
-	 * write to output
+	 * write to output.
+	 *
+	 * @param key the key
+	 * @param value the value
 	 */
 	@Override
 	public void write(String key, String value) {

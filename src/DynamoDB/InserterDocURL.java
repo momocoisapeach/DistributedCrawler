@@ -10,21 +10,28 @@ import java.util.Set;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper.FailedBatch;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class InserterDocURL.
+ *
  * @author dichenli
  * binded to a class T to insert items in batch manner to DynamoDB, typically a static instance
  * of the class T
  */
 public class InserterDocURL {
+	
+	/** The items. */
 	private Set<DocURL> items = null;
+	
 	/**
 	 * insert data to DB. It will batch the insert task, and not send 
 	 * the DB request until a total of 25 items
 	 * has been sent to insert queue. However, if insertNow is set to true,
 	 * it will insert immediately all currently available items in the batch. 
 	 * Must call init() before calling this method.
-	 * @param item
-	 * @param insertNow
+	 *
+	 * @param item the item
+	 * @param insertNow the insert now
 	 */
 	public void insert(DocURL item, boolean insertNow) {
 		if(items == null) {
@@ -38,6 +45,9 @@ public class InserterDocURL {
 		}
 	}
 	
+	/**
+	 * Flush.
+	 */
 	public void flush() {
 		if (items == null) {
 			return;
@@ -59,25 +69,28 @@ public class InserterDocURL {
 	
 	/**
 	 * equal to insert(item, false);
-	 * must call init() before calling this method
-	 * @param item
+	 * must call init() before calling this method.
+	 *
+	 * @param item the item
 	 */
 	public void insert(DocURL item) {
 		insert(item, false);
 	}
 	
 	/**
-	 * must call init() before calling this method
-	 * @param items
-	 * @return
+	 * must call init() before calling this method.
+	 *
+	 * @param items the items
+	 * @return the list
 	 */
 	public List<FailedBatch> batchInsert(List<DocURL> items) {
 		return DynamoTable.mapper.batchSave(items);
 	}
 	
 	/**
-	 * upload a single item to DB
-	 * @param item: an item of a persistent model with @DynamoDBTable(tableName=XX)
+	 * upload a single item to DB.
+	 *
+	 * @param item the item
 	 * @throws Exception when DB init() failed
 	 */
 	public void save(DocURL item) throws Exception {

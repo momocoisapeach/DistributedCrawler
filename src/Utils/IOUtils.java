@@ -15,7 +15,10 @@ import java.util.Set;
 
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class IOUtils.
+ *
  * @author dichenli
  * static methods to facilitates IO classes
  */
@@ -24,8 +27,9 @@ public class IOUtils {
 	/**
 	 * count number of lines of a file using its scanner to scan line by line
 	 * return number of lines. Return null if input file is illegal. No exception thrown.
-	 * @param file
-	 * @return
+	 *
+	 * @param file the file
+	 * @return the long
 	 */
 	public static Long countLines(File file) {
 		if(!fileExists(file)) {
@@ -41,6 +45,13 @@ public class IOUtils {
 		return count;
 	}
 
+	/**
+	 * Gets the reader.
+	 *
+	 * @param is the is
+	 * @return the reader
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static BufferedReader getReader(
 			InputStream is) throws IOException {
 		if(is == null) {
@@ -54,9 +65,10 @@ public class IOUtils {
 	}
 	
 	/**
-	 * open an scanner to a file, no exception thrown, return null for abnormals
-	 * @param file
-	 * @return
+	 * open an scanner to a file, no exception thrown, return null for abnormals.
+	 *
+	 * @param file the file
+	 * @return the scanner
 	 */
 	public static Scanner getScanner(File file) {
 		if(file == null || !file.exists() || file.isDirectory()) {
@@ -72,10 +84,11 @@ public class IOUtils {
 	}
 
 	/**
-	 * suitable for writing characters
-	 * @param socket
-	 * @return
-	 * @throws IOException 
+	 * suitable for writing characters.
+	 *
+	 * @param os the os
+	 * @return the writer
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static PrintWriter getWriter(
 			OutputStream os) throws IOException {
@@ -89,10 +102,11 @@ public class IOUtils {
 	}
 	
 	/**
-	 * get the printwriter of a file, no null return, but throws IOException
-	 * @param file
-	 * @return
-	 * @throws IOException
+	 * get the printwriter of a file, no null return, but throws IOException.
+	 *
+	 * @param file the file
+	 * @return the writer
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static PrintWriter getWriter(File file) throws IOException {
 		OutputStream out = new FileOutputStream(file);
@@ -100,9 +114,10 @@ public class IOUtils {
 	}
 	
 	/**
-	 * is a valid file, exists, and not direcotry, not null
-	 * @param file
-	 * @return
+	 * is a valid file, exists, and not direcotry, not null.
+	 *
+	 * @param file the file
+	 * @return true, if is valid file
 	 */
 	public static boolean isValidFile(File file) {
 		if(file == null || !file.exists() || !file.isFile()) {
@@ -112,14 +127,21 @@ public class IOUtils {
 	}
 
 	/**
-	 * is directory and directory exists
-	 * @param relativePath, null is not allowed
-	 * @return
+	 * is directory and directory exists.
+	 *
+	 * @param file the file
+	 * @return true, if successful
 	 */
 	public static boolean dirExists(File file) {
 		return file.exists() && file.isDirectory();
 	}
 
+	/**
+	 * Dir exists.
+	 *
+	 * @param fileName the file name
+	 * @return true, if successful
+	 */
 	public static boolean dirExists(String fileName) {
 		return dirExists(new File(fileName));
 	}
@@ -141,18 +163,20 @@ public class IOUtils {
 //	}
 	
 	/**
-	 * return true if the file exists and is a file (not directory)
-	 * @param file
-	 * @return
-	 */
+ * return true if the file exists and is a file (not directory).
+ *
+ * @param file the file
+ * @return true, if successful
+ */
 	public static boolean fileExists(File file) {
 		return file != null && file.isFile() && file.exists();
 	}
 
 	/**
-	 * return true if the given file is a directory, exists, and has files in it 
-	 * @param dir
-	 * @return
+	 * return true if the given file is a directory, exists, and has files in it .
+	 *
+	 * @param dir the dir
+	 * @return true, if successful
 	 */
 	public static boolean containsFile(File dir) {
 		if(!dirExists(dir)) {
@@ -167,10 +191,8 @@ public class IOUtils {
 	 * It doesn't delete any existing 
 	 * files in the folders. But it will delete the file with the same 
 	 * name as the folder we need to create
-	 * 
-	 * @param folder
-	 * @param root
-	 * @param relPath
+	 *
+	 * @param folder the folder
 	 * @return true if folder exists or was successfully created
 	 */
 	public static boolean createFolder(File folder) {
@@ -195,8 +217,9 @@ public class IOUtils {
 	}
 
 	/**
-	 * delete all files in a folder, but not the folder itself
-	 * @param folder
+	 * delete all files in a folder, but not the folder itself.
+	 *
+	 * @param folder the folder
 	 * @return false if argument folder is invalid or some file can't be
 	 * deleted.
 	 */
@@ -222,7 +245,8 @@ public class IOUtils {
 	 * create a file to write to. It first check if the original file exists, if do, it will
 	 * first try to delete the file. So it may delete what you had!
 	 * if file is null, false is returned
-	 * @param file
+	 *
+	 * @param file the file
 	 * @return false for any abnormal
 	 */
 	public static boolean createFile(File file) {
@@ -247,9 +271,9 @@ public class IOUtils {
 	 * get file extension from file name by searching for the last "." and return the string
 	 * after it. abc.def.txt will return "txt". abc will return empty string "". abc/ will return
 	 * empty string 
-	 * @throws NullPointerException if input file is null or can't get its file name (not likely)
-	 * @param file
-	 * @return
+	 *
+	 * @param file the file
+	 * @return the extension
 	 */
 	public static String getExtension(File file) {
 		if(file.isDirectory()) { // for example, /.dev is a folder, so no extension
@@ -265,9 +289,10 @@ public class IOUtils {
 	}
 	
 	/**
-	 * will rename the file, newName must be full directory
-	 * @param file
-	 * @param newName
+	 * will rename the file, newName must be full directory.
+	 *
+	 * @param file the file
+	 * @param newName the new name
 	 * @return the pointer to the renamed file, or null if fail (like system forbidden)
 	 */
 	public static File rename(File file, String newName) {
@@ -282,12 +307,10 @@ public class IOUtils {
 	/**
 	 * add file extension to file name. "/abc" will be renamed to "/abc.txt"
 	 * extension must start with ".", like ".txt", must has more than just "."
-	 * @param file
-	 * @param extension
+	 *
+	 * @param file the file
+	 * @param extension the extension
 	 * @return new file,
-	 * @throws NullPointerException if any argument is null or original file name is null
-	 * @throws IllegalArgumentException if input extension is not beginning with . or is just .
-	 * or if after rename, the new file name is illegal (rename failed)
 	 */
 	public static File appendExtension(File file, String extension) {
 		if(extension.charAt(0) != '.' || extension.length() <= 1) {
@@ -307,6 +330,12 @@ public class IOUtils {
 		return newFile;
 	}
 	
+	/**
+	 * Delete file.
+	 *
+	 * @param file the file
+	 * @return true, if successful
+	 */
 	public static boolean deleteFile(File file) {
 		if (!fileExists(file)) {
 			return true;
@@ -322,10 +351,11 @@ public class IOUtils {
 	/**
 	 * set chmod for the given file. File must exists
 	 * to set chmod 740, call with user = 7, group = 4, others = 0
-	 * @param file
-	 * @param user
-	 * @param group
-	 * @param others
+	 *
+	 * @param file the file
+	 * @param user the user
+	 * @param group the group
+	 * @param others the others
 	 * @return true if success
 	 */
 	public static boolean setFilePermission(File file, int user, int group, int others) {
@@ -379,9 +409,10 @@ public class IOUtils {
 	}
 	
 	/**
-	 * execute a system command, return true if success
-	 * @param command
-	 * @return
+	 * execute a system command, return true if success.
+	 *
+	 * @param command the command
+	 * @return true, if successful
 	 */
 	public static boolean runtimeExec(String command) {
 		Process process = null;

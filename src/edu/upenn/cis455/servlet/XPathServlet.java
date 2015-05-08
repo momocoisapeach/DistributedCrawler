@@ -17,6 +17,10 @@ import edu.upenn.cis455.crawler.HttpClient;
 import edu.upenn.cis455.xpathengine.XPathEngineFactory;
 import edu.upenn.cis455.xpathengine.XPathEngineImpl;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class XPathServlet.
+ */
 @SuppressWarnings("serial")
 public class XPathServlet extends HttpServlet {
 	
@@ -24,6 +28,9 @@ public class XPathServlet extends HttpServlet {
 	
 	/* You may want to override one or both of the following methods */
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession sess = request.getSession();
@@ -115,6 +122,9 @@ public class XPathServlet extends HttpServlet {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession sess = request.getSession();

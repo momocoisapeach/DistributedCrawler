@@ -13,22 +13,53 @@ import java.util.concurrent.atomic.AtomicLong;
 import Utils.IOUtils;
 import edu.upenn.cis455.mapreduce.Job;
 import edu.upenn.cis455.mapreduce.job.WordCount;
+// TODO: Auto-generated Javadoc
+
 /**
+ * The Class MapRunner.
+ *
  * @author dichenli
  * a thread to run map task
  */
 class MapRunner implements Runnable {
 
+	/** The job runner. */
 	JobRunner jobRunner;
+	
+	/** The id. */
 	int id; //distinguish among different threads. Always start from 0 to (# of threads - 1)
+	
+	/** The num threads. */
 	int numThreads;
+	
+	/** The peers. */
 	HashMap<Integer, PeerWorker> peers;
+	
+	/** The num workers. */
 	int numWorkers;
+	
+	/** The job. */
 	Job job;
+	
+	/** The context. */
 	MapContext context;
+	
+	/** The keys read. */
 	AtomicLong keysRead; //references to JobRunner's keysRead/keysWritten
+	
+	/** The keys written. */
 	AtomicLong keysWritten;
 	
+	/**
+	 * Instantiates a new map runner.
+	 *
+	 * @param jobRunner the job runner
+	 * @param id the id
+	 * @param numThreads the num threads
+	 * @param peers the peers
+	 * @param job the job
+	 * @param numWorkers the num workers
+	 */
 	MapRunner(JobRunner jobRunner, int id, int numThreads, 
 			HashMap<Integer, PeerWorker> peers, Job job, int numWorkers) {
 		if(jobRunner == null || id < 0 || id >= numThreads || numThreads <= 0
@@ -48,6 +79,9 @@ class MapRunner implements Runnable {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		System.out.println("MapRunner.run: start");
@@ -77,7 +111,8 @@ class MapRunner implements Runnable {
 
 	/**
 	 * read a input file line by line, and do job.map()
-	 * @param scanner
+	 *
+	 * @param scanner the scanner
 	 */
 	private void readInput(Scanner scanner) {
 		for(int i = 0; scanner.hasNextLine(); i++) {//i: line count

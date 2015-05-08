@@ -8,13 +8,24 @@ import javax.servlet.http.*;
 import edu.upenn.cis455.mapreduce.MapReduceUtils;
 import edu.upenn.cis455.mapreduce.WebClient.WebHost;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WorkerServlet.
+ */
 public class WorkerServlet extends HttpServlet {
 
+	/** The Constant serialVersionUID. */
 	static final long serialVersionUID = 455555002;
+	
+	/** The Constant worker. */
 	static final Worker worker = Worker.getInstance(); //the worker "myself"
 
 	/**
-	 * nothing special yet
+	 * nothing special yet.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws java.io.IOException {
@@ -30,6 +41,9 @@ public class WorkerServlet extends HttpServlet {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws java.io.IOException {
 		String urlInfo = request.getPathInfo();
@@ -66,6 +80,12 @@ public class WorkerServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Send welcome.
+	 *
+	 * @param response the response
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void sendWelcome(HttpServletResponse response) throws IOException {
 		PrintWriter out;
 		try {
@@ -78,7 +98,9 @@ public class WorkerServlet extends HttpServlet {
 	}
 	
 	/**
-	 * initialize the servlet
+	 * initialize the servlet.
+	 *
+	 * @throws ServletException the servlet exception
 	 */
 	@Override
 	public void init() throws ServletException {
@@ -120,6 +142,9 @@ public class WorkerServlet extends HttpServlet {
 		worker.startStatusReporter();
 	}
 	
+	/* (non-Javadoc)
+	 * @see javax.servlet.GenericServlet#destroy()
+	 */
 	@Override
 	public void destroy() {
 		worker.shutdown();

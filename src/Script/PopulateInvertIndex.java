@@ -13,13 +13,17 @@ import com.jcraft.jsch.JSchException;
 
 import Utils.IOUtils;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class PopulateInvertedIndex.
+ *
  * @author dichenli
  * Modify format of crawled data
  */
 public class PopulateInvertIndex extends Thread {
 
 
+	/** The addresses. */
 	static String[] addresses = {
 		"ec2-user@52.24.60.12", //0
 		"ec2-user@52.24.37.11",
@@ -62,28 +66,53 @@ public class PopulateInvertIndex extends Thread {
 //		"http://www.aol.com/" //17
 //	};
 
-	static String local_home = "/Users/dichenli/";
+	/** The local_home. */
+static String local_home = "/Users/dichenli/";
+	
+	/** The local_ec2_home. */
 	static String local_ec2_home = local_home + ".ec2/";
+	
+	/** The local_aws_home. */
 	static String local_aws_home = local_home + ".aws/";
+	
+	/** The local_download. */
 	static String local_download = local_home + "Downloads/";
 //	static String upload_data = "crawl_data";
 //	static String upload_zip = "crawl_data.zip";
-	static String key_pem = local_ec2_home + "ec2try.pem";
+	/** The key_pem. */
+static String key_pem = local_ec2_home + "ec2try.pem";
+	
+	/** The berkeley_cleaner. */
 	static String berkeley_cleaner = "berkeley_cleaner";
 
+	/** The remote_home. */
 	static String remote_home = "/home/ec2-user/";
+	
+	/** The project_name. */
 	static String project_name = "DynamoDB555";
+	
+	/** The remote_jar_dir. */
 	static String remote_jar_dir = remote_home + project_name + "/";
+	
+	/** The jar_name. */
 	static String jar_name = "DataPopulator.jar"; 
 //	static long crawl_limit = 7000;
 //	static int size = 1; //Mb data
-	static int crawler_num = 16;
+	/** The crawler_num. */
+static int crawler_num = 16;
 
+	/** The ready count. */
 	static AtomicInteger readyCount = null; //atomic integer to transfer signal among threads
 
+	/** The i. */
 	int i; //crawler number
+	
+	/** The commander. */
 	JschCommander commander;
 
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 
@@ -175,9 +204,11 @@ public class PopulateInvertIndex extends Thread {
 	}
 
 	/**
-	 * @param args
-	 * @throws IOException 
-	 * @throws InterruptedException 
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InterruptedException the interrupted exception
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException {
 //		if(addresses.length != crawler_num ) {

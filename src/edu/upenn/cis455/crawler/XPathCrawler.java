@@ -55,24 +55,60 @@ import edu.upenn.cis455.xpathengine.XPathEngineImpl;
 
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class XPathCrawler.
+ */
 public class XPathCrawler {
 	
+	/** The crawler. */
 	static int crawler = 1;
+	
+	/** The num crawlers. */
 	int numCrawlers = 1;
+	
+	/** The directory. */
 	static String directory = null;
+	
+	/** The max size. */
 	double maxSize;
+	
+	/** The start url. */
 	String startUrl;
+	
+	/** The max file n. */
 	int maxFileN;
+	
+	/** The db. */
 	DBWrapper db;
+	
+	/** The robots. */
 	RobotsTxtInfo robots;
+	
+	/** The range. */
 	HashMap<Integer, BigInteger> range = new HashMap<Integer, BigInteger>();
+	
+	/** The Constant ENCODING. */
 	private final static Charset ENCODING = StandardCharsets.UTF_8;
+	
+	/** The Map reduce input. */
 	private String MapReduceInput;
+	
+	/** The input file name. */
 	private String inputFileName;
+	
+	/** The count. */
 	int count = 0;
+	
+	/** The line. */
 	int line = 0;
 
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args){
 //		args[0] = "https://dbappserv.cis.upenn.edu/crawltest.html";
 //		args[1] = berkeleyDB root directory
@@ -81,6 +117,8 @@ public class XPathCrawler {
 //		args[4] = crawler #
 //		args[5] = total crawler #
 		
+		long start = System.currentTimeMillis();
+		System.out.println("start time is "+start);
 		if(args.length <3 || args.length>7){
 			usage();
 		}
@@ -92,8 +130,18 @@ public class XPathCrawler {
 			
 		}
 		
+		long finish = System.currentTimeMillis();
+		System.out.println("finish time is "+finish);
+		long diff = (finish - start)/1000;
+		System.out.println("total time use is "+diff);
+		
 	}
 	
+	/**
+	 * Initialize.
+	 *
+	 * @param args the args
+	 */
 	public void initialize(String[] args){
 		startUrl = args[0];
 		directory = args[1];
@@ -186,6 +234,9 @@ public class XPathCrawler {
 	
 	
 
+	/**
+	 * Read from dynamo db.
+	 */
 	private void readFromDynamoDB() {
 		System.out.println("reading from dynamo db...");
 		int count = 0;
@@ -228,6 +279,11 @@ public class XPathCrawler {
 		
 	}
 
+	/**
+	 * Run.
+	 *
+	 * @param currentUrl the current url
+	 */
 	public void run(String currentUrl) {
 		NewHttpClient client = new NewHttpClient(currentUrl);
 		NewHttpClient getClient = new NewHttpClient(currentUrl);
@@ -459,10 +515,20 @@ public class XPathCrawler {
 		
 	}
 	
+	/**
+	 * Sets the db.
+	 *
+	 * @param db the new db
+	 */
 	public void setDB(DBWrapper db){
 		this.db = db;
 	}
 
+	/**
+	 * Extract links.
+	 *
+	 * @param currentUrl the current url
+	 */
 	public void extractLinks(String currentUrl) {
 //		System.out.println("\nin the method of extrac links...\n");
 		String docid = String.valueOf(toBigInteger(currentUrl));
@@ -524,6 +590,12 @@ public class XPathCrawler {
 	}
 	
 	
+	/**
+	 * Hash.
+	 *
+	 * @param num the num
+	 * @return the int
+	 */
 	public int hash(BigInteger num) {
 //		int res = -1;
 		num = num.abs();
@@ -534,6 +606,11 @@ public class XPathCrawler {
 		return 0;
 	}
 	
+	/**
+	 * Sets the hash range.
+	 *
+	 * @param numCrawlers the new hash range
+	 */
 	private void setHashRange(int numCrawlers) {
 //		  System.out.println("in the set hash range method");
 		StringBuilder max = new StringBuilder("7");
@@ -555,6 +632,12 @@ public class XPathCrawler {
 	
 
 
+	/**
+	 * Write to dynamo db.
+	 *
+	 * @param linkid the linkid
+	 * @param url the url
+	 */
 	private void writeToDynamoDB(String linkid, String url) {
 //		System.out.println("before inserting doc id and url into dynamo db...");
 //		System.out.println("url is "+url+"\n and the docid is"+linkid+"\nand the crawler # is"+crawler);
@@ -579,6 +662,13 @@ public class XPathCrawler {
 
 	}
 
+	/**
+	 * Checks if is english.
+	 *
+	 * @param text the text
+	 * @return true, if is english
+	 * @throws Exception the exception
+	 */
 	public boolean isEnglish(String text) throws Exception{
 
 		String after = html2text(text);
@@ -592,14 +682,32 @@ public class XPathCrawler {
         return false;
 	}
 
+	/**
+	 * Html2text.
+	 *
+	 * @param content the content
+	 * @return the string
+	 */
 	private String html2text(String content) {
 		return Jsoup.parse(content).text();
 	}
 
+	/**
+	 * Sets the max size.
+	 *
+	 * @param size the new max size
+	 */
 	public void setMaxSize(Double size){
 		maxSize = size;
 	}
 	
+	/**
+	 * Check size type.
+	 *
+	 * @param type the type
+	 * @param len the len
+	 * @return true, if successful
+	 */
 	public boolean checkSizeType(String type, int len) {
 		String content_type = type;
 		int content_length = len;
@@ -612,6 +720,12 @@ public class XPathCrawler {
 		return tp;
 	}
 
+	/**
+	 * Process robot txt.
+	 *
+	 * @param host the host
+	 * @param body the body
+	 */
 	public void processRobotTxt(String host, String body) {
 //		System.out.println("processing robots info....");
 		int cisCrawlerIdx = body.indexOf("User-agent: cis455crawler");
@@ -630,6 +744,12 @@ public class XPathCrawler {
 		
 	}
 
+	/**
+	 * Process helper.
+	 *
+	 * @param body the body
+	 * @param host the host
+	 */
 	public void processHelper(String body, String host) {
 //		System.out.println("in the method of process helper");
 //		System.out.println(body);
@@ -751,7 +871,13 @@ public class XPathCrawler {
 //	    
 //	}
 	
-	public ArrayList<String> listFilesForFolder(File folder) {
+	/**
+ * List files for folder.
+ *
+ * @param folder the folder
+ * @return the array list
+ */
+public ArrayList<String> listFilesForFolder(File folder) {
 		ArrayList<String> files = new ArrayList<String>();
 	    for (File fileEntry : folder.listFiles()) {
 	        if (fileEntry.isDirectory()) {
@@ -765,6 +891,12 @@ public class XPathCrawler {
 	    return files;
 	}
 	
+	/**
+	 * To big integer.
+	 *
+	 * @param key the key
+	 * @return the big integer
+	 */
 	public BigInteger toBigInteger(String key) {
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
@@ -783,10 +915,16 @@ public class XPathCrawler {
 		return new BigInteger("0", 16);
 	}
 	
+	/**
+	 * Sets the crawler root.
+	 */
 	public static void setCrawlerRoot(){
 		Config.init(directory);
 	}
 
+	/**
+	 * Usage.
+	 */
 	private static void usage() {
 		System.out.println("Please input the following arguments:\n"
 				+ "the starting url for crawling\n"
