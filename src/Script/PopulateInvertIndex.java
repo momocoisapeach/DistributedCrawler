@@ -17,7 +17,7 @@ import Utils.IOUtils;
  * @author dichenli
  * Modify format of crawled data
  */
-public class PopulateInvertedIndex extends Thread {
+public class PopulateInvertIndex extends Thread {
 
 
 	static String[] addresses = {
@@ -189,13 +189,13 @@ public class PopulateInvertedIndex extends Thread {
 		boolean success = true;
 
 		//		PrintWriter writer = null;
-		PopulateInvertedIndex[] scripts = new PopulateInvertedIndex[crawler_num];
+		PopulateInvertIndex[] scripts = new PopulateInvertIndex[crawler_num];
 		for (int i = 0; i < crawler_num; i++) {
-			scripts[i] = new PopulateInvertedIndex();
+			scripts[i] = new PopulateInvertIndex();
 			scripts[i].i = i;
 			scripts[i].start();
 		}
-		for(PopulateInvertedIndex sc : scripts) {
+		for(PopulateInvertIndex sc : scripts) {
 			sc.join();
 		}
 
